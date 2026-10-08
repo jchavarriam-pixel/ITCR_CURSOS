@@ -2,11 +2,17 @@ Add-Type -AssemblyName System.Speech
 $modelRoot = $PSScriptRoot
 $modelManifest = Get-Content -LiteralPath (Join-Path $modelRoot 'audios/guiones.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 $modelTimings = @{}
+$modelTimingPath = Join-Path $modelRoot 'audios/animaciones-modelos.json'
+if (Test-Path -LiteralPath $modelTimingPath) {
+    $modelSavedTimings = Get-Content -LiteralPath $modelTimingPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    foreach ($modelSavedVoice in $modelSavedTimings.PSObject.Properties) { $modelTimings[$modelSavedVoice.Name] = $modelSavedVoice.Value }
+}
 $modelSpeaker = New-Object System.Speech.Synthesis.SpeechSynthesizer
 $modelEventId = 'Regresion.ModelNarration.Bookmarks'
 Register-ObjectEvent -InputObject $modelSpeaker -EventName BookmarkReached -SourceIdentifier $modelEventId | Out-Null
 try {
     foreach ($modelVoice in $modelManifest.voces) {
+        if ($modelVoice.tipo -eq 'neural') { continue }
         $modelSpeaker.SelectVoice($modelVoice.voz)
         $modelTimings[$modelVoice.id] = @{}
         $modelVoiceDirectory = Join-Path $modelRoot 'audios'

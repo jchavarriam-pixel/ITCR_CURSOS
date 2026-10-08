@@ -5,6 +5,7 @@ $regressionSpeaker = New-Object System.Speech.Synthesis.SpeechSynthesizer
 try {
     $regressionSpeaker.Rate = 0
     foreach ($regressionVoice in $regressionScripts.voces) {
+        if ($regressionVoice.tipo -eq 'neural') { continue }
         $regressionSpeaker.SelectVoice($regressionVoice.voz)
         $regressionVoiceRoot = $regressionAudioRoot
         if ($regressionVoice.carpeta) {

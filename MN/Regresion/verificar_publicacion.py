@@ -29,7 +29,7 @@ def publication_files():
     clip_files = {clip["archivo"] for clips in manifest["paginas"].values() for clip in clips}
     for voice in manifest["voces"]:
         folder = Path("audios") / voice.get("carpeta", "")
-        files.extend((folder / filename).as_posix() for filename in sorted(clip_files))
+        files.extend((folder / Path(filename).with_suffix("." + voice.get("extension", "wav"))).as_posix() for filename in sorted(clip_files))
     return files
 
 

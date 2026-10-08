@@ -539,6 +539,12 @@
       "nombre": "Laura · femenina",
       "voz": "Microsoft Laura",
       "carpeta": ""
+    },
+    {
+      "id": "helena",
+      "nombre": "Helena · femenina",
+      "voz": "Microsoft Helena Desktop",
+      "carpeta": "helena"
     }
   ]
 }
