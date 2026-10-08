@@ -1,0 +1,544 @@
+{
+  "voz": "Microsoft Laura",
+  "idioma": "es-ES",
+  "paginas": {
+    "inicio": [
+      {
+        "id": "inicio",
+        "titulo": "Cómo aprovechar el recorrido",
+        "texto": "La regresión nos ayuda a reconocer una tendencia y a estimar una respuesta a partir de los datos. Primero veremos un ejemplo de ventas. Después podrás mover puntos, aplicar las fórmulas y comparar modelos. Avanza a tu ritmo y responde las comprobaciones. Las deducciones son opcionales: debes saber aplicar las fórmulas e interpretar los resultados, pero no necesitas reproducir su deducción.",
+        "ubicacion": {
+          "selector": ".hero"
+        },
+        "archivo": "inicio.wav"
+      }
+    ],
+    "conceptos": [
+      {
+        "id": "ventas",
+        "titulo": "De las ventas a una predicción",
+        "texto": "La tienda vendió veinte, treinta y cincuenta y cinco artículos en tres períodos. Las ventas aumentan, pero los puntos no están exactamente alineados. Es un ejemplo pequeño para entender el proceso. Prueba las rectas que pasan por dos observaciones y compáralas con la que queda cerca de las tres. Nuestra recta de referencia estima sesenta y nueve artículos para el cuarto período; todavía no hemos calculado la de mejor ajuste.",
+        "ubicacion": {
+          "selector": ".tablewrap"
+        },
+        "archivo": "ventas.wav"
+      },
+      {
+        "id": "epsilon",
+        "titulo": "Qué representa cada error",
+        "texto": "Mira la flecha vertical de cada punto. Compara las ventas observadas con la altura de la recta de referencia en el mismo período. En el primero, la separación es de dos artículos hacia arriba; en el segundo, de cinco hacia abajo; y en el tercero, de tres hacia arriba. En este ejemplo simulado, épsilon representa el error respecto a una respuesta media conocida. Frente a una recta estimada, llamamos residuo a esa diferencia.",
+        "ubicacion": {
+          "selector": "#epsilonPlot",
+          "plot": true,
+          "before": true
+        },
+        "archivo": "epsilon.wav"
+      },
+      {
+        "id": "objetivo",
+        "titulo": "Por qué sumamos los cuadrados",
+        "texto": "Si sumamos diferencias positivas y negativas, pueden cancelarse. Podemos evitarlo sumando sus cuadrados o sus valores absolutos. Los dos criterios son válidos, aunque pueden dar rectas distintas. Los cuadrados tienen una ventaja para el cálculo: la derivada de equis al cuadrado es dos por equis, para cualquier valor. En cambio, la derivada del valor absoluto es menos uno cuando equis es negativo y uno cuando es positivo. En cero no existe, porque las pendientes de ambos lados no coinciden. Observa la esquina de la gráfica en forma de uve y compárala con la curva suave del cuadrado. Esa esquina requiere otros procedimientos de minimización. Además, los cuadrados dan más peso a diferencias grandes. En nuestro ejemplo, los cuadrados son cuatro, veinticinco y nueve; suman treinta y ocho. Usaremos ese criterio para buscar una recta cercana al conjunto. La comparación de derivadas es opcional: no necesitas reproducirla para aplicar las fórmulas.",
+        "ubicacion": {
+          "heading": "¿Por qué sumar los cuadrados?"
+        },
+        "archivo": "objetivo.wav"
+      },
+      {
+        "id": "comparar-tres-puntos",
+        "titulo": "¿Pasar por dos puntos o quedar cerca de los tres?",
+        "texto": "¿Qué conviene: pasar por dos puntos o quedar cerca de los tres? Si la recta pasa por el primero y el segundo, el tercero queda quince artículos por encima. Si pasa por el primero y el tercero, el segundo queda siete coma cinco artículos por debajo. Si pasa por el segundo y el tercero, el primero queda quince artículos por encima. Ahora prueba la recta cercana a los tres. Sus diferencias son más dos, menos cinco y más tres artículos. Al sumar sus cuadrados obtenemos treinta y ocho, frente a cincuenta y seis coma veinticinco o doscientos veinticinco en las otras opciones. Por eso, entre estas cuatro rectas, preferimos la que queda cerca de todos. Esta comparación ilustra el objetivo; todavía no estamos calculando la recta de mejor ajuste.",
+        "ubicacion": {
+          "heading": "¿Pasar por dos puntos o quedar cerca de los tres?"
+        },
+        "archivo": "comparar-tres-puntos.wav"
+      },
+      {
+        "id": "epsilon-punto-1",
+        "titulo": "Punto 1: real y predicho",
+        "texto": "El primer punto representa veinte artículos vendidos en el primer período. La recta predice dieciocho. El valor real es dos artículos mayor que el predicho, por eso el punto queda encima de la recta. La diferencia, valor real menos valor predicho, es más dos. Observa la flecha roja: muestra esa separación vertical.",
+        "punto": 0,
+        "archivo": "epsilon-punto-1.wav",
+        "ubicacion": {
+          "selector": "#epsilonPointAudio1",
+          "inside": true
+        }
+      },
+      {
+        "id": "epsilon-punto-2",
+        "titulo": "Punto 2: real y predicho",
+        "texto": "El segundo punto representa treinta artículos vendidos en el segundo período. La recta predice treinta y cinco. El valor real es cinco artículos menor que el predicho, por eso el punto queda debajo de la recta. La diferencia, valor real menos valor predicho, es menos cinco. Observa la flecha verde: muestra esa separación vertical.",
+        "punto": 1,
+        "archivo": "epsilon-punto-2.wav",
+        "ubicacion": {
+          "selector": "#epsilonPointAudio2",
+          "inside": true
+        }
+      },
+      {
+        "id": "epsilon-punto-3",
+        "titulo": "Punto 3: real y predicho",
+        "texto": "El tercer punto representa cincuenta y cinco artículos vendidos en el tercer período. La recta predice cincuenta y dos. El valor real es tres artículos mayor que el predicho, por eso el punto queda encima de la recta. La diferencia, valor real menos valor predicho, es más tres. Observa la flecha violeta: muestra esa separación vertical.",
+        "punto": 2,
+        "archivo": "epsilon-punto-3.wav",
+        "ubicacion": {
+          "selector": "#epsilonPointAudio3",
+          "inside": true
+        }
+      }
+    ],
+    "laboratorio": [
+      {
+        "id": "mover-puntos",
+        "titulo": "Qué observar al mover un punto",
+        "texto": "Arrastra un punto y observa cómo se mueve la recta. El ajuste tiene en cuenta todas las observaciones, así que un cambio puede modificar la pendiente, el intercepto y los residuos. Prueba con un punto alejado de los demás. Luego restaura los datos y compara. Las flechas verticales muestran las diferencias entre los valores observados y los que predice la recta.",
+        "ubicacion": {
+          "selector": "#labPlot",
+          "plot": true,
+          "before": true
+        },
+        "archivo": "mover-puntos.wav"
+      },
+      {
+        "id": "pendiente-intercepto",
+        "titulo": "Pendiente e intercepto",
+        "texto": "La letra eme representa la pendiente: cuánto cambia la respuesta estimada cuando equis aumenta una unidad. La letra be representa el intercepto: el valor que estima la recta cuando equis vale cero. Si cero queda fuera del rango observado, ese intercepto puede no tener una interpretación práctica. Activa la opción Mi recta para explorar qué ocurre al cambiar estos dos parámetros.",
+        "ubicacion": {
+          "heading": "Propón tu propia recta"
+        },
+        "archivo": "pendiente-intercepto.wav"
+      }
+    ],
+    "minimos": [
+      {
+        "id": "minimos",
+        "titulo": "Qué significa el mejor ajuste",
+        "texto": "La recta de mínimos cuadrados es la que deja la menor suma de cuadrados de los residuos verticales. Eso no significa que pase por todos los puntos, ni que garantice buenas predicciones futuras. Si hay al menos dos valores distintos de equis, podemos determinar una única pendiente y un único intercepto con este criterio. Después debemos revisar los residuos y el contexto.",
+        "ubicacion": {
+          "selector": ".formula",
+          "before": true
+        },
+        "archivo": "minimos.wav"
+      },
+      {
+        "id": "formulas",
+        "titulo": "Cómo usar las fórmulas",
+        "texto": "Primero calcula las medias y las sumas que aparecen en las fórmulas. Obtén la pendiente y después el intercepto. En palabras, be es la media de la respuesta menos la pendiente multiplicada por la media de equis. Comprueba que los valores de equis no sean todos iguales. La deducción explica de dónde salen estas expresiones, pero es opcional: lo necesario es saber aplicarlas.",
+        "ubicacion": {
+          "heading": "Las fórmulas que debes saber aplicar"
+        },
+        "archivo": "formulas.wav"
+      }
+    ],
+    "calculo": [
+      {
+        "id": "calculo",
+        "titulo": "Cómo leer la tabla de cálculo",
+        "texto": "Empieza con el ejemplo de tres puntos. En esta misma página puedes arrastrar los puntos verdes de la gráfica. Al moverlos, observa cómo cambian la recta, los segmentos rojos y la tabla. Cada fila corresponde a una observación. El residuo es el valor observado menos el valor estimado: es la diferencia vertical que muestra el segmento rojo. Sigue los pasos de abajo: medias, sumas centradas, pendiente, intercepto y suma de los errores al cuadrado. Cuando entiendas el proceso, prueba el botón para ampliar el ejemplo a seis puntos. Los botones también permiten restaurar los datos originales. La gráfica comparte los datos con el laboratorio.",
+        "ubicacion": {
+          "selector": ".tablewrap",
+          "before": true
+        },
+        "archivo": "calculo.wav"
+      }
+    ],
+    "calidad": [
+      {
+        "id": "media-referencia",
+        "titulo": "Qué representa la media",
+        "texto": "La media es el promedio de los valores observados. Sumamos las ventas de los tres períodos: veinte, treinta y cincuenta y cinco. Esa suma es ciento cinco. Al dividir entre tres, obtenemos treinta y cinco artículos. Este promedio no dice que todos los períodos tuvieron las mismas ventas. Nos da una referencia: si no usáramos una tendencia, podríamos estimar treinta y cinco artículos para cada período. En la gráfica, esa referencia es la línea horizontal azul.",
+        "ubicacion": {
+          "selector": "#meanExplanation"
+        },
+        "archivo": "media-referencia.wav"
+      },
+      {
+        "id": "variacion-total",
+        "titulo": "Qué mide la variación total",
+        "texto": "Mira los segmentos rojos de esta gráfica. Cada uno une una venta observada con la línea de la media. El primer dato está quince artículos por debajo de la media, el segundo está cinco por debajo y el tercero está veinte por encima. Si sumamos esas diferencias con sus signos, se cancelan. Por eso las elevamos al cuadrado y luego las sumamos: doscientos veinticinco, más veinticinco, más cuatrocientos, da seiscientos cincuenta. Esa es la suma de cuadrados total. Mide cuánto se dispersan todos los datos alrededor de la media. No mide el crecimiento entre períodos. Después compararemos esta cantidad con los errores de la recta, para ver cuánto mejora el ajuste frente a usar solamente el promedio.",
+        "ubicacion": {
+          "selector": "#totalVariationExplanation"
+        },
+        "archivo": "variacion-total.wav"
+      },
+      {
+        "id": "r-cuadrado",
+        "titulo": "Cómo interpretar erre al cuadrado",
+        "texto": "Ahora podemos comparar dos referencias: predecir siempre la media, o usar la recta ajustada. La suma de cuadrados total mide las diferencias respecto a la media. La suma de cuadrados del error mide las diferencias respecto a la recta. Erre al cuadrado indica qué proporción de esa variación total explica el ajuste. Por ejemplo, cero coma ochenta y cinco corresponde al ochenta y cinco por ciento de la variación observada alrededor de la media. No significa que el ochenta y cinco por ciento de las predicciones sean correctas. Para evaluar el modelo, también revisa los residuos.",
+        "ubicacion": {
+          "heading": "Interpretar R² y r"
+        },
+        "archivo": "r-cuadrado.wav"
+      },
+      {
+        "id": "residuos",
+        "titulo": "Qué buscar en la gráfica de residuos",
+        "texto": "Una nube de residuos alrededor de cero, sin un patrón claro, es compatible con una relación lineal. Si aparece una curva, la recta puede estar dejando una parte de la relación sin describir. Un embudo sugiere que la dispersión cambia. Un punto aislado merece una revisión, pero no debes borrarlo solo para mejorar el ajuste. Comprueba cómo se obtuvo el dato y qué representa.",
+        "ubicacion": {
+          "heading": "Observa los residuos de tu laboratorio"
+        },
+        "archivo": "residuos.wav"
+      },
+      {
+        "id": "medidas-error",
+        "titulo": "Error y dirección de la relación",
+        "texto": "La correlación, que representamos con la letra erre, indica el sentido de la relación lineal: positivo si crece y negativo si decrece. Erre al cuadrado no conserva ese signo. La raíz del error cuadrático medio resume el tamaño de los residuos en las unidades de la respuesta. La estimación de la desviación del error usa otro divisor, porque la recta tiene dos parámetros estimados. Son medidas distintas.",
+        "ubicacion": {
+          "heading": "Error en las unidades originales"
+        },
+        "archivo": "medidas-error.wav"
+      }
+    ],
+    "ejemplos": [
+      {
+        "id": "ejemplos",
+        "titulo": "Cómo trabajar los ejemplos resueltos",
+        "texto": "Trabaja estos ejemplos en orden: primero cuatro puntos, después seis, siete y nueve. Identifica las variables y la pregunta. En cada solución se muestra cómo calcular las medias, las diferencias centradas, la pendiente, el intercepto, las predicciones y los errores. Sigue las operaciones de cada fila y las sustituciones de las fórmulas. Los cálculos conservan más decimales que los que ves en pantalla. Al final, intenta el reto con datos nuevos. Escribe tus ocho resultados y usa el botón de comprobación para recibir indicaciones. Después de completar un intento, podrás consultar la resolución completa.",
+        "ubicacion": {
+          "selector": "#exampleCards",
+          "before": true
+        },
+        "archivo": "ejemplos.wav"
+      }
+    ],
+    "formas": [
+      {
+        "id": "modelos-no-lineales",
+        "titulo": "Cuándo necesitamos una curva",
+        "texto": "Una recta supone que la respuesta cambia siempre en la misma cantidad cuando la variable explicativa aumenta una unidad. En muchos fenómenos, ese cambio se acelera, se vuelve más lento, cambia de dirección o se aproxima a un límite. Entonces podemos usar un modelo curvo. La curva busca representar la tendencia, no pasar por todos los puntos. Su forma debe tener sentido en el contexto, y siempre debemos revisar los errores. En estas gráficas puedes mover los parámetros y comparar la curva azul con la forma inicial en gris. Todavía no son ajustes a datos: son exploradores para comprender las fórmulas.",
+        "ubicacion": {
+          "selector": "#nonlinearIntro"
+        },
+        "archivo": "modelos-no-lineales.wav"
+      },
+      {
+        "id": "modelo-quadratic",
+        "titulo": "Cómo cambia la parábola",
+        "texto": "La curva cuadrática es una parábola. En este explorador puedes cambiar su apertura y la posición del vértice. Una apertura positiva produce un mínimo; una negativa produce un máximo. Cambia la posición horizontal para moverla a los lados y la altura para moverla arriba o abajo. La curva es no lineal respecto a la variable explicativa, pero sus coeficientes en la forma general se estiman mediante un ajuste lineal por mínimos cuadrados.",
+        "ubicacion": {
+          "selector": "#modelIntro-quadratic"
+        },
+        "archivo": "modelo-quadratic.wav"
+      },
+      {
+        "id": "modelo-exp",
+        "titulo": "Cómo funciona la exponencial",
+        "texto": "La exponencial describe un cambio proporcional. Al aumentar una unidad la variable explicativa, la respuesta se multiplica por el mismo factor. El parámetro de escala fija la respuesta inicial. Una tasa positiva hace que crezca cada vez más rápido; una negativa produce una disminución hacia cero. Observa los valores para dos y cuatro, y compara la curva con la referencia gris. Para ajustar este modelo mediante una recta, se toma el logaritmo de la respuesta.",
+        "ubicacion": {
+          "selector": "#modelIntro-exp"
+        },
+        "archivo": "modelo-exp.wav"
+      },
+      {
+        "id": "modelo-power",
+        "titulo": "Cómo funciona una potencia",
+        "texto": "En una potencia, el exponente controla la forma. Entre cero y uno, la respuesta aumenta cada vez más despacio. Por encima de uno, aumenta cada vez más rápido. Si es uno, aparece una recta por el origen; si es negativo, la respuesta disminuye. El parámetro de escala indica el valor de la respuesta cuando la entrada vale uno. Observa también el factor que aparece al duplicar la entrada. Para linealizar, se toman los logaritmos de ambas variables.",
+        "ubicacion": {
+          "selector": "#modelIntro-power"
+        },
+        "archivo": "modelo-power.wav"
+      },
+      {
+        "id": "modelo-log",
+        "titulo": "Cómo funciona el logaritmo",
+        "texto": "Con intensidad positiva, la curva logarítmica aumenta rápido al principio y luego cada vez más despacio. No tiene un máximo finito: sigue creciendo, aunque lentamente. Con intensidad negativa, disminuye. El segundo parámetro cambia la ubicación del cruce con cero. El argumento del logaritmo debe ser positivo. Para ajustar este modelo con una recta, se transforma la variable explicativa mediante su logaritmo y se conserva la respuesta.",
+        "ubicacion": {
+          "selector": "#modelIntro-log"
+        },
+        "archivo": "modelo-log.wav"
+      },
+      {
+        "id": "modelo-growth",
+        "titulo": "Cómo funciona la saturación",
+        "texto": "La saturación describe un crecimiento que se aproxima a un límite. La línea naranja señala ese límite. El punto naranja indica dónde se alcanza la mitad. Aumenta el segundo parámetro y observa que se necesita una entrada mayor para llegar a esa mitad. Aquí usamos parámetros positivos. Es posible ajustar una recta con los recíprocos de las dos variables, pero esa transformación cambia la forma en que se miden los errores.",
+        "ubicacion": {
+          "selector": "#modelIntro-growth"
+        },
+        "archivo": "modelo-growth.wav"
+      },
+      {
+        "id": "formas",
+        "titulo": "Cómo reconocer el tipo de relación",
+        "texto": "Observa la forma general de la nube. Una tendencia con cambio aproximadamente constante puede describirse con una recta. Si la rapidez del cambio aumenta, disminuye o se acerca a un límite, considera una curva. Usa el selector para comparar las formas. Una función que pasa por todos los puntos puede oscilar mucho entre ellos. Ajustar mejor los datos conocidos no garantiza predecir mejor datos nuevos.",
+        "ubicacion": {
+          "selector": "#shapePlot",
+          "plot": true,
+          "before": true
+        },
+        "archivo": "formas.wav"
+      },
+      {
+        "id": "cuadratico",
+        "titulo": "Qué tiene de lineal un modelo cuadrático",
+        "texto": "Un modelo cuadrático dibuja una curva porque incluye equis al cuadrado. Sin embargo, sus coeficientes aparecen de forma lineal. Podemos ajustarlos por mínimos cuadrados usando columnas con uno, equis y equis al cuadrado. No necesitamos transformar la respuesta. Añadir términos puede reducir el error del ajuste, pero conviene comprobar si esa complejidad describe el fenómeno y ayuda a predecir nuevas observaciones.",
+        "ubicacion": {
+          "heading": "Regresión cuadrática"
+        },
+        "archivo": "cuadratico.wav"
+      }
+    ],
+    "linealizacion": [
+      {
+        "id": "transformar",
+        "titulo": "Qué hacemos al linealizar",
+        "texto": "Linealizar consiste en cambiar las variables para expresar un modelo curvo como una recta. Primero eliges la transformación, luego ajustas la recta con las variables nuevas y finalmente recuperas los parámetros del modelo original. Revisa las condiciones de cada fila de la tabla. Debes saber aplicar estos pasos; las deducciones que explican por qué funcionan son opcionales.",
+        "ubicacion": {
+          "selector": ".required-note",
+          "before": true
+        },
+        "archivo": "transformar.wav"
+      },
+      {
+        "id": "logaritmos",
+        "titulo": "Exponenciales y potencias",
+        "texto": "Para el modelo exponencial, usamos el logaritmo natural de la respuesta y conservamos equis. Para el modelo de potencias, usamos el logaritmo natural de ambas variables. Los valores a los que aplicamos el logaritmo deben ser positivos. Tras ajustar la recta, recuperamos los parámetros siguiendo la tabla. Mantén la misma base de logaritmo durante todo el procedimiento.",
+        "ubicacion": {
+          "heading": "Modelos exponenciales y de potencias"
+        },
+        "archivo": "logaritmos.wav"
+      },
+      {
+        "id": "otras-transformaciones",
+        "titulo": "Logaritmos y saturación",
+        "texto": "En el modelo logarítmico, transformamos equis mediante su logaritmo natural y conservamos la respuesta. En el modelo de saturación, trabajamos con los inversos de ambas variables, por lo que los datos no pueden ser cero. Después recuperamos los parámetros y revisamos las condiciones del modelo. Recuerda que la transformación cambia el error que minimizamos: el mejor ajuste transformado no necesariamente es el mejor en las unidades originales.",
+        "ubicacion": {
+          "heading": "Modelos logarítmicos y de saturación"
+        },
+        "archivo": "otras-transformaciones.wav"
+      },
+      {
+        "id": "caso-linealizacion-0",
+        "titulo": "Observa las ventas",
+        "texto": "Mira los seis puntos observados de esta campaña. Las ventas aumentan, pero no suman la misma cantidad cada día. Los aumentos son cada vez mayores y las razones entre ventas consecutivas están cerca de uno coma cinco. La hipótesis es un crecimiento aproximadamente proporcional. Antes de buscar una fórmula, decide qué comportamiento sugieren los datos.",
+        "ubicacion": {
+          "selector": "#guidedAudio0",
+          "inside": true
+        },
+        "archivo": "caso-linealizacion-0.wav"
+      },
+      {
+        "id": "caso-linealizacion-1",
+        "titulo": "Compara los modelos",
+        "texto": "Selecciona un modelo y mira cómo se dibuja sobre los mismos puntos. La tabla compara los cuadrados de los errores en las ventas originales. Aquí la exponencial tiene el menor error de las alternativas calculadas y coincide con la hipótesis de crecimiento por un factor. Una buena elección combina el ajuste con el contexto; no demuestra una ley única ni garantiza el futuro.",
+        "ubicacion": {
+          "selector": "#guidedAudio1",
+          "inside": true
+        },
+        "archivo": "caso-linealizacion-1.wav"
+      },
+      {
+        "id": "caso-linealizacion-2",
+        "titulo": "Anticipa la transformación",
+        "texto": "Queremos convertir la exponencial en una recta en otra escala. Todas las ventas son positivas. Piensa qué variable debe cambiar mediante un logaritmo y cuál puede conservarse. Después anticipa la forma de la nueva nube. Los datos tienen pequeñas desviaciones, así que una transformación no los vuelve perfectos.",
+        "ubicacion": {
+          "selector": "#guidedAudio2",
+          "inside": true
+        },
+        "archivo": "caso-linealizacion-2.wav"
+      },
+      {
+        "id": "caso-linealizacion-3",
+        "titulo": "Mira los puntos linealizados",
+        "texto": "A la izquierda ves las ventas originales. A la derecha conservamos el día y usamos el logaritmo natural de cada venta. Los nuevos puntos quedan casi alineados. Calcula el valor que falta para la venta de veintitrés artículos. Usa el logaritmo natural de tu calculadora. Esa nueva coordenada nos permite trabajar con una recta.",
+        "ubicacion": {
+          "selector": "#guidedAudio3",
+          "inside": true
+        },
+        "archivo": "caso-linealizacion-3.wav"
+      },
+      {
+        "id": "caso-linealizacion-4",
+        "titulo": "Calcula la nueva recta",
+        "texto": "Aplica ahora los mismos mínimos cuadrados que ya conoces. Usa las medias y las sumas centradas de la tabla. Divide la suma de productos centrados entre la suma de cuadrados para obtener la pendiente. Para el intercepto, resta a la media de las respuestas transformadas la pendiente por la media de los días. Escribe los dos resultados y dibuja tu recta antes de comprobarla.",
+        "ubicacion": {
+          "selector": "#guidedAudio4",
+          "inside": true
+        },
+        "archivo": "caso-linealizacion-4.wav"
+      },
+      {
+        "id": "caso-linealizacion-5",
+        "titulo": "Recupera las constantes",
+        "texto": "La pendiente de la nueva recta coincide con la tasa de la exponencial. El intercepto, en cambio, es el logaritmo de la escala inicial. Para recuperar esa escala, calcula la exponencial del intercepto. No confundas el intercepto con la constante original. Elige la regla correcta y calcula las dos constantes.",
+        "ubicacion": {
+          "selector": "#guidedAudio5",
+          "inside": true
+        },
+        "archivo": "caso-linealizacion-5.wav"
+      },
+      {
+        "id": "caso-linealizacion-6",
+        "titulo": "Predice y decide qué significa",
+        "texto": "Ya tenemos el modelo en la escala original. Sustituye el séptimo día en la exponencial y calcula las ventas estimadas. Conserva decimales durante el cálculo. El día siete está fuera de los seis días observados. Por eso esta respuesta es una extrapolación que supone que la tendencia se mantiene; no es una venta ya ocurrida ni una garantía.",
+        "ubicacion": {
+          "selector": "#guidedAudio6",
+          "inside": true
+        },
+        "archivo": "caso-linealizacion-6.wav"
+      },
+      {
+        "id": "caso-linealizacion-7",
+        "titulo": "Relaciona todas las etapas",
+        "texto": "Observaste una curva, comparaste modelos, transformaste las ventas, ajustaste una recta y recuperaste las constantes. Las dos gráficas muestran el mismo proceso en escalas diferentes. Los puntos no quedan exactamente sobre las funciones porque son observaciones con pequeñas desviaciones. Ajustamos los errores de los logaritmos, pero interpretamos las predicciones y sus residuos en artículos. La estimación del séptimo día es cercana a ciento quince artículos.",
+        "ubicacion": {
+          "selector": "#guidedAudio7",
+          "inside": true
+        },
+        "archivo": "caso-linealizacion-7.wav"
+      }
+    ],
+    "comparador": [
+      {
+        "id": "comparador",
+        "titulo": "Cómo comparar modelos con justicia",
+        "texto": "El comparador usa los mismos puntos del laboratorio. Cambia el modelo y observa tanto la gráfica original como la transformada. Compara los errores calculados en las mismas unidades originales. No compares directamente un indicador calculado con logaritmos con otro calculado sin transformar. Además de las cifras, revisa los residuos, las condiciones de uso y el sentido de la curva. Un ajuste mejor no basta por sí solo para elegir.",
+        "ubicacion": {
+          "selector": ".toolbar",
+          "before": true
+        },
+        "archivo": "comparador.wav"
+      }
+    ],
+    "prediccion": [
+      {
+        "id": "prediccion",
+        "titulo": "Qué podemos afirmar al predecir",
+        "texto": "Dentro del rango observado, una estimación suele tener más respaldo de los datos. Fuera de ese rango, extrapolamos: suponemos que la relación continúa. Cuanto más nos alejamos, más importante es revisar esa suposición. Una predicción es una estimación con incertidumbre, no una promesa. Al comunicarla, indica las unidades, el modelo y si el valor consultado está dentro o fuera del rango conocido.",
+        "ubicacion": {
+          "selector": ".grid2",
+          "before": true
+        },
+        "archivo": "prediccion.wav"
+      }
+    ],
+    "actividades": [
+      {
+        "id": "actividades",
+        "titulo": "Cómo resolver las actividades",
+        "texto": "En las actividades, combina cálculo e interpretación. Primero explora los puntos, después calcula una recta y finalmente compara modelos y revisa una predicción imposible. Usa las pistas cuando las necesites y explica tus decisiones con tus propias palabras. En la autoevaluación, lee la retroalimentación y vuelve a intentarlo si hace falta. Comprender por qué una respuesta es correcta vale más que memorizarla.",
+        "ubicacion": {
+          "selector": ".exercise",
+          "before": true
+        },
+        "archivo": "actividades.wav"
+      }
+    ],
+    "referencia": [
+      {
+        "id": "referencia",
+        "titulo": "Cómo usar la hoja de referencia",
+        "texto": "Esta hoja reúne las fórmulas principales para que puedas consultarlas al resolver un problema. Antes de sustituir números, identifica qué quieres calcular y verifica las condiciones de la fórmula. Después revisa las unidades y el significado del resultado. Para una recta, necesitas la pendiente y el intercepto; para evaluar el ajuste, revisa también los residuos. Vuelve al laboratorio si quieres comprobar tu interpretación con una gráfica.",
+        "ubicacion": {
+          "selector": ".tablewrap",
+          "before": true
+        },
+        "archivo": "referencia.wav"
+      }
+    ],
+    "deduccion-minimos": [
+      {
+        "id": "deduccion-paso-1",
+        "titulo": "Definir el objetivo",
+        "texto": "Los datos son fijos. Lo que elegimos es la pendiente, llamada eme, y el intercepto, llamado be. Cada residuo es el valor observado menos el valor que predice la recta. Elevamos los residuos al cuadrado y los sumamos. Queremos encontrar los dos parámetros que hagan mínima esa suma. Para obtener una recta única, necesitamos al menos dos valores de entrada distintos.",
+        "archivo": "deduccion-paso-1.wav",
+        "ubicacion": {
+          "selector": "#derivationStep1"
+        }
+      },
+      {
+        "id": "deduccion-paso-2",
+        "titulo": "Derivar respecto al intercepto",
+        "texto": "Para derivar respecto al intercepto, mantenemos fija la pendiente. El residuo contiene menos be, así que su derivada es menos uno. Aplicamos la regla de la cadena: dos veces el residuo, multiplicado por menos uno. Al sumar e igualar a cero, obtenemos que la suma de los residuos debe ser cero. Esta es nuestra primera condición.",
+        "archivo": "deduccion-paso-2.wav",
+        "ubicacion": {
+          "selector": "#derivationStep2"
+        }
+      },
+      {
+        "id": "deduccion-paso-3",
+        "titulo": "Derivar respecto a la pendiente",
+        "texto": "Ahora mantenemos fijo el intercepto y cambiamos la pendiente. El residuo contiene menos eme por equis, por eso su derivada respecto a eme es menos equis. La regla de la cadena produce menos dos por equis por el residuo. Sumamos esos términos e igualamos a cero. La segunda condición exige que la suma de equis por cada residuo sea cero.",
+        "archivo": "deduccion-paso-3.wav",
+        "ubicacion": {
+          "selector": "#derivationStep3"
+        }
+      },
+      {
+        "id": "deduccion-paso-4",
+        "titulo": "Ordenar las ecuaciones",
+        "texto": "Expandimos las dos condiciones y distribuimos las sumas. La pendiente y el intercepto son los mismos para todas las observaciones, así que salen de las sumatorias. El intercepto aparece una vez por dato: sumarlo da ene por be. Ordenamos los términos y obtenemos dos ecuaciones con dos incógnitas. Se llaman ecuaciones normales.",
+        "archivo": "deduccion-paso-4.wav",
+        "ubicacion": {
+          "selector": "#derivationStep4"
+        }
+      },
+      {
+        "id": "deduccion-paso-5",
+        "titulo": "Despejar el intercepto",
+        "texto": "En la primera ecuación, dejamos el intercepto solo y dividimos entre el número de observaciones. Las sumas divididas entre ese número son las medias. Por tanto, be es la media de la respuesta menos la pendiente por la media de equis. Esta igualdad también muestra que la recta pasa por el punto formado por las dos medias: el centroide.",
+        "archivo": "deduccion-paso-5.wav",
+        "ubicacion": {
+          "selector": "#derivationStep5"
+        }
+      },
+      {
+        "id": "deduccion-paso-6",
+        "titulo": "Obtener la pendiente",
+        "texto": "Sustituimos la expresión del intercepto en la segunda ecuación. Agrupamos los términos que contienen eme y pasamos los demás al otro lado. Luego reemplazamos las medias por sus sumas divididas entre ene y despejamos la pendiente. Multiplicar el numerador y el denominador por ene nos da la fórmula habitual. Después usamos esa pendiente para calcular el intercepto.",
+        "archivo": "deduccion-paso-6.wav",
+        "ubicacion": {
+          "selector": "#derivationStep6"
+        }
+      },
+      {
+        "id": "deduccion-paso-7",
+        "titulo": "La forma centrada",
+        "texto": "También podemos escribir las fórmulas usando diferencias respecto a las medias. Al expandir los cuadrados y los productos, obtenemos el mismo denominador y el mismo numerador de antes. La pendiente es la suma de los productos de las diferencias, dividida entre la suma de cuadrados de las diferencias de equis. Ese denominador es positivo cuando los valores de entrada no son todos iguales.",
+        "archivo": "deduccion-paso-7.wav",
+        "ubicacion": {
+          "selector": "#derivationStep7"
+        }
+      },
+      {
+        "id": "deduccion-paso-8",
+        "titulo": "Por qué es el mínimo",
+        "texto": "Las derivadas iguales a cero nos dieron un candidato. Ahora comprobamos el mínimo. Si cambiamos su pendiente o su intercepto, la nueva suma de cuadrados es la anterior más otra suma de cuadrados. Los términos cruzados desaparecen por las ecuaciones normales. Como no añadimos una cantidad negativa, ninguna recta puede mejorar el resultado. Con dos valores de entrada distintos, el mínimo es único.",
+        "archivo": "deduccion-paso-8.wav",
+        "ubicacion": {
+          "selector": "#derivationStep8"
+        }
+      },
+      {
+        "id": "deduccion-paso-9",
+        "titulo": "Aplicar a las ventas",
+        "texto": "Para las ventas de veinte, treinta y cincuenta y cinco artículos, calculamos las sumas y aplicamos las fórmulas. La pendiente es diecisiete coma cinco y el intercepto es cero. Los residuos son dos coma cinco, menos cinco y dos coma cinco. Sus cuadrados suman treinta y siete coma cinco, un poco menos que los treinta y ocho de la recta de prueba. Este ajuste estima setenta artículos para el cuarto período.",
+        "archivo": "deduccion-paso-9.wav",
+        "ubicacion": {
+          "selector": "#derivationStep9"
+        }
+      },
+      {
+        "id": "deduccion-paso-10",
+        "titulo": "Condiciones y regreso",
+        "texto": "Antes de dividir, comprueba que la suma de cuadrados de las diferencias de equis sea positiva. Si todas las entradas son iguales, no puedes separar una pendiente y un intercepto únicos. Recuerda que esta deducción es opcional. Lo necesario es aplicar las fórmulas, interpretar las unidades y revisar los residuos. El botón del final te devuelve al punto donde abriste esta explicación.",
+        "archivo": "deduccion-paso-10.wav",
+        "ubicacion": {
+          "selector": "#derivationStep10"
+        }
+      }
+    ]
+  },
+  "voces": [
+    {
+      "id": "pablo",
+      "nombre": "Pablo · masculina",
+      "voz": "Microsoft Pablo",
+      "carpeta": "pablo"
+    },
+    {
+      "id": "laura",
+      "nombre": "Laura · femenina",
+      "voz": "Microsoft Laura",
+      "carpeta": ""
+    }
+  ]
+}
