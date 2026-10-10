@@ -213,7 +213,7 @@
       {
         "id": "modelos-no-lineales",
         "titulo": "Cuándo necesitamos una curva",
-        "texto": "Una recta supone que la respuesta cambia siempre en la misma cantidad cuando la variable explicativa aumenta una unidad. En muchos fenómenos, ese cambio se acelera, se vuelve más lento, cambia de dirección o se aproxima a un límite. Entonces podemos usar un modelo curvo. La curva busca representar la tendencia, no pasar por todos los puntos. Su forma debe tener sentido en el contexto, y siempre debemos revisar los errores. En estas gráficas puedes mover los parámetros y comparar la curva azul con la forma inicial en gris. Todavía no son ajustes a datos: son exploradores para comprender las fórmulas.",
+        "texto": "En esta actividad vas a decidir visualmente si una curva puede representar una nube de puntos. Elige una de las nubes disponibles y mueve los deslizadores. La curva azul es tu propuesta; los puntos verdes son los datos observados. No necesitas hacer que la curva pase por todos los puntos. Busca una forma que quede cerca del conjunto y que tenga sentido para el comportamiento que ves.",
         "ubicacion": {
           "selector": "#nonlinearIntro"
         },
@@ -222,7 +222,7 @@
       {
         "id": "modelo-quadratic",
         "titulo": "Cómo cambia la parábola",
-        "texto": "La curva cuadrática es una parábola. En este explorador puedes cambiar su apertura y la posición del vértice. Una apertura positiva produce un mínimo; una negativa produce un máximo. Cambia la posición horizontal para moverla a los lados y la altura para moverla arriba o abajo. La curva es no lineal respecto a la variable explicativa, pero sus coeficientes en la forma general se estiman mediante un ajuste lineal por mínimos cuadrados.",
+        "texto": "Prueba las tres nubes cuadráticas. En la primera, los puntos bajan y luego suben; en la segunda, suben y luego bajan. Mueve la apertura, la posición horizontal y la altura de la curva azul. Observa si puedes acercarla a los puntos sin intentar pasar exactamente por todos. La posición más baja o más alta de la parábola es el vértice.",
         "ubicacion": {
           "selector": "#modelIntro-quadratic"
         },
@@ -231,7 +231,7 @@
       {
         "id": "modelo-exp",
         "titulo": "Cómo funciona la exponencial",
-        "texto": "La exponencial describe un cambio proporcional. Al aumentar una unidad la variable explicativa, la respuesta se multiplica por el mismo factor. El parámetro de escala fija la respuesta inicial. Una tasa positiva hace que crezca cada vez más rápido; una negativa produce una disminución hacia cero. Observa los valores para dos y cuatro, y compara la curva con la referencia gris. Para ajustar este modelo mediante una recta, se toma el logaritmo de la respuesta.",
+        "texto": "Elige entre crecimiento acelerado, crecimiento suave y disminución proporcional. Mueve los dos deslizadores hasta que la curva azul siga la nube de puntos. En las dos primeras nubes la curva debe crecer; en la tercera debe bajar. Compara las separaciones verticales y observa cómo cambia la suma de sus cuadrados al acercar la curva a los datos.",
         "ubicacion": {
           "selector": "#modelIntro-exp"
         },
@@ -240,7 +240,7 @@
       {
         "id": "modelo-power",
         "titulo": "Cómo funciona una potencia",
-        "texto": "En una potencia, el exponente controla la forma. Entre cero y uno, la respuesta aumenta cada vez más despacio. Por encima de uno, aumenta cada vez más rápido. Si es uno, aparece una recta por el origen; si es negativo, la respuesta disminuye. El parámetro de escala indica el valor de la respuesta cuando la entrada vale uno. Observa también el factor que aparece al duplicar la entrada. Para linealizar, se toman los logaritmos de ambas variables.",
+        "texto": "En estas nubes de puntos, compara tres posibilidades: crecimiento cada vez más lento, crecimiento cada vez más rápido y relación decreciente. Cambia los deslizadores y mira cómo se adapta la curva azul. Pregúntate cuál de las tres formas se parece más a cada nube antes de buscar una fórmula o hacer un cálculo.",
         "ubicacion": {
           "selector": "#modelIntro-power"
         },
@@ -249,7 +249,7 @@
       {
         "id": "modelo-log",
         "titulo": "Cómo funciona el logaritmo",
-        "texto": "Con intensidad positiva, la curva logarítmica aumenta rápido al principio y luego cada vez más despacio. No tiene un máximo finito: sigue creciendo, aunque lentamente. Con intensidad negativa, disminuye. El segundo parámetro cambia la ubicación del cruce con cero. El argumento del logaritmo debe ser positivo. Para ajustar este modelo con una recta, se transforma la variable explicativa mediante su logaritmo y se conserva la respuesta.",
+        "texto": "Selecciona una nube logarítmica y trata de ajustar la curva azul. En algunas, los puntos aumentan mucho al inicio y luego se separan cada vez menos. En otra, disminuyen. Mueve los deslizadores y compara el resultado con la nube completa. La forma visual, no un solo punto, es la que ayuda a reconocer este modelo.",
         "ubicacion": {
           "selector": "#modelIntro-log"
         },
@@ -258,7 +258,7 @@
       {
         "id": "modelo-growth",
         "titulo": "Cómo funciona la saturación",
-        "texto": "La saturación describe un crecimiento que se aproxima a un límite. La línea naranja señala ese límite. El punto naranja indica dónde se alcanza la mitad. Aumenta el segundo parámetro y observa que se necesita una entrada mayor para llegar a esa mitad. Aquí usamos parámetros positivos. Es posible ajustar una recta con los recíprocos de las dos variables, pero esa transformación cambia la forma en que se miden los errores.",
+        "texto": "Prueba las nubes de saturación. Todas crecen, pero sus puntos sugieren que el aumento se va frenando cerca de un límite. Ajusta la curva azul y observa la línea naranja. Cambia de nube para comparar una que se acerca pronto al límite, otra que se acerca lentamente y otra con un límite mayor.",
         "ubicacion": {
           "selector": "#modelIntro-growth"
         },
@@ -267,7 +267,7 @@
       {
         "id": "formas",
         "titulo": "Cómo reconocer el tipo de relación",
-        "texto": "Observa la forma general de la nube. Una tendencia con cambio aproximadamente constante puede describirse con una recta. Si la rapidez del cambio aumenta, disminuye o se acerca a un límite, considera una curva. Usa el selector para comparar las formas. Una función que pasa por todos los puntos puede oscilar mucho entre ellos. Ajustar mejor los datos conocidos no garantiza predecir mejor datos nuevos.",
+        "texto": "Observa estas nubes de puntos como un primer diagnóstico. La curva azul solo es una hipótesis de forma. Cambia el selector y mira si la nube tiene un mínimo, un máximo, un crecimiento acelerado, un crecimiento que se frena o una aproximación a un límite. Después usa los exploradores de abajo para ajustar cada familia de curvas con los deslizadores.",
         "ubicacion": {
           "selector": "#shapePlot",
           "plot": true,
@@ -289,7 +289,7 @@
       {
         "id": "transformar",
         "titulo": "Qué hacemos al linealizar",
-        "texto": "Linealizar consiste en cambiar las variables para expresar un modelo curvo como una recta. Primero eliges la transformación, luego ajustas la recta con las variables nuevas y finalmente recuperas los parámetros del modelo original. Revisa las condiciones de cada fila de la tabla. Debes saber aplicar estos pasos; las deducciones que explican por qué funcionan son opcionales.",
+        "texto": "Linealizar consiste en definir nuevas variables para expresar un modelo curvo como una recta. En el modelo cuadrático usamos la forma de vértice: y igual a a por equis menos h, todo al cuadrado, más k. Al tomar equis mayúscula igual a equis menos h, todo al cuadrado, e ye mayúscula igual a ye menos k, obtenemos ye mayúscula igual a a por equis mayúscula. Después aplicamos las fórmulas de regresión lineal que ya conoces. Los demás modelos usan las transformaciones de la tabla.",
         "ubicacion": {
           "selector": ".required-note",
           "before": true
