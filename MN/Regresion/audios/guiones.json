@@ -26,7 +26,7 @@
       {
         "id": "epsilon",
         "titulo": "Qué representa cada error",
-        "texto": "Mira la flecha vertical de cada punto. Compara las ventas observadas con la altura de la recta de referencia en el mismo período. En el primero, la separación es de dos artículos hacia arriba; en el segundo, de cinco hacia abajo; y en el tercero, de tres hacia arriba. En este ejemplo simulado, épsilon representa el error respecto a una respuesta media conocida. Frente a una recta estimada, llamamos residuo a esa diferencia.",
+        "texto": "Mira el segmento vertical de cada punto. Compara las ventas observadas con la altura de la recta de referencia en el mismo período. A esa diferencia la llamamos residuo y la representamos con la letra e, seguida del subíndice que identifica el punto. Siempre restamos el valor predicho al valor observado. En el primer período, el residuo es dos artículos; en el segundo, menos cinco; y en el tercero, tres. Es positivo si el punto está por encima de la recta y negativo si está por debajo. Al ajustar la recta, buscamos que la suma de los cuadrados de todos los residuos sea lo más pequeña posible.",
         "ubicacion": {
           "selector": "#epsilonPlot",
           "plot": true,
@@ -55,7 +55,7 @@
       {
         "id": "epsilon-punto-1",
         "titulo": "Punto 1: real y predicho",
-        "texto": "El primer punto representa veinte artículos vendidos en el primer período. La recta predice dieciocho. El valor real es dos artículos mayor que el predicho, por eso el punto queda encima de la recta. La diferencia, valor real menos valor predicho, es más dos. Observa la flecha roja: muestra esa separación vertical.",
+        "texto": "El primer punto representa veinte artículos vendidos en el primer período. La recta predice dieciocho. El valor real es dos artículos mayor que el predicho, por eso el punto queda encima de la recta. La diferencia, valor real menos valor predicho, es más dos. Observa el segmento rojo: muestra esa separación vertical.",
         "punto": 0,
         "archivo": "epsilon-punto-1.wav",
         "ubicacion": {
@@ -66,7 +66,7 @@
       {
         "id": "epsilon-punto-2",
         "titulo": "Punto 2: real y predicho",
-        "texto": "El segundo punto representa treinta artículos vendidos en el segundo período. La recta predice treinta y cinco. El valor real es cinco artículos menor que el predicho, por eso el punto queda debajo de la recta. La diferencia, valor real menos valor predicho, es menos cinco. Observa la flecha verde: muestra esa separación vertical.",
+        "texto": "El segundo punto representa treinta artículos vendidos en el segundo período. La recta predice treinta y cinco. El valor real es cinco artículos menor que el predicho, por eso el punto queda debajo de la recta. La diferencia, valor real menos valor predicho, es menos cinco. Observa el segmento verde: muestra esa separación vertical.",
         "punto": 1,
         "archivo": "epsilon-punto-2.wav",
         "ubicacion": {
@@ -77,7 +77,7 @@
       {
         "id": "epsilon-punto-3",
         "titulo": "Punto 3: real y predicho",
-        "texto": "El tercer punto representa cincuenta y cinco artículos vendidos en el tercer período. La recta predice cincuenta y dos. El valor real es tres artículos mayor que el predicho, por eso el punto queda encima de la recta. La diferencia, valor real menos valor predicho, es más tres. Observa la flecha violeta: muestra esa separación vertical.",
+        "texto": "El tercer punto representa cincuenta y cinco artículos vendidos en el tercer período. La recta predice cincuenta y dos. El valor real es tres artículos mayor que el predicho, por eso el punto queda encima de la recta. La diferencia, valor real menos valor predicho, es más tres. Observa el segmento violeta: muestra esa separación vertical.",
         "punto": 2,
         "archivo": "epsilon-punto-3.wav",
         "ubicacion": {
@@ -122,7 +122,7 @@
       {
         "id": "formulas",
         "titulo": "Cómo usar las fórmulas",
-        "texto": "Primero calcula las medias y las sumas que aparecen en las fórmulas. Obtén la pendiente y después el intercepto. En palabras, be es la media de la respuesta menos la pendiente multiplicada por la media de equis. Comprueba que los valores de equis no sean todos iguales. La deducción explica de dónde salen estas expresiones, pero es opcional: lo necesario es saber aplicarlas.",
+        "texto": "Primero organiza una columna con las entradas, otra con las respuestas, otra con los cuadrados de las entradas y otra con los productos de cada entrada por su respuesta. Suma cada columna. En la fórmula de la pendiente, multiplica el número de datos por la suma de productos y resta el producto de las sumas de las dos variables. Divide entre el número de datos por la suma de cuadrados, menos el cuadrado de la suma de las entradas. Para el intercepto, resta a la suma de las respuestas la pendiente por la suma de las entradas y divide entre el número de datos. Comprueba que el denominador de la pendiente sea positivo. La deducción es opcional; lo necesario es saber aplicar estas fórmulas.",
         "ubicacion": {
           "heading": "Las fórmulas que debes saber aplicar"
         },
@@ -133,7 +133,7 @@
       {
         "id": "calculo",
         "titulo": "Cómo leer la tabla de cálculo",
-        "texto": "Empieza con el ejemplo de tres puntos. En esta misma página puedes arrastrar los puntos verdes de la gráfica. Al moverlos, observa cómo cambian la recta, los segmentos rojos y la tabla. Cada fila corresponde a una observación. El residuo es el valor observado menos el valor estimado: es la diferencia vertical que muestra el segmento rojo. Sigue los pasos de abajo: medias, sumas centradas, pendiente, intercepto y suma de los errores al cuadrado. Cuando entiendas el proceso, prueba el botón para ampliar el ejemplo a seis puntos. Los botones también permiten restaurar los datos originales. La gráfica comparte los datos con el laboratorio.",
+        "texto": "Empieza con el ejemplo de tres puntos. En esta misma página puedes arrastrar los puntos verdes de la gráfica. Al moverlos, observa cómo cambian la recta, los segmentos rojos y la tabla. Cada fila corresponde a una observación. El residuo es el valor observado menos el valor estimado: es la diferencia vertical que muestra el segmento rojo. Sigue los pasos de abajo: sumas de las cuatro columnas, pendiente, intercepto y suma de los errores al cuadrado. Cuando entiendas el proceso, prueba el botón para ampliar el ejemplo a seis puntos. Los botones también permiten restaurar los datos originales. La gráfica comparte los datos con el laboratorio.",
         "ubicacion": {
           "selector": ".tablewrap",
           "before": true
@@ -154,7 +154,7 @@
       {
         "id": "variacion-total",
         "titulo": "Qué mide la variación total",
-        "texto": "Mira los segmentos rojos de esta gráfica. Cada uno une una venta observada con la línea de la media. El primer dato está quince artículos por debajo de la media, el segundo está cinco por debajo y el tercero está veinte por encima. Si sumamos esas diferencias con sus signos, se cancelan. Por eso las elevamos al cuadrado y luego las sumamos: doscientos veinticinco, más veinticinco, más cuatrocientos, da seiscientos cincuenta. Esa es la suma de cuadrados total. Mide cuánto se dispersan todos los datos alrededor de la media. No mide el crecimiento entre períodos. Después compararemos esta cantidad con los errores de la recta, para ver cuánto mejora el ajuste frente a usar solamente el promedio.",
+        "texto": "Mira los segmentos rojos de esta gráfica. Cada uno une una venta observada con la línea de la media. El primer dato está quince artículos por debajo de la media, el segundo está cinco por debajo y el tercero está veinte por encima. Si sumamos esas diferencias con sus signos, se cancelan. Por eso las elevamos al cuadrado y sumamos: doscientos veinticinco, más veinticinco, más cuatrocientos, da seiscientos cincuenta. Esta suma describe la separación de los tres datos respecto a su media. Para obtener la varianza, dividimos entre tres. Aquí hablamos de dispersión alrededor del promedio, no del crecimiento de las ventas entre períodos.",
         "ubicacion": {
           "selector": "#totalVariationExplanation"
         },
@@ -162,37 +162,46 @@
       },
       {
         "id": "r-cuadrado",
-        "titulo": "Cómo interpretar erre al cuadrado",
-        "texto": "Ahora podemos comparar dos referencias: predecir siempre la media, o usar la recta ajustada. La suma de cuadrados total mide las diferencias respecto a la media. La suma de cuadrados del error mide las diferencias respecto a la recta. Erre al cuadrado indica qué proporción de esa variación total explica el ajuste. Por ejemplo, cero coma ochenta y cinco corresponde al ochenta y cinco por ciento de la variación observada alrededor de la media. No significa que el ochenta y cinco por ciento de las predicciones sean correctas. Para evaluar el modelo, también revisa los residuos.",
+        "titulo": "Cómo calcular erre al cuadrado",
+        "texto": "Para calcular erre al cuadrado en una regresión lineal con intercepto, divide la varianza de las predicciones entre la varianza de los datos observados. Usa los mismos datos con los que ajustaste la recta y divide ambas sumas de cuadrados entre la misma cantidad de observaciones. En las tres ventas del ejemplo, la varianza observada es seiscientos cincuenta dividido entre tres. La varianza de las predicciones es seiscientos doce coma cinco dividido entre tres. Su cociente es aproximadamente cero coma noventa y cuatro veintitrés: la recta explica cerca del noventa y cuatro coma veintitrés por ciento de la variación. Eso no significa que ese porcentaje de predicciones sea exacto. Revisa también los residuos y el contexto.",
         "ubicacion": {
-          "heading": "Interpretar R² y r"
+          "selector": "#r2VarianceFormula"
         },
         "archivo": "r-cuadrado.wav"
       },
       {
         "id": "residuos",
-        "titulo": "Qué buscar en la gráfica de residuos",
-        "texto": "Una nube de residuos alrededor de cero, sin un patrón claro, es compatible con una relación lineal. Si aparece una curva, la recta puede estar dejando una parte de la relación sin describir. Un embudo sugiere que la dispersión cambia. Un punto aislado merece una revisión, pero no debes borrarlo solo para mejorar el ajuste. Comprueba cómo se obtuvo el dato y qué representa.",
+        "titulo": "Cómo leer los residuos de la recta",
+        "texto": "Cada punto de esta gráfica muestra la diferencia entre un valor observado y el que predice la recta para esa misma entrada. Un residuo positivo significa que el dato quedó por encima de la recta. Uno negativo significa que quedó por debajo. Si vale cero, el dato coincide con su predicción. Cuanto menor sea su distancia a cero, más cerca está el dato de la recta. Al ajustar por mínimos cuadrados, buscamos que la suma de los cuadrados de esos residuos sea lo más pequeña posible.",
         "ubicacion": {
           "heading": "Observa los residuos de tu laboratorio"
         },
         "archivo": "residuos.wav"
       },
       {
-        "id": "medidas-error",
-        "titulo": "Error y dirección de la relación",
-        "texto": "La correlación, que representamos con la letra erre, indica el sentido de la relación lineal: positivo si crece y negativo si decrece. Erre al cuadrado no conserva ese signo. La raíz del error cuadrático medio resume el tamaño de los residuos en las unidades de la respuesta. La estimación de la desviación del error usa otro divisor, porque la recta tiene dos parámetros estimados. Son medidas distintas.",
+        "id": "varianzas",
+        "titulo": "Cómo calcular las dos varianzas",
+        "texto": "La varianza resume cuánto se separan los valores de su media. Primero calcula el promedio. Después resta ese promedio a cada valor, eleva las diferencias al cuadrado, suma y divide entre el número de datos. Haz ese proceso una vez con las ventas observadas y otra con las predicciones de la recta. Para una recta de mínimos cuadrados con intercepto, los dos promedios coinciden. Mantén el mismo divisor en ambas varianzas. Su cociente nos permite calcular erre al cuadrado.",
         "ubicacion": {
-          "heading": "Error en las unidades originales"
+          "selector": "#varianceExplanation"
         },
-        "archivo": "medidas-error.wav"
+        "archivo": "varianzas.wav"
+      },
+      {
+        "id": "descomponer-variacion",
+        "titulo": "Qué explica la recta y qué queda en los residuos",
+        "texto": "La variación total mide cuánto se separan los datos de su media. Al ajustar una recta por mínimos cuadrados con intercepto, podemos distinguir dos partes. La variación explicada es la que recoge la recta. La variación residual es la que queda en las diferencias entre los datos y sus predicciones. En las tres ventas del ejemplo, erre al cuadrado indica que la recta explica aproximadamente el noventa y cuatro coma veintitrés por ciento de la variación. El cinco coma setenta y siete por ciento restante queda en los residuos. Estos porcentajes describen el ajuste a los datos observados: no indican cuántas predicciones son exactas ni garantizan lo que ocurrirá en el futuro.",
+        "ubicacion": {
+          "selector": "#variationBreakdown"
+        },
+        "archivo": "descomponer-variacion.wav"
       }
     ],
     "ejemplos": [
       {
         "id": "ejemplos",
         "titulo": "Cómo trabajar los ejemplos resueltos",
-        "texto": "Trabaja estos ejemplos en orden: primero cuatro puntos, después seis, siete y nueve. Identifica las variables y la pregunta. En cada solución se muestra cómo calcular las medias, las diferencias centradas, la pendiente, el intercepto, las predicciones y los errores. Sigue las operaciones de cada fila y las sustituciones de las fórmulas. Los cálculos conservan más decimales que los que ves en pantalla. Al final, intenta el reto con datos nuevos. Escribe tus ocho resultados y usa el botón de comprobación para recibir indicaciones. Después de completar un intento, podrás consultar la resolución completa.",
+        "texto": "Trabaja estos ejemplos en orden: primero cuatro puntos, después seis, siete y nueve. Identifica las variables y la pregunta. Cada solución muestra las sumas de los datos, sus cuadrados y sus productos, la pendiente y el intercepto. Después calcula las predicciones, los residuos y la suma de cuadrados del error. Para evaluar el ajuste, calcula directamente la varianza de los datos y la varianza de las predicciones. Divide esas dos varianzas para obtener erre al cuadrado. Conserva los decimales durante las operaciones. Al final, intenta el reto con datos nuevos y comprueba tus ocho resultados.",
         "ubicacion": {
           "selector": "#exampleCards",
           "before": true
@@ -348,7 +357,7 @@
       {
         "id": "caso-linealizacion-4",
         "titulo": "Calcula la nueva recta",
-        "texto": "Aplica ahora los mismos mínimos cuadrados que ya conoces. Usa las medias y las sumas centradas de la tabla. Divide la suma de productos centrados entre la suma de cuadrados para obtener la pendiente. Para el intercepto, resta a la media de las respuestas transformadas la pendiente por la media de los días. Escribe los dos resultados y dibuja tu recta antes de comprobarla.",
+        "texto": "Aplica ahora las mismas fórmulas de mínimos cuadrados que ya conoces, usando las coordenadas transformadas. Suma las entradas, las respuestas, los cuadrados de las entradas y los productos de cada par. Sustituye esas cuatro sumas y los seis datos en la fórmula de la pendiente. Para el intercepto, resta a la suma de las respuestas transformadas la pendiente por la suma de las entradas y divide entre seis. Conserva suficientes decimales. Escribe los dos resultados y dibuja tu recta antes de comprobarla.",
         "ubicacion": {
           "selector": "#guidedAudio4",
           "inside": true
@@ -390,7 +399,7 @@
       {
         "id": "comparador",
         "titulo": "Cómo comparar modelos con justicia",
-        "texto": "El comparador usa los mismos puntos del laboratorio. Cambia el modelo y observa tanto la gráfica original como la transformada. Compara los errores calculados en las mismas unidades originales. No compares directamente un indicador calculado con logaritmos con otro calculado sin transformar. Además de las cifras, revisa los residuos, las condiciones de uso y el sentido de la curva. Un ajuste mejor no basta por sí solo para elegir.",
+        "texto": "El comparador usa los mismos puntos del laboratorio. Cambia el modelo y observa la gráfica original y, cuando corresponda, la recta en la escala de ajuste. Para comparar las predicciones de los modelos, revisa la suma de cuadrados de sus errores con los mismos datos originales. El coeficiente de determinación se calcula con el cociente de varianzas de la recta y describe su propia escala de ajuste. Además de las cifras, observa si la forma del modelo tiene sentido para los datos y para el contexto.",
         "ubicacion": {
           "selector": ".toolbar",
           "before": true
@@ -491,8 +500,8 @@
       },
       {
         "id": "deduccion-paso-7",
-        "titulo": "La forma centrada",
-        "texto": "También podemos escribir las fórmulas usando diferencias respecto a las medias. Al expandir los cuadrados y los productos, obtenemos el mismo denominador y el mismo numerador de antes. La pendiente es la suma de los productos de las diferencias, dividida entre la suma de cuadrados de las diferencias de equis. Ese denominador es positivo cuando los valores de entrada no son todos iguales.",
+        "titulo": "Las fórmulas con las cuatro sumas",
+        "texto": "Podemos abreviar la fórmula dando un nombre a cada suma. Ese sub equis suma las entradas; ese sub ye suma las respuestas. Ese sub equis al cuadrado suma los cuadrados de las entradas. Ese sub equis ye suma los productos de cada par. Sustituimos esas cuatro cantidades en la fórmula de la pendiente. El intercepto se despeja de la primera ecuación normal. El denominador de la pendiente puede escribirse como una suma de cuadrados de diferencias entre pares de entradas. Por eso es positivo cuando al menos dos entradas son distintas.",
         "archivo": "deduccion-paso-7.wav",
         "ubicacion": {
           "selector": "#derivationStep7"
@@ -519,7 +528,7 @@
       {
         "id": "deduccion-paso-10",
         "titulo": "Condiciones y regreso",
-        "texto": "Antes de dividir, comprueba que la suma de cuadrados de las diferencias de equis sea positiva. Si todas las entradas son iguales, no puedes separar una pendiente y un intercepto únicos. Recuerda que esta deducción es opcional. Lo necesario es aplicar las fórmulas, interpretar las unidades y revisar los residuos. El botón del final te devuelve al punto donde abriste esta explicación.",
+        "texto": "Antes de dividir, comprueba que el denominador de la pendiente sea positivo. Si todas las entradas son iguales, el número de datos por la suma de cuadrados coincide con el cuadrado de la suma. El denominador es cero y no puedes obtener una pendiente y un intercepto únicos. Recuerda que esta deducción es opcional. Lo necesario es calcular las cuatro sumas, aplicar las fórmulas, interpretar las unidades y revisar los residuos. El botón del final te devuelve al punto donde abriste esta explicación.",
         "archivo": "deduccion-paso-10.wav",
         "ubicacion": {
           "selector": "#derivationStep10"
