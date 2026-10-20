@@ -34,6 +34,8 @@ Las duraciones y la descripción temática se contrastaron con el archivo LEEME.
 
 ## Uso y navegación
 
+Los títulos, las descripciones y los puntos de seguimiento se adaptaron a las descripciones completas de los quince videos aportadas por el profesor. Se incorporaron el cálculo de la cantidad de rectángulos a partir de la tolerancia, las integrales auxiliares del trapecio, la deducción de Simpson mediante Newton, los sistemas de exactitud, los límites de las sumatorias y los dos ejemplos del resumen. Las tablas de los ejercicios muestran diez decimales por defecto; algunas comparaciones de errores conservan más cifras para que el redondeo no las oculte.
+
 El índice permite consultar cualquier tema. «Anterior» y «Siguiente» siguen el orden real de los videos. Las gráficas permiten cambiar particiones y nodos manteniendo los ejes fijos. Las actividades aceptan coma o punto decimal. El avance y las notas personales se guardan únicamente en el navegador. «Marcar como visto» sirve para registrar el avance de los videos de Drive, cuyo estado de reproducción no es accesible desde el documento por tratarse de un reproductor externo.
 
 Las fórmulas y el contenido escrito funcionan sin conexión gracias a la copia local de KaTeX. Los videos sí requieren internet. Las sumas se componen con displaystyle.
@@ -52,6 +54,7 @@ Se mantuvieron las correcciones editoriales de la adaptación: el cambio de vari
 
 - videos.js: los quince archivos, sus identificadores de Drive, las duraciones y las direcciones de inserción.
 - contenido.js: lecciones, datos, fórmulas y cálculos.
+- guia-videos.js: adaptación de títulos, puntos de seguimiento, deducciones y ejercicios a las descripciones definitivas de los quince videos.
 - app.js: navegación, reproductores, gráficas, comprobaciones y notas.
 - estilos.css: diseño para computadora y teléfono.
 - assets/: KaTeX y su licencia.
