@@ -1,0 +1,5 @@
+Coloque aquí los videos MP4. Los nombres esperados están en ../videos.js y en ../README.md.
+
+Los primeros once nombres fueron indicados por el profesor. Los cuatro últimos son provisionales y se pueden sustituir editando videos.js.
+
+Esta carpeta no incluye archivos de video generados. Cada lección ya tiene su reproductor y puede consultarse con sus fórmulas, ejemplos y actividades mientras se incorporan los videos.
