@@ -32,34 +32,26 @@ El primer video repasa la regla compuesta del rectángulo. Los videos 02–05 cu
 
 Las duraciones y la descripción temática se contrastaron con el archivo LEEME.md de la misma carpeta de Drive. Los títulos de las lecciones están redactados para el estudiante y no tienen que coincidir literalmente con los nombres de los MP4. Los identificadores internos anteriores se conservan para mantener el avance y las notas existentes.
 
-## Uso y navegación
+## Estructura de cada lección
 
-Los títulos, las descripciones y los puntos de seguimiento se adaptaron a las descripciones completas de los quince videos aportadas por el profesor. Se incorporaron el cálculo de la cantidad de rectángulos a partir de la tolerancia, las integrales auxiliares del trapecio, la deducción de Simpson mediante Newton, los sistemas de exactitud, los límites de las sumatorias y los dos ejemplos del resumen. Las tablas de los ejercicios muestran diez decimales por defecto; algunas comparaciones de errores conservan más cifras para que el redondeo no las oculte.
+Cada video tiene una lección con la misma organización:
 
-El índice permite consultar cualquier tema. «Anterior» y «Siguiente» siguen el orden real de los videos. Las gráficas permiten cambiar particiones y nodos manteniendo los ejes fijos. Las actividades aceptan coma o punto decimal. El avance y las notas personales se guardan únicamente en el navegador. «Marcar como visto» sirve para registrar el avance de los videos de Drive, cuyo estado de reproducción no es accesible desde el documento por tratarse de un reproductor externo.
+1. **Enunciado** (solo en los ejercicios), escrito tal como aparece en el video.
+2. **Video**, que se carga al pulsar «Reproducir».
+3. **Procedimiento del video** (ejercicios) o **Desarrollo escrito del video** (deducciones): los mismos renglones de la hoja del video, cada uno con su justificación a la derecha, con diez decimales y los mismos valores numéricos.
+4. **Gráfica del método** (solo en los videos de explicación: 01, 02, 04, 06, 08, 09, 11, 12, 13 y 15). Se puede elegir entre siete funciones con comportamientos distintos (la del ejemplo, una que oscila, una campana, una cúbica que cambia de concavidad, √x, un pico estrecho y una oscilación creciente) y cambiar la cantidad de subintervalos o de nodos para ver qué figuras construye el método y cómo cambia el error.
 
-Las fórmulas y el contenido escrito funcionan sin conexión gracias a la copia local de KaTeX. Los videos sí requieren internet. Las sumas se componen con displaystyle.
+La navegación lateral sigue el orden de los videos. «Marcar como visto» registra el avance solo en el navegador. Las fórmulas funcionan sin conexión gracias a la copia local de KaTeX; los videos requieren internet.
 
-## Cotas y contenido matemático
+## Archivos
 
-Se cubren los ejercicios de las notas y se incluye un repaso de rectángulos para acompañar el primer video. Se utiliza la convención error con signo = integral − aproximación. Las referencias numéricas de calculadora no se presentan como valores exactos.
+- `index.html`: estructura de la página.
+- `videos.js`: los quince videos de Drive (identificadores, duraciones y direcciones de inserción).
+- `contenido.js`: enunciados, procedimientos y desarrollos de cada video.
+- `app.js`: navegación, reproductor, avance y gráficas de exploración.
+- `ejes.js`: marco cartesiano de las gráficas (ejes en cero).
+- `estilos.css`: diseño para computadora, teléfono e impresión.
+- `assets/`: KaTeX y su licencia. `materiales/`: PDF de las notas de clase.
+- `guia-videos.js`: versión anterior de los textos; ya no se carga y puede borrarse.
 
-Para seguir las grabaciones, se usan las cotas dadas M₂ = 0,24 y M₄ = 0,14 para la función sen(x)/x en el intervalo de uno a dos. Se actualizaron las cotas de trapecio, trapecio compuesto, Simpson y Simpson compuesto con esos mismos valores. Los cálculos internos conservan la precisión; el redondeo se realiza al mostrar.
-
-Las fuentes originales revisadas fueron S12 Cls.tex y S12 Cls (Visto en S13).pdf, ubicados en C:/Users/jeffz/OneDrive/ITCR/2026/IIS26/Cursos/MN/Notas de clase MN/S12/. La copia de consulta del PDF está en materiales/notas-de-clase.pdf y no se modificó.
-
-Se mantuvieron las correcciones editoriales de la adaptación: el cambio de variable se usa para un intervalo distinto de menos uno a uno; el ejemplo que sigue a Gauss de tres puntos se resuelve con tres puntos, aunque el enunciado original repite «dos puntos».
-
-## Configuración y traslado
-
-- videos.js: los quince archivos, sus identificadores de Drive, las duraciones y las direcciones de inserción.
-- contenido.js: lecciones, datos, fórmulas y cálculos.
-- guia-videos.js: adaptación de títulos, puntos de seguimiento, deducciones y ejercicios a las descripciones definitivas de los quince videos.
-- app.js: navegación, reproductores, gráficas, comprobaciones y notas.
-- estilos.css: diseño para computadora y teléfono.
-- assets/: KaTeX y su licencia.
-- materiales/: PDF de consulta.
-
-Para sustituir un video, edite su entrada en videos.js. También se admite tipo:'archivo' con una ruta a un MP4 local, o tipo:'iframe' con una dirección válida de inserción. Si configura un video local, puede añadir subtitulos:'videos/nombre.es.vtt'.
-
-La carpeta completa es un sitio estático que puede alojarse en GitHub Pages o trasladarse a otro equipo. No necesita compilarse. El ZIP contiene el documento y sus enlaces, sin incluir las grabaciones. Este cambio actualiza la copia local; no publica un sitio nuevo.
+Para sustituir un video, edite su entrada en `videos.js`. La carpeta es un sitio estático que puede alojarse en GitHub Pages; no necesita compilarse.

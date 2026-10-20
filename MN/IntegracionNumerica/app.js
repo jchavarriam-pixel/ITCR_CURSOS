@@ -1,91 +1,125 @@
 'use strict';
 (() => {
- const C=window.Integracion, {m,d,esc,fmt,num,lessons,blocks}=C;
+ const C=window.Integracion,{m,esc,lessons,blocks}=C;
  const $=id=>document.getElementById(id);
  const storageKey='mn-integracion-numerica-v1';
- let state={seen:[],notes:{},last:''},storageAvailable=true,current=-1,objectUrl=null;
- try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved&&typeof saved==='object')state={seen:Array.isArray(saved.seen)?saved.seen.filter(id=>lessons.some(l=>l.id===id)):[],notes:saved.notes&&typeof saved.notes==='object'?saved.notes:{},last:typeof saved.last==='string'?saved.last:''};}catch{storageAvailable=false;}
- function save(){try{localStorage.setItem(storageKey,JSON.stringify(state));}catch{storageAvailable=false;}}
+ let state={seen:[],last:''},current=-1;
+ try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved&&typeof saved==='object')state={seen:Array.isArray(saved.seen)?saved.seen.filter(id=>lessons.some(l=>l.id===id)):[],last:typeof saved.last==='string'?saved.last:'',notes:saved.notes};}catch{}
+ const save=()=>{try{localStorage.setItem(storageKey,JSON.stringify(state));}catch{}};
+ const video=l=>window.VIDEOS_INTEGRACION.find(v=>v.id===l.id)||{};
+ const two=i=>String(i+1).padStart(2,'0');
+ const d10=x=>Number.isFinite(x)?x.toFixed(10):'—';
+
  function renderMath(root=document){root.querySelectorAll('[data-math]').forEach(el=>{const tex=el.dataset.math.replaceAll('\\sum','\\displaystyle\\sum');try{katex.render(tex,el,{displayMode:el.dataset.display==='true',throwOnError:true,strict:'ignore',trust:false});}catch(e){el.classList.add('math-error');el.textContent=el.dataset.math;console.error('Fórmula no compuesta:',el.dataset.math,e.message);}});}
- function texSVG(tex,x,y,width=75,height=25){return `<foreignObject x="${x}" y="${y}" width="${width}" height="${height}"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11px;line-height:1.4;text-align:center;color:#53657a">${m(tex)}</div></foreignObject>`;}
- function updateNav(){
-  $('temas').innerHTML=blocks.map((b,bi)=>`<h2>${esc(b.name)}</h2>${lessons.map((l,i)=>l.block===bi?`<a href="#${l.slug}" ${i===current?'class="active" aria-current="page"':''}><span class="nav-number">${String(i+1).padStart(2,'0')}</span><span>${esc(l.title)}</span><span class="nav-check">${state.seen.includes(l.id)?'✓':''}</span></a>`:'').join('')}`).join('');
-  $('progress').value=state.seen.length;$('progressText').textContent=`${state.seen.length} de ${lessons.length} videos vistos`;
- }
- function heroChart(){const xs=x=>30+(x-1)*320,ys=y=>240-y*200;const p=Array.from({length:81},(_,i)=>{const x=1+i/80;return `${xs(x)},${ys(C.f(x))}`;}).join(' ');return `<svg viewBox="0 0 390 300" role="img" aria-label="La integral se aproxima sumando áreas de trapecios cada vez más estrechos"><path d="M30 240H365M30 240V35" stroke="#7f96b0" fill="none"/>${Array.from({length:5},(_,i)=>{const x=1+i/5,z=x+.2;return `<polygon points="${xs(x)},240 ${xs(x)},${ys(C.f(x))} ${xs(z)},${ys(C.f(z))} ${xs(z)},240" fill="#dbf19a" fill-opacity="${.12+i*.035}" stroke="#93bba1" stroke-width="1"/>`;}).join('')}<polyline points="${p}" fill="none" stroke="#dbf19a" stroke-width="3"/><g fill="#c1d1e2">${texSVG('1',9,248,45)}${texSVG('2',328,248,45)}</g><text x="38" y="292" fill="#c5d2e3" font-size="11">Una curva. Distintas formas de aproximar su integral.</text></svg>`;}
- function home(){return `<section class="hero"><div><span class="eyebrow">Observar · aproximar · comprobar</span><h1>Integración<br>numérica.</h1><p>Aprende a aproximar una integral cuando no conviene o no es posible calcular una antiderivada. Sigue los videos, organiza tus datos y compara lo que hace cada método.</p><a class="primary" href="#${lessons[0].slug}">Comenzar el recorrido →</a><div class="meta-strip"><span>15 videos en orden</span><span>3 bloques de estudio</span><span>Ejemplos y gráficas</span></div></div><div class="hero-chart">${heroChart()}</div></section><div class="grid3">${blocks.map((b,i)=>`<article class="chapter-card"><span class="chapter-n">${String(i+1).padStart(2,'0')}</span><h2>${b.name}</h2><p>${b.intro}</p><a href="#${lessons[b.first].slug}">${b.range} →</a></article>`).join('')}</div><section class="section"><span class="eyebrow">Antes de empezar</span><h2>Cómo aprovechar esta guía</h2><ol class="steps"><li><strong>Prepara la idea.</strong> Lee la pregunta inicial y anota qué datos necesita el método.</li><li><strong>Mira y pausa.</strong> Intenta cada sustitución antes de que aparezca la solución en el video.</li><li><strong>Comprueba.</strong> Contrasta tus resultados con las fórmulas, las tablas y la actividad breve. Las deducciones escritas pueden abrirse cuando quieras profundizar.</li><li><strong>Avanza.</strong> Marca el video como visto y usa «Siguiente». Puedes volver a cualquier tema desde el índice.</li></ol><div class="callout"><strong>Un mismo ejemplo nos conecta.</strong> La integral ${m(String.raw`\int_1^2\frac{\operatorname{sen}x}{x}\,dx`)} reaparece en distintos métodos. Comparar siempre el mismo problema permite reconocer qué cambia y cuánto mejora la aproximación. Usa radianes.</div><p>Conviene recordar las integrales definidas, la interpolación polinómica y las derivadas. No necesitas obtener una antiderivada de la función de cada ejemplo para aplicar las reglas.</p>${state.last?`<a class="primary" style="display:inline-block;padding:10px 16px;border-radius:8px;text-decoration:none" href="#${esc(state.last)}">Continuar donde quedé →</a>`:''}</section><section class="section"><span class="eyebrow">Índice de visualización</span><h2>El recorrido, video a video</h2><ol class="route-list">${lessons.map((l,i)=>`<li><a href="#${l.slug}"><span class="nav-number">${String(i+1).padStart(2,'0')}</span><span>${esc(l.title)} ${state.seen.includes(l.id)?'✓':''}</span><small>${esc(l.kind)}</small></a></li>`).join('')}</ol></section>`;}
- function quizHTML(l){const q=l.quiz;return `<section class="check" aria-labelledby="checkTitle"><span class="eyebrow">Haz una pausa</span><h2 id="checkTitle">Comprueba lo que entendiste</h2><form id="checkForm">${q.type==='choice'?`<fieldset style="border:0;padding:0;margin:0"><legend>${esc(q.q)}</legend>${q.options.map((s,i)=>`<label><input name="answer" type="radio" value="${i}" required> ${esc(s)}</label>`).join('')}</fieldset>`:`<label for="numericAnswer">${esc(q.q)}</label><p><input type="text" id="numericAnswer" name="answer" inputmode="decimal" autocomplete="off" placeholder="Tu respuesta" required aria-describedby="numberHelp"><span id="numberHelp" class="small">Puedes usar coma o punto decimal.</span></p>`}<button type="submit">Comprobar mi respuesta</button><p id="checkFeedback" class="feedback" role="status"></p></form>${q.solution?`<details><summary>Ver la resolución del reto</summary>${q.solution()}</details>`:''}</section>`;}
- function lesson(i){const l=lessons[i];return `<header class="lesson-heading"><div class="lesson-meta"><span class="pill blue">${esc(blocks[l.block].name)}</span><span class="lesson-number">Video ${String(i+1).padStart(2,'0')} de 15 · ${esc(l.kind)}${window.VIDEOS_INTEGRACION.find(v=>v.id===l.id)?.duracion?' · '+esc(window.VIDEOS_INTEGRACION.find(v=>v.id===l.id).duracion):''}</span></div><h1 tabindex="-1">${esc(l.title)}</h1><p>${esc(l.lead)}</p></header><div class="watch-layout"><div class="watch-main"><div class="player" id="player"><button type="button" class="video-cover" id="playVideo"><span class="play-icon" aria-hidden="true">▶</span><strong>${esc(l.title)}</strong><small>Reproducir video ${String(i+1).padStart(2,'0')}</small></button></div><div class="video-problem" id="videoProblem" role="status" hidden></div><div class="watch-actions"><span>${/^\d/.test(l.pages)?'Notas de clase · '+(l.pages.includes('–')||l.pages.includes(',')?'páginas ':'página ')+esc(l.pages):esc(l.pages)}</span><a href="${esc(window.VIDEOS_INTEGRACION.find(v=>v.id===l.id)?.verEnDrive||window.CARPETA_VIDEOS_INTEGRACION)}" target="_blank" rel="noopener">Abrir video en Drive ↗</a><button type="button" id="markSeen" aria-pressed="${state.seen.includes(l.id)}">${state.seen.includes(l.id)?'✓ Video visto':'Marcar como visto'}</button></div></div><div class="watch-note"><div><span class="eyebrow">Durante el video</span><h2>En qué fijarte</h2></div><ul>${l.goals.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div></div><div class="callout"><strong>Antes de reproducir:</strong> ${esc(l.before)}</div><article class="section lesson-body">${l.content()}</article>${quizHTML(l)}<div class="notes"><label for="personalNotes">Tus notas de este video</label><textarea id="personalNotes" placeholder="Anota una duda, un paso que quieras repetir o una idea que te ayudó."></textarea><small id="notesState">${storageAvailable?'Solo se guardan en este navegador.':'El navegador no permite guardar las notas de forma permanente.'}</small></div><nav class="lesson-bottom" aria-label="Navegación entre videos"><button type="button" id="previous"><small>${i===0?'Volver':'Video anterior'}</small>${i===0?'El recorrido completo':'← '+esc(lessons[i-1].title)}</button><button type="button" id="next" class="primary"><small>${i===lessons.length-1?'Terminar':'Siguiente video'}</small>${i===lessons.length-1?'Volver al recorrido ✓':esc(lessons[i+1].title)+' →'}</button></nav>`;}
- function setSeen(id,value){state.seen=state.seen.filter(x=>x!==id);if(value)state.seen.push(id);save();updateNav();if(current>=0&&lessons[current].id===id){$('markSeen').setAttribute('aria-pressed',String(value));$('markSeen').textContent=value?'✓ Video visto':'Marcar como visto';}}
- function startVideo(l){
-  const config=window.VIDEOS_INTEGRACION.find(v=>v.id===l.id);
-  if(!config||!config.src){$('videoProblem').hidden=false;$('videoProblem').textContent='El video de esta lección todavía no tiene una dirección asignada.';return;}
-  const player=$('player');player.replaceChildren();
-  if(config.tipo==='iframe'){
-   const frame=document.createElement('iframe');frame.title=`Video: ${l.title}`;frame.src=config.src;frame.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen';frame.allowFullscreen=true;frame.referrerPolicy='strict-origin-when-cross-origin';player.append(frame);
+
+ /* ---------------------------------------------------------------- gráficas de exploración */
+ const FUNCIONES=[
+  {id:'senx',nombre:'sen(x)/x en [1, 2] (la integral de los ejemplos)',f:x=>Math.sin(x)/x,a:1,b:2},
+  {id:'oscila',nombre:'2 + sen(3x) en [0, 4] (oscila)',f:x=>2+Math.sin(3*x),a:0,b:4},
+  {id:'campana',nombre:'3·e^(−x²) en [−2, 2] (campana)',f:x=>3*Math.exp(-x*x),a:-2,b:2},
+  {id:'cubica',nombre:'x³ − 3x + 3 en [−2, 2.5] (cambia de concavidad)',f:x=>x**3-3*x+3,a:-2,b:2.5},
+  {id:'raiz',nombre:'√x en [0, 4] (pendiente infinita en 0)',f:x=>x>=0?Math.sqrt(x):NaN,a:0,b:4},
+  {id:'pico',nombre:'1/(1 + 4x²) en [−3, 3] (pico estrecho)',f:x=>1/(1+4*x*x),a:-3,b:3},
+  {id:'exponencial',nombre:'e^(x/2)·cos(2x) + 2 en [0, 5] (oscila y crece)',f:x=>Math.exp(x/2)*Math.cos(2*x)+2,a:0,b:5}
+ ];
+ const NODOS={2:[[-1/Math.sqrt(3),1],[1/Math.sqrt(3),1]],3:[[-Math.sqrt(.6),5/9],[0,8/9],[Math.sqrt(.6),5/9]],
+  4:[[-0.8611363115940526,0.3478548451374538],[-0.3399810435848563,0.6521451548625461],[0.3399810435848563,0.6521451548625461],[0.8611363115940526,0.3478548451374538]]};
+ const referencia=(f,a,b)=>{const n=20000,h=(b-a)/n;let s=f(a)+f(b);for(let i=1;i<n;i++)s+=(i%2?4:2)*f(a+i*h);return s*h/3;};
+ const METODOS={
+  rectangulo:{nombre:'Rectángulos (extremo izquierdo)',min:1,paso:1,aprox:(f,a,b,n)=>{const h=(b-a)/n;let s=0;for(let i=0;i<n;i++)s+=f(a+i*h);return h*s;}},
+  trapecio:{nombre:'Trapecios',min:1,paso:1,aprox:(f,a,b,n)=>{const h=(b-a)/n;let s=(f(a)+f(b))/2;for(let i=1;i<n;i++)s+=f(a+i*h);return h*s;}},
+  simpson:{nombre:'Parábolas de Simpson',min:2,paso:2,aprox:(f,a,b,n)=>{const h=(b-a)/n;let s=f(a)+f(b);for(let i=1;i<n;i++)s+=(i%2?4:2)*f(a+i*h);return h*s/3;}},
+  gauss:{nombre:'Gauss-Legendre',aprox:(f,a,b,n)=>(b-a)/2*NODOS[n].reduce((s,[u,w])=>s+w*f((a+b)/2+(b-a)*u/2),0)}
+ };
+ const marcas=(lo,hi)=>{const r=hi-lo||1,base=10**Math.floor(Math.log10(r/4)),paso=[1,2,5,10].map(k=>k*base).find(p=>r/p<=6);const out=[];for(let v=Math.ceil(lo/paso)*paso;v<=hi+1e-9;v+=paso)out.push(Number(v.toPrecision(10)));return out;};
+ const lagrange=(xs,ys)=>x=>xs.reduce((s,xi,i)=>s+ys[i]*xs.reduce((p,xj,j)=>j===i?p:p*(x-xj)/(xi-xj),1),0);
+
+ function dibujar(svg,F,metodo,n){
+  const {f,a,b}=F,W=800,H=360,ext=.15*(b-a),xs0=a-ext,xs1=b+ext;
+  const muestra=Array.from({length:401},(_,i)=>xs0+(xs1-xs0)*i/400).map(x=>f(x)).filter(Number.isFinite);
+  let yMin=Math.min(0,...muestra),yMax=Math.max(0,...muestra);const pad=.06*(yMax-yMin||1);yMax+=pad;if(yMin<0)yMin-=pad;
+  const fr=EjesCartesianos({width:W,height:H,a,b,yMin,yMax,extend:.15,left:62,right:34,top:28,bottom:46,xTicks:marcas(Math.min(0,a),Math.max(0,b)),yTicks:marcas(yMin,yMax)}),{px,py}=fr;
+  const camino=(g,x0,x1,pasos=200)=>{let out='',pluma='M';for(let i=0;i<=pasos;i++){const x=x0+(x1-x0)*i/pasos,y=g(x);if(!Number.isFinite(y)){pluma='M';continue;}out+=`${pluma}${px(x).toFixed(2)},${py(y).toFixed(2)} `;pluma='L';}return out;};
+  const region=(g,x0,x1,color,op=.16,borde=true)=>`<path d="${camino(g,x0,x1,80)}L${px(x1)},${py(0)} L${px(x0)},${py(0)} Z" fill="${color}" fill-opacity="${op}" ${borde?`stroke="${color}" stroke-width="1.6"`:'stroke="none"'}/>`;
+  let fig='',puntos=[];
+  if(metodo==='rectangulo'||metodo==='trapecio'||metodo==='simpson'){
+   const h=(b-a)/n;
+   for(let i=0;i<n;i+=(metodo==='simpson'?2:1)){
+    const x0=a+i*h;
+    if(metodo==='rectangulo'){const y=f(x0);fig+=`<polygon points="${px(x0)},${py(0)} ${px(x0)},${py(y)} ${px(x0+h)},${py(y)} ${px(x0+h)},${py(0)}" fill="#315ad3" fill-opacity=".14" stroke="#315ad3" stroke-width="1.5"/>`;puntos.push(x0);}
+    if(metodo==='trapecio'){fig+=`<polygon points="${px(x0)},${py(0)} ${px(x0)},${py(f(x0))} ${px(x0+h)},${py(f(x0+h))} ${px(x0+h)},${py(0)}" fill="#315ad3" fill-opacity=".14" stroke="#315ad3" stroke-width="1.5"/>`;}
+    if(metodo==='simpson'){const q=lagrange([x0,x0+h,x0+2*h],[f(x0),f(x0+h),f(x0+2*h)]);fig+=region(q,x0,x0+2*h,['#315ad3','#8a4fc1'][(i/2)%2]);}
+   }
+   if(metodo!=='rectangulo')puntos=Array.from({length:n+1},(_,i)=>a+i*h);
   }else{
-   const video=document.createElement('video');video.controls=true;video.preload='metadata';video.playsInline=true;video.setAttribute('aria-label',l.title);
-   if(config.subtitulos){const track=document.createElement('track');track.kind='captions';track.srclang='es';track.label='Español';track.src=config.subtitulos;video.append(track);}
-   video.addEventListener('ended',()=>setSeen(l.id,true));
-   video.addEventListener('error',()=>{
-    if(current<0||lessons[current].id!==l.id)return;
-    $('videoProblem').hidden=false;$('videoProblem').innerHTML=`<strong>Este video aún no está disponible aquí.</strong><p>Puedes seguir estudiando con las fórmulas, los ejemplos y las gráficas. El espacio de reproducción está preparado para incorporar el archivo.</p><details><summary>Archivo esperado</summary><code>${esc(config.src)}</code></details><button type="button" id="retryVideo">Volver a intentar</button>`;
-    $('retryVideo').onclick=()=>{$('videoProblem').hidden=true;startVideo(l);};
-   });
-   video.src=config.src;player.append(video);video.play().catch(()=>{});
+   const xs=NODOS[n].map(([u])=>(a+b)/2+(b-a)*u/2),q=lagrange(xs,xs.map(f));
+   fig+=region(q,a,b,'#315ad3');fig+=`<path d="${camino(q,a,b)}" fill="none" stroke="#315ad3" stroke-width="2" stroke-dasharray="6 4"/>`;puntos=xs;
   }
+  const guias=puntos.map(x=>{const y=f(x);return Number.isFinite(y)?`<line x1="${px(x)}" y1="${py(0)}" x2="${px(x)}" y2="${py(y)}" stroke="#91a4b9" stroke-dasharray="3 3"/><circle cx="${px(x)}" cy="${py(y)}" r="${n>24?2.5:4}" fill="#d79b25" stroke="white" stroke-width="1.2"/>`:'';}).join('');
+  svg.innerHTML=`<defs><clipPath id="clip${svg.dataset.i}"><rect x="${fr.left}" y="${fr.top}" width="${W-fr.left-fr.right}" height="${H-fr.top-fr.bottom}"/></clipPath></defs>${fr.grid}<g clip-path="url(#clip${svg.dataset.i})">${region(f,a,b,'#007d79',.10,false)}${fig}<path d="${camino(f,fr.curveMin,fr.curveMax,400)}" fill="none" stroke="#007d79" stroke-width="2.8"/>${[a,b].map(x=>`<line x1="${px(x)}" y1="${fr.top}" x2="${px(x)}" y2="${H-fr.bottom}" stroke="#c45a3b" stroke-width="1.2" stroke-dasharray="2 5"/>`).join('')}${guias}</g>${fr.axes}`;
+  renderMath(svg);
  }
- function chart(svg,fn,a,b,{method='trap',n=1,yMax=1,yMin=0}={}){
-  const W=800,H=340,L=65,R=25,T=25,B=50,px=x=>L+(x-a)/(b-a)*(W-L-R),py=y=>H-B-(y-yMin)/(yMax-yMin)*(H-T-B);
-  let out=`<defs><clipPath id="plotClip"><rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}"/></clipPath></defs>`;
-  for(let i=0;i<=4;i++){const y=yMin+(yMax-yMin)*i/4;out+=`<line x1="${L}" y1="${py(y)}" x2="${W-R}" y2="${py(y)}" stroke="#e1e7ed"/>`+texSVG(num(y,2),0,py(y)-11,58);}
-  for(let i=0;i<=4;i++){const x=a+(b-a)*i/4;out+=texSVG(num(x,2),px(x)-30,H-B+9,60);}
-  out+=`<path d="M${L} ${T}V${H-B}H${W-R}" stroke="#8ba0b5" fill="none"/>`+texSVG('x',W-27,H-B+9,26)+texSVG('f(x)',17,0,50);
-  const path=(fun,x0,x1,steps=160)=>Array.from({length:steps+1},(_,i)=>{const x=x0+(x1-x0)*i/steps;return `${i?'L':'M'}${px(x).toFixed(3)},${py(fun(x)).toFixed(3)}`;}).join(' ');
-  out+=`<g clip-path="url(#plotClip)"><path d="${path(fn,a,b)}L${px(b)},${py(0)}L${px(a)},${py(0)}Z" fill="#c9e8d8" fill-opacity=".4"/>`;
-  if(method==='trap'){
-   const h=(b-a)/n;for(let i=0;i<n;i++){const x=a+i*h,z=x+h;out+=`<polygon points="${px(x)},${py(0)} ${px(x)},${py(fn(x))} ${px(z)},${py(fn(z))} ${px(z)},${py(0)}" fill="#315ad3" fill-opacity=".10" stroke="#315ad3" stroke-width="1.5"/>`;}
-  }
-  if(method==='rectangle'){
-   const h=(b-a)/n;for(let i=0;i<n;i++){const x=a+i*h,z=x+h;out+=`<polygon points="${px(x)},${py(0)} ${px(x)},${py(fn(x))} ${px(z)},${py(fn(x))} ${px(z)},${py(0)}" fill="#315ad3" fill-opacity=".10" stroke="#315ad3" stroke-width="1.5"/>`;}
-  }
-  if(method==='simpson'){
-   const h=(b-a)/n;for(let i=0;i<n;i+=2){const x0=a+i*h,x1=x0+h,x2=x0+2*h,v0=fn(x0),v1=fn(x1),v2=fn(x2),p=x=>v0*(x-x1)*(x-x2)/(2*h*h)-v1*(x-x0)*(x-x2)/(h*h)+v2*(x-x0)*(x-x1)/(2*h*h);out+=`<path d="${path(p,x0,x2,50)}L${px(x2)},${py(0)}L${px(x0)},${py(0)}Z" fill="#315ad3" fill-opacity=".10" stroke="#315ad3" stroke-width="1.6"/>`;}
-  }
-  out+=`<path d="${path(fn,a,b)}" fill="none" stroke="#007d79" stroke-width="2.8"/>`;
-  const sampleXs=method==='gauss'?C.nodes[n].map(([u])=>(a+b)/2+(b-a)*u/2):Array.from({length:method==='rectangle'?n:n+1},(_,i)=>a+(b-a)*i/n);
-  sampleXs.forEach(x=>{out+=`<line x1="${px(x)}" y1="${py(0)}" x2="${px(x)}" y2="${py(fn(x))}" stroke="#91a4b9" stroke-dasharray="4 4"/><circle cx="${px(x)}" cy="${py(fn(x))}" r="4" fill="#d79b25" stroke="white" stroke-width="1.4"/>`;});
-  svg.innerHTML=out+'</g>';renderMath(svg);
- }
- function gaussIntro(el){
-  const panel=(xOffset,method)=>{const px=x=>xOffset+35+(x+1)/2*300,py=y=>265-y*85,fun=x=>1+x*x,curve=Array.from({length:101},(_,i)=>{const x=-1+i/50;return `${i?'L':'M'}${px(x)},${py(fun(x))}`;}).join(' '),level=method==='trap'?2:4/3,xs=method==='trap'?[-1,1]:[-1/Math.sqrt(3),1/Math.sqrt(3)];return `<path d="M${px(-1)} 40V265H${px(1)}" fill="none" stroke="#90a3b6"/><path d="${curve}L${px(1)},265L${px(-1)},265Z" fill="#cce8d8" fill-opacity=".5"/><rect x="${px(-1)}" y="${py(level)}" width="300" height="${265-py(level)}" fill="#315ad3" fill-opacity=".12"/><path d="M${px(-1)} ${py(level)}H${px(1)}" stroke="#315ad3" stroke-width="2"/><path d="${curve}" fill="none" stroke="#007d79" stroke-width="3"/>${xs.map(x=>`<circle cx="${px(x)}" cy="${py(fun(x))}" r="4" fill="#d79b25"/>`).join('')}${texSVG('-1',px(-1)-20,272,40)}${texSVG('1',px(1)-20,272,40)}<text x="${xOffset+35}" y="24" font-size="15" fill="#172b42">${method==='trap'?'Dos extremos: trapecio':'Dos nodos interiores: Gauss'}</text>${texSVG(method==='trap'?'T=4':'G_2=8/3',xOffset+105,305,170,28)}`;};
-  el.innerHTML=`<figure class="plot-box"><svg viewBox="0 0 800 350" role="img" aria-label="La función uno más equis al cuadrado: el trapecio por los extremos sobreestima; Gauss de dos puntos integra exactamente">${panel(0,'trap')}${panel(410,'gauss')}</svg><figcaption>La curva verde y el área azul usan los mismos ejes en ambos paneles. Los puntos dorados muestran dónde se evalúa la función.</figcaption></figure>`;renderMath(el);
- }
- function initializePlots(){
-  document.querySelectorAll('[data-plot]').forEach((el,index)=>{
-   const key=el.dataset.plot;if(key==='gauss-intro'){gaussIntro(el);return;}
-   const gaussian=key.startsWith('gauss'),method=gaussian?'gauss':key.startsWith('simpson')?'simpson':key.startsWith('rectangle')?'rectangle':'trap',composite=key.endsWith('composite');
-   let n=gaussian?({ 'gauss-two':2,'gauss-three':3,'gauss-four':4 }[key]):method==='simpson'?(composite?(lessons[current].slug==='simpson-compuesto-deduccion'?6:10):2):(composite?(method==='rectangle'?4:3):1);
-   const select=gaussian?`<label for="plotN${index}">Nodos</label><select id="plotN${index}">${[2,3,4].map(k=>`<option value="${k}" ${k===n?'selected':''}>${k} puntos</option>`).join('')}</select>`:composite?`<label for="plotN${index}">Subintervalos ${m('n')}</label><input type="range" id="plotN${index}" min="${method==='simpson'?2:1}" max="20" step="${method==='simpson'?2:1}" value="${n}"><output for="plotN${index}" id="plotOut${index}">${n}</output>`:'';
-   el.innerHTML=`<figure class="plot-box">${select?`<div class="plot-toolbar">${select}</div>`:''}<svg viewBox="0 0 800 340" role="img" aria-label="${gaussian?'Nodos de Gauss-Legendre en el intervalo de uno a dos':method==='simpson'?'Aproximación parabólica de Simpson':method==='rectangle'?'Aproximación por rectángulos con alturas por la izquierda':'Aproximación por trapecios'}"></svg><div class="legend"><span>Función</span>${gaussian?'':'<span>Aproximación</span>'}<span>Nodos de evaluación</span></div><figcaption>${gaussian?'Gauss calcula una suma ponderada de valores en los nodos interiores; no suma trapecios.':'La escala permanece fija al cambiar la partición. En Simpson, la parábola y la función pueden verse casi superpuestas.'}${select?' Los controles modifican solo esta exploración, no los datos del ejercicio resuelto.':''}</figcaption><div class="plot-result"></div></figure>`;
-   const draw=()=>{chart(el.querySelector('svg'),C.f,1,2,{method,n});const q=gaussian?C.gauss(C.f,1,2,n):method==='simpson'?C.simpson(C.f,1,2,n):method==='rectangle'?Array.from({length:n},(_,i)=>C.f(1+i/n)).reduce((a,b)=>a+b,0)/n:C.trap(C.f,1,2,n);el.querySelector('.plot-result').innerHTML=`<span>Aproximación: ${m(num(q,12))}</span><span>Error absoluto: ${m(num(Math.abs(C.ref-q),12))}</span>`;renderMath(el.querySelector('.plot-result'));};
-   const control=el.querySelector('input,select');if(control)control.addEventListener('input',()=>{n=Number(control.value);const out=$('plotOut'+index);if(out)out.value=n;draw();});draw();
+
+ function iniciarGraficas(){
+  document.querySelectorAll('[data-plot]').forEach((el,idx)=>{
+   const [metodo,n0]=el.dataset.plot.split(':'),M=METODOS[metodo],gauss=metodo==='gauss';
+   let n=Number(n0),F=FUNCIONES[0];
+   const ctlN=gauss?`<label>Nodos <select data-n>${[2,3,4].map(k=>`<option value="${k}" ${k===n?'selected':''}>${k} puntos</option>`).join('')}</select></label>`:`<label>Subintervalos ${m('n')} <input type="range" data-n min="${M.min}" max="40" step="${M.paso}" value="${n}"> <output>${n}</output></label>`;
+   el.innerHTML=`<figure class="plot-box"><div class="plot-toolbar"><label>Función <select data-f>${FUNCIONES.map((g,i)=>`<option value="${i}">${esc(g.nombre)}</option>`).join('')}</select></label>${ctlN}</div><svg viewBox="0 0 800 360" data-i="${idx}" role="img" aria-label="${esc(M.nombre)}"></svg><div class="legend"><span>Función</span><span>${esc(M.nombre)}</span><span>Puntos de evaluación</span></div><div class="plot-result"></div><figcaption>Cambia la función y ${gauss?'la cantidad de nodos':'la cantidad de subintervalos'} para ver qué figura construye el método y cómo cambia el error. La referencia es un cálculo numérico muy fino, no una antiderivada.</figcaption></figure>`;
+   const svg=el.querySelector('svg'),res=el.querySelector('.plot-result'),out=el.querySelector('output');
+   const actualizar=()=>{dibujar(svg,F,metodo,n);const q=M.aprox(F.f,F.a,F.b,n),I=referencia(F.f,F.a,F.b);res.innerHTML=`<span>Aproximación: <strong>${d10(q)}</strong></span><span>Integral (referencia): ${d10(I)}</span><span>Error absoluto: <strong>${d10(Math.abs(I-q))}</strong></span>`;};
+   el.querySelector('[data-f]').addEventListener('change',e=>{F=FUNCIONES[Number(e.target.value)];actualizar();});
+   el.querySelector('[data-n]').addEventListener('input',e=>{n=Number(e.target.value);if(out)out.value=n;actualizar();});
+   actualizar();
   });
  }
- function route({focus=false}={}){
-  document.querySelector('video')?.pause();if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;}
-  const requestedHash=decodeURIComponent(location.hash.slice(1)),hash=requestedHash==='comparacion-y-cierre'?'gauss-cuatro-puntos':requestedHash;current=lessons.findIndex(l=>l.slug===hash);
-  $('vista').innerHTML=current<0?home():lesson(current);updateNav();renderMath($('vista'));document.body.classList.remove('menu-open');document.querySelector('.mobile-menu').setAttribute('aria-expanded','false');
-  document.title=current<0?'Integración numérica · Métodos Numéricos':`${lessons[current].title} · Integración numérica`;
-  if(current>=0){const l=lessons[current];state.last=l.slug;save();$('playVideo').onclick=()=>startVideo(l);$('markSeen').onclick=()=>setSeen(l.id,!state.seen.includes(l.id));$('personalNotes').value=state.notes[l.id]||'';$('personalNotes').oninput=e=>{state.notes[l.id]=e.target.value;save();$('notesState').textContent=storageAvailable?'Nota guardada en este navegador.':'Nota disponible durante esta sesión; el navegador no permite guardarla.';};$('previous').onclick=()=>location.hash=current===0?'inicio':lessons[current-1].slug;$('next').onclick=()=>location.hash=current===lessons.length-1?'inicio':lessons[current+1].slug;
-   $('checkForm').onsubmit=e=>{e.preventDefault();const raw=new FormData(e.target).get('answer');let answer=l.quiz.type==='number'?parseDecimal(raw):Number(raw);const okay=Number.isFinite(answer)&&(l.quiz.type==='choice'?answer===l.quiz.answer:Math.abs(answer-l.quiz.answer)<=l.quiz.tol);$('checkFeedback').className='feedback '+(okay?'good':'bad');$('checkFeedback').textContent=(okay?'Correcto. ':'Revisa el procedimiento. ')+l.quiz.why;};initializePlots();
-  }
-  window.scrollTo({top:0,behavior:'instant'});if(focus){const heading=$('vista').querySelector('h1');heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
+ /* Gráfica que acompaña a cada video de explicación. */
+ const GRAFICA={'rectangulo-compuesto':'rectangulo:4','trapecio-deduccion':'trapecio:1','trapecio-compuesto-deduccion':'trapecio:4','simpson-deduccion':'simpson:2',
+  'simpson-error':'simpson:2','simpson-compuesto-deduccion':'simpson:6','cuadratura-gaussiana':'gauss:2','gauss-dos-puntos':'gauss:2','gauss-tres-puntos':'gauss:3','gauss-cuatro-puntos':'gauss:4'};
+
+ /* ---------------------------------------------------------------- vistas */
+ function updateNav(){
+  $('temas').innerHTML=blocks.map((b,bi)=>`<h2>${esc(b.name)}</h2>${lessons.map((l,i)=>l.block===bi?`<a href="#${l.slug}" ${i===current?'class="active" aria-current="page"':''}><span class="nav-number">${two(i)}</span><span>${esc(l.title)}</span><span class="nav-check">${state.seen.includes(l.id)?'✓':''}</span></a>`:'').join('')}`).join('');
+  $('progress').value=state.seen.length;$('progressText').textContent=`${state.seen.length} de ${lessons.length} videos vistos`;
  }
- function parseDecimal(raw){const s=String(raw??'').trim().replace(',','.');return /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(s)?Number(s):NaN;}
+ function home(){return `<section class="hero solo"><div><span class="eyebrow">Métodos Numéricos · Guía de estudio</span><h1>Integración numérica</h1><p>Quince videos, en orden, con el procedimiento escrito de cada uno. En los ejercicios encontrarás primero el enunciado, después el video y debajo la solución completa tal como se desarrolla en la hoja del video.</p><a class="primary" href="#${lessons[0].slug}">Comenzar con el video 01 →</a>${state.last?` <a class="primary alt" href="#${esc(state.last)}">Continuar donde quedé →</a>`:''}<div class="meta-strip"><span>15 videos · 1 h 32 min</span><span>Enunciados y procedimientos escritos</span><span>Gráficas para explorar los métodos</span></div></div></section>
+  <div class="grid3">${blocks.map((b,i)=>`<article class="chapter-card"><span class="chapter-n">${String(i+1).padStart(2,'0')}</span><h2>${b.name}</h2><p>${b.intro}</p><a href="#${lessons[b.first].slug}">${b.range} →</a></article>`).join('')}</div>
+  <section class="section"><h2>Cómo estudiar con esta guía</h2><ol class="steps"><li><strong>Lee el enunciado</strong> e intenta plantear el problema antes de ver el video.</li><li><strong>Mira el video</strong> y pausa en cada paso para reproducirlo en tu cuaderno.</li><li><strong>Repasa el procedimiento escrito</strong> debajo del video: cada renglón lleva a la derecha su justificación, como en la hoja del video.</li><li><strong>Explora la gráfica</strong> en los videos de explicación: cambia la función y la partición para ver las figuras que construye cada método.</li></ol>${C.m?`<div class="callout">Las funciones trigonométricas se evalúan en <strong>radianes</strong>. Se usan diez decimales; se recomienda conservar todos los dígitos de la calculadora y redondear solo al final.</div>`:''}</section>
+  <section class="section"><h2>Los quince videos</h2><ol class="route-list">${lessons.map((l,i)=>`<li><a href="#${l.slug}"><span class="nav-number">${two(i)}</span><span>${esc(l.title)} ${state.seen.includes(l.id)?'✓':''}</span><small>${esc(l.kind)} · ${esc(video(l).duracion||'')}</small></a></li>`).join('')}</ol></section>`;}
+ function lesson(i){
+  const l=lessons[i],v=video(l),ejercicio=Boolean(l.enunciado),graf=GRAFICA[l.slug];
+  return `<header class="lesson-heading"><div class="lesson-meta"><span class="pill blue">${esc(blocks[l.block].name)}</span><span class="lesson-number">Video ${two(i)} de 15 · ${esc(l.kind)}${v.duracion?' · '+esc(v.duracion):''}</span></div><h1 tabindex="-1">${esc(l.title)}</h1><p>${esc(l.lead)}</p></header>
+  ${ejercicio?`<section class="enunciado"><span class="eyebrow">Enunciado</span>${l.enunciado}</section>`:''}
+  <div class="player" id="player"><button type="button" class="video-cover" id="playVideo"><span class="play-icon" aria-hidden="true">▶</span><strong>${esc(l.title)}</strong><small>Reproducir video ${two(i)}</small></button></div>
+  <div class="video-problem" id="videoProblem" role="status" hidden></div>
+  <div class="watch-actions"><a href="${esc(v.verEnDrive||window.CARPETA_VIDEOS_INTEGRACION)}" target="_blank" rel="noopener">Abrir video en Drive ↗</a><button type="button" id="markSeen" aria-pressed="${state.seen.includes(l.id)}">${state.seen.includes(l.id)?'✓ Video visto':'Marcar como visto'}</button></div>
+  <article class="section lesson-body"><span class="eyebrow">${ejercicio?'Solución':'Desarrollo'}</span><h2>${ejercicio?'Procedimiento del video':'Desarrollo escrito del video'}</h2>${l.cuerpo()}</article>
+  ${graf?`<section class="section"><span class="eyebrow">Explora</span><h2>Gráfica del método</h2><div data-plot="${graf}"></div></section>`:''}
+  <nav class="lesson-bottom" aria-label="Navegación entre videos"><button type="button" id="previous"><small>${i===0?'Volver':'Video anterior'}</small>${i===0?'Inicio':'← '+esc(lessons[i-1].title)}</button><button type="button" id="next" class="primary"><small>${i===lessons.length-1?'Terminar':'Siguiente video'}</small>${i===lessons.length-1?'Volver al inicio ✓':esc(lessons[i+1].title)+' →'}</button></nav>`;
+ }
+ function setSeen(id,value){state.seen=state.seen.filter(x=>x!==id);if(value)state.seen.push(id);save();updateNav();if(current>=0&&lessons[current].id===id){$('markSeen').setAttribute('aria-pressed',String(value));$('markSeen').textContent=value?'✓ Video visto':'Marcar como visto';}}
+ function startVideo(l){
+  const config=video(l);
+  if(!config.src){$('videoProblem').hidden=false;$('videoProblem').textContent='El video de esta lección todavía no tiene una dirección asignada.';return;}
+  const player=$('player');player.replaceChildren();
+  if(config.tipo==='iframe'){const frame=document.createElement('iframe');frame.title=`Video: ${l.title}`;frame.src=config.src;frame.allow='autoplay; encrypted-media; fullscreen; picture-in-picture';frame.allowFullscreen=true;frame.referrerPolicy='strict-origin-when-cross-origin';player.append(frame);}
+  else{const vid=document.createElement('video');vid.controls=true;vid.preload='metadata';vid.playsInline=true;vid.src=config.src;vid.addEventListener('ended',()=>setSeen(l.id,true));player.append(vid);vid.play().catch(()=>{});}
+ }
+ function route(){
+  const raw=decodeURIComponent(location.hash.slice(1)),hash=raw==='comparacion-y-cierre'?'gauss-cuatro-puntos':raw;
+  current=lessons.findIndex(l=>l.slug===hash);
+  $('vista').innerHTML=current<0?home():lesson(current);updateNav();renderMath($('vista'));
+  document.body.classList.remove('menu-open');document.querySelector('.mobile-menu').setAttribute('aria-expanded','false');
+  document.title=current<0?'Integración numérica · Métodos Numéricos':`${lessons[current].title} · Integración numérica`;
+  if(current>=0){const l=lessons[current];state.last=l.slug;save();
+   $('playVideo').onclick=()=>startVideo(l);$('markSeen').onclick=()=>setSeen(l.id,!state.seen.includes(l.id));
+   $('previous').onclick=()=>location.hash=current===0?'inicio':lessons[current-1].slug;$('next').onclick=()=>location.hash=current===lessons.length-1?'inicio':lessons[current+1].slug;
+   iniciarGraficas();}
+  window.scrollTo({top:0,behavior:'instant'});
+ }
  document.querySelector('.mobile-menu').onclick=()=>{const open=document.body.classList.toggle('menu-open');document.querySelector('.mobile-menu').setAttribute('aria-expanded',String(open));};
  document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.body.classList.remove('menu-open');document.querySelector('.mobile-menu').setAttribute('aria-expanded','false');}});
  $('resetProgress').onclick=()=>{state.seen=[];state.last='';save();updateNav();if(current>=0){$('markSeen').textContent='Marcar como visto';$('markSeen').setAttribute('aria-pressed','false');}};
- window.addEventListener('hashchange',()=>route({focus:true}));
- window.IntegracionUI={renderMath,parseDecimal};route();
+ window.addEventListener('hashchange',route);
+ window.IntegracionUI={renderMath};route();
 })();
