@@ -1,0 +1,3 @@
+Los quince videos están enlazados desde Google Drive en ../videos.js.
+No hace falta copiar los archivos MP4 aquí. La reproducción requiere internet.
+Para usar videos locales, cambie las entradas correspondientes a tipo:'archivo' y src:'videos/nombre.mp4'.
