@@ -1,0 +1,343 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage{url}
+\usepackage[colorlinks,urlcolor=blue]{hyperref}
+\usepackage[UTF8]{inputenc}
+%\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{uarial}
+\renewcommand\familydefault{\sfdefault}
+\usepackage{amsmath,amssymb,amsfonts,latexsym,cancel, wrapfig, multicol,enumerate,graphicx, xcolor,paralist,tikz,tkz-tab,dsfont}
+\usepackage[letterpaper,showframe=false]{geometry}
+\usepackage[spanish]{babel}
+\usepackage{color}
+\usepackage{hyperref}
+%colores------------------------------------------------
+\input{Direcciones/colores}
+%-------------------------------------------------------
+
+\DeclareGraphicsExtensions {.pdf,.png,.jpg}
+
+%Dimensiones-------------------------------------------
+\textheight=26cm
+\textwidth=20 cm
+\topmargin=-3.2 cm
+\oddsidemargin=-2 cm
+\evensidemargin=0 cm
+\parskip=0 mm
+\parindent=0 mm
+%-----------------------------------------------------
+
+
+%\usepackage[T1]{fontenc}
+\usepackage{uarial}
+\renewcommand\familydefault{\sfdefault}
+%\usepackage{blindtext}
+
+\newcommand{\URLLibroMN}{\href{https://ezproxy.itcr.ac.cr/login?url=https://www.bibliotecaebook.com/my-library}{\textbf{Acceso al e-book}} Libro de Métodos Numéricos. Autor Jeffry Chavarría Molina.}
+
+\newcommand{\CursoOctave}{\href{https://lugfi.github.io/curso-octave/index.html}{\textbf{Ingreso al curso}}}
+
+\newcommand{\PaqueteSymbolic}{\href{https://docs.sympy.org/latest/tutorials/intro-tutorial/index.html}{\textbf{Paquete Sympy:}} Paquete para realizar cálculo simbólico en Python}
+%--------------------------------
+%Videos
+
+
+\newcommand{\URLVideoUno}{\href{https://youtu.be/_7Aw-ay67DM}{\textbf{Vídeo 1:}} Integración con datos no igualmente espaciado}
+
+\newcommand{\URLVideoDos}{\href{https://tecnube1-my.sharepoint.com/:v:/g/personal/ccalderon_itcr_ac_cr/EfR-z83flapBtUcMU36DMr4BlEX-YLvYJBM7eMtV8kM4Mw?e=9Ed7WD}{\textbf{Video 2:}} Cuadratura Gaussiana. Introducción}
+
+\newcommand{\URLVideoTres}{\href{https://tecnube1-my.sharepoint.com/:v:/g/personal/ccalderon_itcr_ac_cr/EZJCmoE_ZydJqdjObEAX0EcBSlz-IyN2drdlT4QuWE759g?e=3r3SLz}{\textbf{Video 3:}} Cuadratura Gaussiana. Ejemplo}
+
+\newcommand{\URLVideoCuatro}{\href{https://tecnube1-my.sharepoint.com/:v:/g/personal/ccalderon_itcr_ac_cr/ETdNUpQs4Q5LjHNWW62PxP8BUNPz02wIHSAs_nfhxJRW2g?e=5s6yyh}{\textbf{Video 4:}} Gauss-Legendre}
+
+\newcommand{\URLVideoCinco}{\href{https://youtu.be/j0SyekJzuvg}{\textbf{Video 5:}} Cuadratura Gaussinaa en Octave}
+
+
+%------------Vídeos teoricos---------------
+\newcommand{\URLVideoTeoriaActiI}{\href{https://drive.google.com/file/d/1Is-lhFgiC0lT138Ikfc-pgqc2trrvBBq/view?usp=sharing}{\textbf{Vídeo de teoría 1:}}  Complementario al libro}
+\newcommand{\URLVideoTeoriaActiII}{\href{https://drive.google.com/file/d/1kloExvEhsScDhAK6WMXRjhp5rQ62zYDm/view?usp=sharing}{\textbf{Vídeo de teoría 2:}} Complementario al libro}
+\newcommand{\URLVideoTeoriaActiIII}{\href{https://drive.google.com/file/d/1H7o1l6RkJaNmG_7-_cLjfnSolojOus38/view?usp=sharing}{\textbf{Vídeo de teoría 3:}} Complementario al libro}
+
+
+%---------Infografías-----------------
+
+
+
+%----------Solucionario-------------
+\newcommand{\FolletoPractica}{\href{https://tecnube1-my.sharepoint.com/:b:/g/personal/jchavarria_itcr_ac_cr/ESbC_k0vPWdMovfv0-d9GpoBcM31nPWa26ScY419frpBdw?e=hutomi}{\textbf{Folleto de práctica}} Folleto completo de práctica del curso.}
+
+\newcommand{\FolletoPracticaDOS}{\href{https://tecnube1-my.sharepoint.com/:b:/g/personal/jchavarria_itcr_ac_cr/ESbC_k0vPWdMovfv0-d9GpoBcM31nPWa26ScY419frpBdw?e=hutomi}{\textbf{Folleto de práctica}}}
+
+
+%----------Podcast---------------------------------------------
+
+\newcommand{\URLpodcast}{\href{https://soundcloud.com/angie-solis-palma/logica-matematica-y-conectivas-logicas?utm_source=clipboard\&utm_campaign=wtshare\&utm_medium=widget\&utm_content=https\%253A\%252F\%252Fsoundcloud.com\%252Fangie-252Fsol-palmamama}{\textbf{Podcast:}} Lógica matemática.}
+
+
+
+\input{Direcciones/dire}
+
+
+\begin{document}
+\setlength{\parskip}{0.3cm}
+
+%Encabezado-----------------------------------------------------------------------------------	
+
+
+
+
+
+
+\begin{center}
+{ \fboxsep 12pt
+	\fcolorbox {encabezado}{encabezado}{
+	\begin{minipage}[t]{19.5cm}
+		{\color{white} 
+		\input{Direcciones/encabezado} \\
+		\rule[0.1cm]{19.5cm}{0.01cm}
+		\begin{center}
+			{\Huge  \textbf{Semana 11}}
+		\end{center}
+		\vspace{-0.5cm}
+		\rule[0cm]{19.5cm}{0.01cm}
+		\begin{center}
+			{  \textbf{Integración Numérica}}
+		\end{center}
+					}
+	\vspace{-0.5cm}
+	\end{minipage}
+	} 
+}
+\end{center}
+
+
+%Pagina1-------------------------------------------------------------------------
+\begin{minipage}[c]{14cm}
+	\begin{center}
+		\includegraphics[height=5.4cm,width=11cm]{imagenes/estudiantes}
+	\end{center}
+		
+{\color{titulos} {\large \textbf{Descripción para la semana:}}}\\
+		
+Durante la \textbf{semana 11} se repasó la integral definida, su interpretación gráfica, el teorema fundamental del cálculo y la regla de Barrow. Se introdujeron las fórmulas de Newton-Cotes y se estudiaron la \textbf{regla del rectángulo simple y la regla del rectángulo compuesta}. Esta orientación organiza el repaso y la práctica de esos contenidos.
+
+{\color{titulos} {\large \textbf{ Modo de trabajo:}}}
+		
+{ \fboxsep 12pt
+	\fcolorbox {cuadro1}{cuadro1}{
+		\begin{minipage}[l][9.6cm]{3.15cm}
+			\begin{center}
+				\includegraphics[scale=0.2]{imagenes/uno}
+			\end{center}
+			{\color{ContenidosObjetivos} {\large Material a utilizar}} \\ \\
+			{\footnotesize
+\href{https://jchavarriam-pixel.github.io/ITCR_CURSOS/MN/IntegracionNumerica/}{\textbf{Guía web de integración numérica}}\\[0.2cm]
+Videos, explicaciones escritas, fórmulas, cálculos y resultados.\\[0.2cm]
+Consulten también las notas de clase enlazadas en la página.
+} 
+\vspace{0.5cm}
+						
+		\end{minipage}
+		}
+}
+{ \fboxsep 12pt
+		\fcolorbox {cuadro2}{cuadro2}{
+			\begin{minipage}[l][9.6cm]{3.9cm}
+				\begin{center}
+					\includegraphics[scale=0.2]{imagenes/dos}
+				\end{center}
+				{\color{ContenidosObjetivos} {\large Vídeos}} \\ \\
+				{\footnotesize
+\textbf{Recursos de estudio:}\\[0.2cm]
+Notas de clase y libro de texto para el repaso de integración definida y la introducción a Newton-Cotes.\\[0.2cm]
+\href{https://jchavarriam-pixel.github.io/ITCR_CURSOS/MN/IntegracionNumerica/\#rectangulo-compuesto}{\textbf{Video 01 de la guía web:}} Regla compuesta del rectángulo.\\[0.2cm]
+Intenten los cálculos antes de consultar el desarrollo escrito.
+}
+\end{minipage}
+	}
+}
+{ \fboxsep 12pt
+	\fcolorbox {cuadro3}{cuadro3}{
+		\begin{minipage}[l][9.6cm]{3.15cm}
+			\begin{center}
+				\includegraphics[scale=0.2]{imagenes/tres}
+			\end{center}
+			{\color{ContenidosObjetivos} {\large Evaluación}} \\ \\
+			 \footnotesize 
+			 \textbf{Práctica de la semana:}
+
+Resuelvan los ejercicios de integral definida y de las reglas del rectángulo simple y compuesta indicados en esta orientación.
+
+Conserven sus procedimientos y registren las dudas para consultarlas.
+\vfill
+\end{minipage}
+	} 
+} 
+\end{minipage}\hspace{0.2cm}\begin{minipage}[c]{5cm}
+\begin{center}
+{ \fboxsep 12pt
+		\fcolorbox {CcontenidosObjetivos}{CcontenidosObjetivos}{
+\begin{minipage}[l][21cm]{5cm}
+\begin{center}
+	\ImagenDM
+\end{center}
+					
+{\color{ContenidosObjetivos}\textbf{ \small Contenidos:}}\\
+					
+{\footnotesize
+{ \tiny $\blacksquare$} Métodos numéricos para la integración de funciones \\ \\
+{ \tiny $\blacksquare$}  Programación de métodos para la integración de funciones\\
+}
+
+{\color{white}\rule[0.1cm]{5cm}{0.01cm}}
+		{\color{ContenidosObjetivos} \textbf{ \small Objetivos:}}\\
+					
+{\footnotesize
+{ \tiny $\blacksquare$} Estudiar métodos asociados la integración de funciones \\ \\
+{ \tiny $\blacksquare$} Programar los métodos para
+la integración de funciones
+}
+
+{\color{white}\rule[0.1cm]{5cm}{0.01cm}}\\
+
+%\vspace{2cm}
+%\hspace{-7pt}\begin{minipage}[4cm]{5cm}
+%\begin{center}
+%\includegraphics[scale=0.14]{imagenes/QRFacebook}
+%
+%Comunidad de la cátedra de Matemática Discreta en el tecDigital (\URLFacebook).
+%\end{center}
+%\end{minipage}
+
+\end{minipage}
+}}
+\end{center}
+\end{minipage}	 
+%----------------------------------------------------------------------------
+
+
+\newpage
+
+%Página2----------------------------------------------------------------------
+\begin{multicols}{2}
+{\color{actividades}\textbf{Actividad 1: Integral definida}\par}
+\begin{itemize}
+\item Repasen la definición de integral definida y la partición de un intervalo. Consulten la sección 5.3 del libro, páginas 339--342.
+\item Interpreten la integral como área con signo y distingan este valor del área geométrica total.
+\item Repasen el teorema fundamental del cálculo y la regla de Barrow: si $F'=f$, entonces $\int_a^b f(x)\,dx=F(b)-F(a)$, bajo las hipótesis correspondientes.
+\end{itemize}
+
+{\color{actividades}\textbf{Actividad 2: Newton-Cotes y rectángulo}}
+\begin{itemize}
+\item Revisen la idea de las fórmulas de Newton-Cotes: aproximar la función mediante un polinomio interpolador e integrar ese polinomio.
+\item Estudien la regla del rectángulo simple y su interpretación gráfica, según la convención utilizada en clase.
+\item Estudien los ejemplos 123, 124 y 125 del libro relacionados con la regla del rectángulo.
+\end{itemize}
+
+\columnbreak
+{\color{actividades}\textbf{Actividad 3: Rectángulo compuesto}\par}
+\begin{itemize}
+\item Construyan una partición uniforme con $n$ subintervalos y ancho $h=(b-a)/n$.
+\item Identifiquen los puntos de evaluación utilizados en clase y sumen las contribuciones de los rectángulos.
+\item Revisen el video 01 de la guía web y su desarrollo escrito. En este recurso se emplean extremos izquierdos.
+\item Comparen el resultado con una integral de referencia y distingan el error real de una cota del error.
+\end{itemize}
+
+{\color{actividades}\textbf{Actividad 4: Ejercicios de práctica}}
+
+Los ejercicios 1--3 se elaboraron para esta orientación; el ejercicio 4 corresponde al video 01 de la guía web. Las respuestas se incluyen en la página siguiente.
+\begin{enumerate}
+\item Para $f(x)=x^2$ en $[0,2]$, dibujen la región y calculen la integral definida mediante la regla de Barrow. Expliquen su relación con el área.
+\item Para $f(x)=x-1$ en $[0,2]$, calculen la integral definida y el área geométrica total. Justifiquen por qué difieren.
+\item Para $\int_0^2 x^2\,dx$, apliquen la regla del rectángulo simple con extremo izquierdo. Luego, apliquen la regla compuesta con extremos izquierdos para $n=4$ y $n=8$. Comparen los errores absolutos con el valor exacto.
+\item Resuelvan el enunciado del video 01: aproximen $\int_1^2 \frac{\operatorname{sen}x}{x}\,dx$ con rectángulos izquierdos y determinen $n$ para garantizar un error absoluto menor que $10^{-5}$. Comparen después con la solución de la guía.
+\end{enumerate}
+\end{multicols}
+
+{ \fboxsep 12pt
+\fcolorbox {CRecapitulacion}{CRecapitulacion}{
+\begin{minipage}[c]{12cm}
+{\color{ContenidosObjetivos}\large {\large Recapitulación}:}\\
+		
+Se les recuerda la importancia de completar las actividades asignadas de la sección virtual para un desarrollo adecuado de su aprendizaje. Completen las actividades de repaso de la semana 11 y conserven sus cálculos para repasarlos y consultar sus dudas. \\
+		
+Se le recuerda que no está solo en el proceso. Puede realizar sus dudas en el grupo de Teams.\\
+		
+
+\end{minipage}
+		\begin{minipage}[c]{7cm}
+			\begin{center}
+				\Motivacion
+			\end{center}
+			
+		\end{minipage}
+	}
+}
+
+
+\newpage
+{\color{titulos}\Large\textbf{Respuestas de la actividad 4}}
+
+Intenten resolver cada ejercicio antes de consultar estas respuestas. En las reglas del rectángulo se utilizan extremos izquierdos, tal como indican los enunciados.
+
+{\color{actividades}\textbf{1. Integral de $x^2$ en $[0,2]$}}
+
+Una primitiva es $F(x)=x^3/3$. Por la regla de Barrow,
+\[
+\int_0^2 x^2\,dx=\left[\frac{x^3}{3}\right]_0^2=\boxed{\frac83}.
+\]
+La región está entre la curva $y=x^2$, el eje horizontal y las rectas $x=0$ y $x=2$. Como $x^2\geq0$, la integral coincide con el área geométrica: $8/3$ unidades cuadradas.
+
+{\color{actividades}\textbf{2. Integral de $x-1$ y área geométrica}}
+\[
+\int_0^2(x-1)\,dx=\left[\frac{x^2}{2}-x\right]_0^2=\boxed{0}.
+\]
+La función cambia de signo en $x=1$. Las dos regiones son triángulos de base y altura iguales a 1: cada uno tiene área $1/2$. La integral suma las áreas con signo, $-1/2+1/2=0$, mientras que el área geométrica total es $\boxed{1}$ unidad cuadrada.
+
+{\color{actividades}\textbf{3. Rectángulos para $\int_0^2 x^2\,dx$}}
+
+Con un solo rectángulo izquierdo, $R=(2-0)f(0)=\boxed{0}$. Para la regla compuesta,
+\[
+L_n=h\sum_{i=0}^{n-1}(ih)^2,\qquad h=\frac2n,
+\qquad L_n=\frac{4(n-1)(2n-1)}{3n^2}.
+\]
+\begin{center}
+\begin{tabular}{c|c|c|c}
+Método & $h$ & Aproximación & Error absoluto $|8/3-L_n|$\\ \hline
+Simple izquierdo & $2$ & $0$ & $8/3\approx2.666667$\\
+Compuesto, $n=4$ & $1/2$ & $7/4=1.75$ & $11/12\approx0.916667$\\
+Compuesto, $n=8$ & $1/4$ & $35/16=2.1875$ & $23/48\approx0.479167$
+\end{tabular}
+\end{center}
+Las aproximaciones son menores que la integral porque $x^2$ es creciente y se usan extremos izquierdos. Al aumentar el número de rectángulos, el error disminuye.
+
+{\color{actividades}\textbf{4. Rectángulo compuesto del video 01}}
+
+Para $f(x)=\operatorname{sen}(x)/x$ en $[1,2]$, con ángulos en radianes, el desarrollo de la guía establece $|f'(x)|\leq M=0.4354$. La cota para rectángulos izquierdos da
+\[
+|I-L_n|\leq\frac{(b-a)^2M}{2n}=\frac{0.4354}{2n}.
+\]
+Para garantizar un error menor que $10^{-5}$ mediante esta cota, se exige $n>21770$; por tanto, el menor entero que satisface esta condición es $\boxed{n=21771}$. Entonces,
+\[
+L_{21771}=\frac1{21771}\sum_{i=0}^{21770}
+\frac{\operatorname{sen}(1+i/21771)}{1+i/21771}
+\approx\boxed{0.659338790}.
+\]
+La cota es aproximadamente $9.99954\times10^{-6}<10^{-5}$. Con $I\approx0.659329906$, el error real es aproximadamente $8.88\times10^{-6}$, y respeta la cota.
+
+
+
+%{\color{actividades} \textbf{   $\bullet$ Códigos QR de los vídeos:}}\\
+%\begin{center}
+%\begin{tabular}{|c|c|c|c|}
+%\hline 
+%\textbf{¿Para que sirven las matemáticas?} & \textbf{Motivación a la lógica} & \textbf{Vídeo de teoría 1} &\textbf{Vídeo de teoría 2} \\ \hline &&&\\  
+%\includegraphics[scale=0.1]{imagenes/QRMoti1} & \includegraphics[scale=0.1]{imagenes/QRMoti2} & \includegraphics[scale=0.1]{imagenes/QRVideo1} & \includegraphics[scale=0.1]{imagenes/QRVideo2}\\ 
+%\hline 
+%\textbf{Vídeo 3}&\textbf{Vídeo 4}&\textbf{Vídeo 5}&\\ 
+%\hline &&&\\  
+% \includegraphics[scale=0.1]{imagenes/QRVideo3} & \includegraphics[scale=0.1]{imagenes/QRVideo4} & \includegraphics[scale=0.1]{imagenes/QRVideo5} & \\ \hline
+%\end{tabular} 
+%\end{center}
+\end{document}
+
