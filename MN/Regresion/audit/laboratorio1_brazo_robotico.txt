@@ -1,0 +1,3636 @@
+CELL 1 markdown
+# Simulación bidimensional de un brazo robótico plano de tres articulaciones
+
+**Curso:** Métodos Numéricos - G01  
+**Laboratorio 1 - Proyecto de simulación de brazo robótico**  
+**Instituto Tecnológico de Costa Rica**  
+
+**Integrantes:**
+- Valeria Daniela Arce Cortés - carné: 2020233145 - correo: dcortes12321@estudiantec.cr
+- Abigail Sánchez González - carné: 2022438017 - correo:
+absanchez@estudiantec.cr
+- David Castro Chaves - carné: 2024122057 - correo: d.castro.1@estudiantec.cr
+- Pablo Andrés Elizondo Leiva - 2014160023 - pelizondo@estudiantec.cr
+
+**Coordinador(a):** Pablo Andrés Elizondo Leiva
+
+**Fecha de entrega:** 08 de octubre de 2026
+OUTPUT []
+CELL 2 markdown
+# Objetivo del proyecto
+
+**Objetivo general**
+
+Desarrollar un laboratorio computacional que permita modelar, resolver y animar el movimiento de un brazo robótico plano de tres articulaciones mediante la formulación de un sistema no lineal resuelto con el método de Newton-Raphson en tres variables.
+
+**Objetivos específicos**
+
+1. Modelar matemáticamente la posición del efector final de un brazo robótico plano de tres eslabones.
+2. Formular el problema de determinación de ángulos articulares como un sistema no lineal de tres ecuaciones con tres incógnitas.
+3. Implementar las cinco ecuaciones auxiliares y calcular los ángulos necesarios para alcanzar un punto dado.
+4. Construir un programa robusto que recorra una lista arbitraria de puntos.
+5. Generar gráficas y animaciones del recorrido para cada ecuación auxiliar.
+6. Comparar las trayectorias y construir mapas del espacio de trabajo.
+7. Documentar el proceso de trabajo del equipo y el uso responsable de IA.
+
+OUTPUT []
+CELL 3 markdown
+# Declaración de uso responsable de IA
+
+
+En la elaboración de este laboratorio se utilizaron herramientas de
+inteligencia artificial como apoyo para las siguientes tareas:
+
+- **Escritura y depuración de código.** Se emplearon asistentes de IA para proponer estructuras de funciones,
+  redactar fragmentos de código Python, detectar errores de sintaxis y
+  sugerir mejoras en la organización del cuaderno. Todo el código generado
+  fue ejecutado, revisado y adaptado por los integrantes del equipo antes
+  de incorporarlo a la versión final.
+
+- **Asistencia de redacción.** La IA se utilizó como apoyo para redactar y
+  pulir secciones de texto del cuaderno: planteamiento matemático,
+  descripción de las ecuaciones auxiliares, análisis comparativo de las
+  fases y discusión de limitaciones.
+
+- **Orientación metodológica.** Se consultó a la IA para obtener sugerencias
+  sobre cómo distribuir las responsabilidades entre los cuatro integrantes
+  del equipo, cómo organizar el cronograma de trabajo y cómo abordar las
+  distintas fases del proyecto. Las decisiones finales sobre el reparto de
+  tareas y la planificación fueron tomadas por el equipo.
+
+El equipo revisó, adaptó y validó los aportes utilizados, y comprende el
+propósito general del proyecto, las decisiones principales, los resultados
+y las conclusiones presentadas. El equipo asume
+la responsabilidad académica por el producto presentado.
+OUTPUT []
+CELL 4 markdown
+# Bitácora de reuniones y distribución del trabajo
+
+A continuación se registra la bitácora de trabajo del equipo, incluyendo
+la reunión inicial de organización, las entregas individuales por
+integrante y la reunión final de revisión conjunta. Las evidencias
+corresponden a capturas de pantalla de las conversaciones y sesiones de
+trabajo, incluidas al final de esta sección.
+
+### Tabla de bitácora
+
+| Fecha       | Asistentes / Participantes | Acuerdos y tareas | Responsable | Meta / Evidencia |
+|-------------|----------------------------|-------------------|-------------|------------------|
+| 24/09/2026  | Valeria Arce, Abigail Sánchez, David Castro, Pablo Elizondo | Repartición del trabajo en cuatro bloques: (1) modelo matemático y `NR_Un_Punto`, (2) programa robusto y animación, (3) Fases I y II, (4) Fase III y documentación. Se acuerda que la función `NR_Un_Punto` debe entregarse temprano porque el resto del proyecto depende de ella. | Todos | Captura de pantalla del chat de WhatsApp |
+| 27/09/2026  | Valeria Arce | Entrega del bloque 1: modelo geométrico, formulación de los 5 sistemas no lineales, jacobianos, implementación de `NR_Un_Punto` y pruebas unitarias con puntos sencillos. | Valeria Arce | Captura de pantalla del aporte en el cuaderno de Colab |
+| 28/09/2026  | Abigail Sánchez | Entrega del bloque 2: función principal `Laboratorio_Brazo_3AR`, recorrido completo de la lista de puntos, gráfica estática y animación GIF, política de avance ante puntos no alcanzables. | Abigail Sánchez | Captura de pantalla del aporte en el cuaderno de Colab |
+| 30/09/2026  | David Castro | Entrega del bloque 3: Fase I (secuencia P) y Fase II (secuencia Q), tablas comparativas, análisis de compatibilidad punto por punto y clasificación de los 20 pares punto–opción. | David Castro | Captura de pantalla del aporte en el cuaderno de Colab |
+| 03/10/2026  | Pablo Elizondo | Entrega del bloque 4: Fase III (mapas del espacio de trabajo con la Alternativa 1), figura comparativa, verificación numérica puntual, comparación cuantitativa y discusión de limitaciones. | Pablo Elizondo | Captura de pantalla del aporte en el cuaderno de Colab |
+| 07/10/2026  | Valeria Arce, Abigail Sánchez, David Castro, Pablo Elizondo | Reunión de revisión conjunta del cuaderno. Se verifica la coherencia entre modelo, jacobiano y código. Se consolidan los GIFs de Fase I y Fase II con nombres únicos, se revisa el orden del cuaderno, se valida la declaración de uso de IA y se aprueba la versión final. | Abigail Sánchez (organizadora) | Captura de pantalla de la reunión |
+
+### Distribución de responsabilidades
+
+| Integrante | Rol principal | Bloques asignados |
+|------------|---------------|-------------------|
+| Valeria Daniela Arce Cortés | Desarrollo del núcleo numérico | Modelo matemático, jacobianos, `NR_Un_Punto`, pruebas unitarias |
+| Abigail Sánchez González | Desarrollo del programa robusto y animación | `Laboratorio_Brazo_3AR`, gráficas, GIFs, política de puntos no alcanzables |
+| David Castro Chaves | Experimentación Fases I y II | Secuencias P y Q, tablas comparativas, análisis de compatibilidad |
+| Pablo Andrés Elizondo Leiva | Coordinación, Fase III y documentación | Mapas del espacio de trabajo, figura comparativa, bitácora, declaración de IA, consolidación final |
+
+### Evidencias
+
+Las siguientes capturas de pantalla respaldan las reuniones y las entregas
+individuales registradas en la tabla anterior:
+
+- **24/09/2026** — Captura del chat de WhatsApp donde se acordó la
+  repartición del trabajo y se asignaron los cuatro bloques.
+- **27/09/2026** — Captura del cuaderno mostrando el aporte de Valeria Arce
+  (modelo matemático y `NR_Un_Punto`).
+- **28/09/2026** — Captura del cuaderno mostrando el aporte de Abigail
+  Sánchez (programa robusto y animación).
+- **30/09/2026** — Captura del cuaderno mostrando el aporte de David Castro
+  (Fases I y II).
+- **03/10/2026** — Captura del cuaderno mostrando el aporte de Pablo
+  Elizondo (Fase III y documentación).
+- **07/10/2026** — Captura de la reunión de revisión conjunta del cuaderno.
+OUTPUT []
+CELL 5 markdown
+## Evidencias
+
+**Evidencia 1** — Repartición del trabajo (WhatsApp, 24/09/2026)
+
+<img src="https://lh3.googleusercontent.com/d/1rwPZkpnA9YLYAa_uHrqE_OrT4WYZVQLJ" width="600">
+
+**Evidencia 2**
+
+<img src="https://lh3.googleusercontent.com/d/1zzvkNZxLHUn97KtdXEmdwa-PXg0nI1dx" width="600">
+
+**Evidencia 3**
+
+<img src="https://lh3.googleusercontent.com/d/1qFtK94bWDpOpUWXdoSdw2PmmWS1XVPoS" width="600">
+OUTPUT []
+CELL 6 markdown
+# Modelo geométrico del brazo robótico
+
+Se considerará un brazo robótico plano formado por tres eslabones de longitudes l1, l2 y l3, unidos por tres articulaciones rotacionales con ángulos θ1, θ2 y θ3. El punto terminal del brazo será el efector final P(x,y).
+
+![Figura de brazo mecanico.png](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqEAAAGrCAYAAADw0U6lAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAEhWSURBVHhe7d15eNTV/fbxOyQBAkjCGsCFiUrBQptBBHyESrRSVGxJ1CraPhJa0BarDFYftIrEukB/1TK0uFWRUX9W26IErVioyIi4UQsTKqAgZhAB2cywSgLJPH98M5PMyTbZJrO8X9c1V8I534QQBG/OOZ/zSfL7/X4BAAAAEdTOHAAAAABaGyEUAAAAEUcIBQAAQMQRQgEAABBxhFAAAABEHCEUAAAAEUcIBQAAQMQRQgEAABBxhFAAAABEHCEUAAAAEUcIBQAAQMQRQgEAABBxhFAAAABEHCEUAAAAEUcIBQAAQMQRQgEAABBxhFAAAABEHCEUAAAAEUcIBQAAQMQRQgEAABBxhFAAAABEHCEUAAAAEUcIBQAAQMQRQqNQeXm5Nm7cqA8//FBfffWVOR1UXl6uAwcOmMMAAABRjxAaZcrLy7Vy5Up169ZNZ599tl555RV98cUX5mOSpLfeeksvvfSSDh48aE4BAABENUJolHn//fd13nnnqV+/furSpYv8fr82b95sPia/36/i4mIlJyerS5cu5jQAAEBUI4RGkcOHD6u8vFzdu3eXJO3Zs0eSlJKSYjwp7d27VydOnFCfPn2UnJxsTgMAAEQ1QmgU2bRpkwYOHBj88aeffipJysrKqvaUZefOnZKkU0891ZwCAACIeoTQKHLmmWeqT58+kqQTJ07o888/V/v27dW/f3/zUUIoAACIaYTQKNKrV6/g+8XFxTp58qSysrJqbLdXVFRo9+7dSk5OVmZmZsgcAABALCCERqlt27ZJkgYMGGBOcR4UAADEPEJoFKqoqNCXX36plJQUnXbaaeY0W/EAACDmEUKjUElJicrKypSZmVnrSichFAAAxDpCaBQ6evSoJCk9Pd2c4jwoAACIC4TQKFRb+AwIFCz17du31lVSAACAWEAIjULp6enq2rWr9u7dGzK+Z88erVq1SmIrHgAAxLgkv9/vNwfR9vbv369//vOf6tOnj04//XQdOHBAJ0+e1P79+7V7927l5eWpX79+5ocBAADEBEJoFPP7/dq3b5/KysrUo0cPpaSkaOHCherYsaNuuOEGtWvHQjYAAIhNpJgoVFJSooqKCiUlJal379467bTTlJaWps8//1zl5eUaMmQIARQAAMQ0kkyUWbFihf7yl7+oqKgoZLy8vFxr165VWlqaBg8eHDIHAAAQawihUaa4uFgpKSk1rl9at26djh49qssuu0xpaWkhcwAAALGGEBplevfurZ/85CchRUcbNmxQUVGRfvCDH6hv374hzwMAAMQiCpOizL59+/TRRx/pjDPOkKp1Rxo9erQ6depkPA0AABCbCKFRqLy8XF9//bWSkpLUo0cPJSUlmY8AAADENEIoAAAAIo4zoQAAAIg4QigAAAAijhAKAACAiCOEAgAAIOIIoQAAAIg4QigAAAAijhAKAACAiCOEAgAAIOIIoTHi8OHD5hAAAEDMIoTGgMOHD+vtt982hwEAAGIWITQGFBUVafv27ayGAgCAuEEIjQGffPKJJGnLli3mFAAAQEwihEa5nTt3qqysTJK0fv16cxoAACAmEUKjnMfjkd/vlySVlZVp//795iMAAAAxhxAaxUpLS/XFF18Ef+z3+/Xhhx+GPAMAABCLCKFRrLi4OLgKGrBjx46QHwMAAMQiQmgUW7dunfx+v5KSkoJjFRUVwUIlAACAWEUIjVKHDx9WSUmJJCkzM1O9evVSly5d5Pf79fHHH5uPAwAAxBRCaJQqKiqSJF144YU6//zzlZqaqokTJ+qUU07Rnj17uDMUAADENEJolNqxY4cuvPBCfec73wmOdejQQddee63OOussff755yHPAwAAxBJCaBQqLS3V2LFjQwJoQIcOHXTppZfqlFNOMacAAABiBiE0CnXo0EE9e/Y0h0OceeaZ5hAAAEDMIIQCAAAg4gihAAAAiDhCKAAAACKOEAoAAICII4QCAAAg4gihAAAAiDhCKAAAACKOEAoAAICII4QCAAAg4gihAAAAiDhCKAAAACKOEAoAAICII4QCAAAg4gihAAAAiDhCKAAAACKOEAoAAICII4QCAAAg4gihAAAAiDhCKAAAACKOEAoAAICII4QCAAAg4gihAAAgsZWXmyOxye+3XjGCEAoAABLXRx9JkyaZo7Hpyy+la6+VDh40Z6ISIRQAAESnigqptLThV1NXMtetk37yE+nhh82Z2HT66dLPfy6NHSsdPWrORh1CKAAAiE7f/7505plSWprUsaP16tVL+va3pSFDrNegQVL37tLZZ0vj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119/XS6XS8XFxVLlFYsbN26UJHXq1CnkWb/fr02bNiXU/9sJoVEoIyNDxcXFuv3225Weni5JwUA6cOBArV+/XtOmTTM+CgAANMaIESM0aNCgFqt6r66srExer1ft2rULrqpu3rxZF1xwgbp06RJSJO33+/XBBx9o8ODBCXVlE4VJMWDz5s1avHixZs2aZU4BAIAo9fbbb+vYsWM6++yztXfvXrVv317Dhw/Xnj17tGLFCg0ZMkSpqanasWOHvvOd7+i0004zP0VcI4TGgJ07d2rt2rXKy8szpwAAQBQ7ceKE9u7dq65du4acMy0vL9eePXvUrl079erVq94jePGK7XgAAIBWkpqaqlNPPbVGoVNycrL69eunPn36JGQAFSEUAAAAbYHt+BZSUVGhVatW6T//+Y+Ki4vl8/mUmZmp0aNH69JLL1WXLl3MDwkb2/EAACDesBLaTEePHtV9990nu92uJUuWaNSoUXrggQc0f/58XXbZZXruueeUlZWlJ5980vxQAACAhEUIbYbXX39dgwcP1oYNG/Svf/1LCxYs0KhRo9SjRw/17t1b48aN06uvvqrf/va3+sUvfiGHw2F+CgAAgIRECG2i3/72t7riiis0depUvfzyy7V2Pgj45S9/qdzcXM2fP18rV640pwEAABIOIbQJbr75Zs2ePVu//e1vdffdd5vTtfrDH/4gVQbS48ePm9MAAAAJhRDaSP/zP/+jxx57TGPHjm3U5fFZWVnq3bu3tm7dqsWLF5vTAAAACYUQ2ggrV67Ub37zG3Xq1ElPPPGEOd2gc845R6r8PAAAAImMEBqmsrIyTZ06VeXl5br99tt15plnmo806PTTT5ckFRcXm1MAAAAJhRAapscee0zFxcVKTk7W1KlTzemwHDhwQJJUUlJiTgEAACQUQmgYTp48qYceekiSdNlll+m0004zHwnLrl27JEm9e/c2pwAAABIKITQMq1at0r59+yRJP/7xj83psBw7dkybNm2Sqm3LAwAAJCpCaBiqV7OPGjUqZC5cH3zwgU6cOCFJGjJkiDkNAACQUAihYVi/fr1UuY1+1llnmdNhWb58efD9K6+8MmQOAAAg0RBCw7Bjxw5J0oABA8ypsJSXl+v555+XJJ133nmy2WzmIwAAAAmFEBqGvXv3SpJ69eplToXljTfe0O7duyVJd911lzkNAACQcAihYejataskqVOnTuZUg/x+vx544AFJ0gUXXMBWPAAAACE0PIFzoD6fz5xq0AsvvKAPP/xQaWlpevTRR81pAACAhEQIDcMll1wiScErlsK1e/duzZw5U5L09NNPy263m48AAAAkJEJoGBwOh9LT0+X1euXxeMzpWh09elRXXHGFdu3apQceeEDXX3+9+QgAAEDCIoSGoU+fPpozZ44k6bbbbjOnaygpKVFubq42bNighQsX6u677zYfAQAASGiE0DDddNNNys3N1apVq/S73/1Ofr/ffESS9OGHH+rcc8/Vvn37tHr1av3sZz8zHwEAAEh4Sf660hRqqKio0O9+9zvNnTtXI0aM0M0336zs7GwdP35c//3vf/X0009r7969uummm3TjjTcqOTnZ/BRNsnPnTq1du1Z5eXnmFAAAQEwihDbB4cOH9c9//lMfffSR9u/fr169eslms2nUqFH6zne+Yz7ebIRQAAAQbwihMYAQCgAA4g1nQgEAABBxhFAAAABEHCEUAAAAEUcIBQAAQMQRQgEAABBxhFAAAABEHCEUAAAAEUcIBQAAQMQRQgEAABBxhFAAAABEHCEUAAAAEUcIBQAAQMQRQmNA165ddc4555jDAAAAMSvJ7/f7zUEAAACgNbESCgAAgIgjhAIAACDiCKEAAACIOEIoAAAAIo4QCgAAgIgjhAIAACDiCKEAAACIOEIoAAAAIo4QCgAAgIgjhAIAACDiCKEAAACIOEIoAAAAIo4QCgAAgIgjhAIAACDiCKEAAACIOEIoAAAAIo4QCgAAgIgjhAIAACDi/j/EteN4x9v0igAAAABJRU5ErkJggg==)
+OUTPUT []
+CELL 7 markdown
+# Planteamiento matemático del problema
+
+### 1. Variables conocidas e incógnitas  
+Para cada punto objetivo del recorrido se considerarán como **datos conocidos**: $$l_1, l_2, l_3, x, y$$
+
+Las **incógnitas** serán los ángulos articulares:  $$θ_1, θ_2, θ_3$$  
+
+### 2. Ecuaciones de posición
+
+**Ecuaciones de posición (cinemática directa):**
+
+$$x = l_1\cos(\theta_1) + l_2\cos(\theta_1+\theta_2) + l_3\cos(\theta_1+\theta_2+\theta_3)$$
+$$y = l_1\sin(\theta_1) + l_2\sin(\theta_1+\theta_2) + l_3\sin(\theta_1+\theta_2+\theta_3)$$
+
+Estas dos ecuaciones dejan un grado de libertad (3 incógnitas, 2 ecuaciones), por lo que se necesita una tercera ecuación auxiliar para cerrar el sistema.
+
+### 3. Tercera ecuación (ecuación auxiliar)
+
+Las dos ecuaciones de posición dejan un grado de libertad, para un mismo punto $(x,y)$ pueden existir múltiples configuraciones $(\theta_1,\theta_2,\theta_3)$ que lo alcancen. La tercera ecuación selecciona una postura específica entre las infinitas posibles, y en algunos casos puede excluir puntos que sí son geométricamente alcanzables por el brazo.
+
+Para la opción E se define el ángulo polar del punto objetivo:
+
+$$
+\alpha(x,y) =
+\begin{cases}
+\text{atan2}(y,x), & (x,y) \neq (0,0) \\
+0, & (x,y) = (0,0)
+\end{cases}
+$$
+
+Se implementarán y compararán las cinco opciones siguientes:
+
+| Opción | Ecuación auxiliar $F_3^{(s)}$ | Interpretación geométrica |
+|---|---|---|
+| A | $\theta_1+\theta_2+\theta_3 = 0$ | Efector final orientado horizontalmente |
+| B | $\theta_1+\theta_2+\theta_3 = \dfrac{\pi}{2}$ | Efector final orientado verticalmente |
+| C | $\theta_3 = 0$ | Tercer eslabón alineado con el segundo |
+| D | $\theta_2 = \theta_3$ | Segundo y tercer ángulo relativo iguales |
+| E | $\theta_1+\theta_2+\theta_3 = \alpha(x,y)+\dfrac{\pi}{2}$ | Tercer eslabón tangente a la circunferencia centrada en el origen que pasa por $(x,y)$ |
+
+En la opción E, el último eslabón queda perpendicular al segmento que une el origen con el punto objetivo. En el origen no existe una dirección tangente única, por lo que se adopta la convención $\alpha(0,0)=0$; el efecto de esta convención (y el corte angular de `atan2`) se discute más adelante, al analizar la continuidad del recorrido.
+
+Los ángulos se interpretan módulo $2\pi$.
+
+
+OUTPUT []
+CELL 8 markdown
+### 4. Sistema no lineal completo
+
+Para cada punto objetivo $(x,y)$ y cada opción $s \in \{A,B,C,D,E\}$, se debe resolver el sistema de tres ecuaciones con tres incógnitas:
+
+$$F_1(\theta_1,\theta_2,\theta_3) = l_1\cos(\theta_1) + l_2\cos(\theta_1+\theta_2) + l_3\cos(\theta_1+\theta_2+\theta_3) - x = 0$$
+
+$$F_2(\theta_1,\theta_2,\theta_3) = l_1\sin(\theta_1) + l_2\sin(\theta_1+\theta_2) + l_3\sin(\theta_1+\theta_2+\theta_3) - y = 0$$
+
+$$F_3^{(s)}(\theta_1,\theta_2,\theta_3) = 0$$
+
+En forma vectorial:
+
+$$
+\mathbf{F}(\boldsymbol{\theta}) =
+\begin{pmatrix}
+F_1(\theta_1,\theta_2,\theta_3) \\
+F_2(\theta_1,\theta_2,\theta_3) \\
+F_3^{(s)}(\theta_1,\theta_2,\theta_3)
+\end{pmatrix}
+=
+\begin{pmatrix}
+0 \\ 0 \\ 0
+\end{pmatrix},
+\qquad
+\boldsymbol{\theta} =
+\begin{pmatrix}
+\theta_1 \\ \theta_2 \\ \theta_3
+\end{pmatrix}
+$$
+
+Nótese que $F_1$ y $F_2$ son las mismas para las cinco opciones; lo único que cambia con $s$ es la tercera ecuación.
+
+### 5. Jacobiano del sistema
+
+El jacobiano se construye derivando cada $F_i$ respecto a cada $\theta_j$:
+
+$$
+J(\theta_1,\theta_2,\theta_3) =
+\begin{pmatrix}
+\dfrac{\partial F_1}{\partial \theta_1} & \dfrac{\partial F_1}{\partial \theta_2} & \dfrac{\partial F_1}{\partial \theta_3} \\[8pt]
+\dfrac{\partial F_2}{\partial \theta_1} & \dfrac{\partial F_2}{\partial \theta_2} & \dfrac{\partial F_2}{\partial \theta_3} \\[8pt]
+\dfrac{\partial F_3^{(s)}}{\partial \theta_1} & \dfrac{\partial F_3^{(s)}}{\partial \theta_2} & \dfrac{\partial F_3^{(s)}}{\partial \theta_3}
+\end{pmatrix}
+$$
+
+**Primera y segunda fila** (idénticas para las cinco opciones, ya que $F_1$ y $F_2$ no dependen de $s$):
+
+$$\frac{\partial F_1}{\partial \theta_1} = -l_1\sin(\theta_1) - l_2\sin(\theta_1+\theta_2) - l_3\sin(\theta_1+\theta_2+\theta_3)$$
+$$\frac{\partial F_1}{\partial \theta_2} = -l_2\sin(\theta_1+\theta_2) - l_3\sin(\theta_1+\theta_2+\theta_3)$$
+$$\frac{\partial F_1}{\partial \theta_3} = -l_3\sin(\theta_1+\theta_2+\theta_3)$$
+
+$$\frac{\partial F_2}{\partial \theta_1} = l_1\cos(\theta_1) + l_2\cos(\theta_1+\theta_2) + l_3\cos(\theta_1+\theta_2+\theta_3)$$
+$$\frac{\partial F_2}{\partial \theta_2} = l_2\cos(\theta_1+\theta_2) + l_3\cos(\theta_1+\theta_2+\theta_3)$$
+$$\frac{\partial F_2}{\partial \theta_3} = l_3\cos(\theta_1+\theta_2+\theta_3)$$
+
+**Tercera fila** (depende de la opción $s$):
+
+| Opción | $\partial F_3^{(s)}/\partial\theta_1$ | $\partial F_3^{(s)}/\partial\theta_2$ | $\partial F_3^{(s)}/\partial\theta_3$ |
+|---|---|---|---|
+| A | 1 | 1 | 1 |
+| B | 1 | 1 | 1 |
+| C | 0 | 0 | 1 |
+| D | 0 | 1 | -1 |
+| E | 1 | 1 | 1 |
+
+Es notable que A, B y E comparten exactamente la misma tercera fila del jacobiano ($(1,1,1)$), pese a representar condiciones geométricas distintas, la diferencia entre ellas está únicamente en el valor de $F_3^{(s)}$ (el lado derecho de la ecuación auxiliar), no en su sensibilidad a los ángulos. Esto implica que, desde el punto de vista de la matriz jacobiana, A, B y E tendrán el mismo comportamiento numérico ante posibles singularidades.
+
+En el caso de la opción E, el hecho de que $\alpha(x,y)$ no dependa de $\theta$ es lo que hace que su derivada respecto a los ángulos sea cero, dejando la misma fila $(1,1,1)$ que A y B.
+
+
+OUTPUT []
+CELL 9 markdown
+# Método de Newton-Raphson en tres variables
+
+El sistema no lineal $\mathbf{F}(\boldsymbol{\theta}) = \mathbf{0}$ se resuelve mediante la iteración de Newton-Raphson multivariable:
+
+$$J(\boldsymbol{\theta}^{(k)}) \, \Delta\boldsymbol{\theta}^{(k)} = -\mathbf{F}(\boldsymbol{\theta}^{(k)})$$
+
+$$\boldsymbol{\theta}^{(k+1)} = \boldsymbol{\theta}^{(k)} + \Delta\boldsymbol{\theta}^{(k)}$$
+
+En cada iteración se evalúa $\mathbf{F}$ y $J$ en $\boldsymbol{\theta}^{(k)}$, se resuelve el sistema lineal $J\,\Delta\boldsymbol{\theta}^{(k)} = -\mathbf{F}$ para el incremento $\Delta\boldsymbol{\theta}^{(k)}$, y se actualiza $\boldsymbol{\theta}$.
+
+**Suposición inicial:** La postura inicial de la animación es $(\theta_1,\theta_2,\theta_3) = (0,0,0)$, pero esto no obliga a usar esa misma postura como primera suposición del método. En $(0,0,0)$ el jacobiano puede resultar singular o mal condicionado para ciertas opciones auxiliares (por ejemplo, cuando $F_3^{(s)}$ y las filas de $F_1$/$F_2$ generan un sistema linealmente dependiente en esa configuración particular), por lo que puede optarse por una pequeña perturbación de $(0,0,0)$ como punto de arranque para el primer punto de la ruta. Para los puntos siguientes, se usa como suposición inicial la solución convergida del punto anterior, esto acelera la convergencia porque en general, los puntos consecutivos de la ruta están cerca entre sí, y evita saltos bruscos entre configuraciones del brazo.  
+El parámetro `theta0` de `NR_Un_Punto` está diseñado para que la función pase explícitamente la solución del punto anterior como semilla del siguiente, implementando así el aprovechamiento de la solución anterior.
+**Criterio de convergencia**  
+Se detiene la iteración cuando se cumple
+
+$$\lVert \Delta\boldsymbol{\theta}^{(k)} \rVert_\infty < \varepsilon \quad \text{o bien} \quad \lVert \mathbf{F}(\boldsymbol{\theta}^{(k)}) \rVert_2 < \varepsilon$$
+
+con una tolerancia $\varepsilon$ apropiada (por ejemplo, $\varepsilon = 10^{-8}$, a ajustar según las unidades y la escala de las longitudes $l_1, l_2, l_3$).
+
+**Máximo de iteraciones.**  
+Se fija un número máximo $N_{max}$ (por ejemplo, 50-100) para evitar ciclos infinitos cuando el método no converge.
+
+**Manejo de no convergencia e incompatibilidad.**  
+El algoritmo debe distinguir explícitamente tres situaciones:
+
+1. **Punto fuera del alcance geométrico del brazo**: el punto $(x,y)$ está fuera del anillo alcanzable por el brazo (radialmente más lejos que $l_1+l_2+l_3$, o más cerca que $|l_1-l_2-l_3|$ si aplica). Esto puede verificarse antes de iterar, comparando $\sqrt{x^2+y^2}$ contra esos límites.
+2. **Punto geométricamente alcanzable pero incompatible con la opción auxiliar**: En este caso el punto sí está dentro del alcance del brazo, pero no existe ninguna configuración $(\theta_1,\theta_2,\theta_3)$ que satisfaga simultáneamente $F_1=F_2=0$ y la condición $F_3^{(s)}=0$ de la opción elegida.
+3. **Punto compatible, pero Newton-Raphson no converge**: existe solución, pero el método diverge, oscila, o no alcanza la tolerancia dentro de $N_{max}$ iteraciones (por ejemplo, por una mala suposición inicial o un jacobiano cercano a singular durante la trayectoria de iteración).
+
+### 7. Casos de no solución: alcance geométrico e incompatibilidad con la opción auxiliar
+
+Antes de la iteración de Newton-Raphson, conviene precisar matemáticamente los dos primeros casos mencionados en 2.6, porque ambos pueden (y deben) detectarse **sin necesidad de iterar**.
+
+#### 7.1 Caso (i): punto fuera del alcance geométrico del brazo
+
+El efector final es la suma de tres vectores de longitud fija y dirección libre:
+
+$$
+\mathbf{P} = l_1(\cos\theta_1,\sin\theta_1) + l_2(\cos(\theta_1+\theta_2),\sin(\theta_1+\theta_2)) + l_3(\cos(\theta_1+\theta_2+\theta_3),\sin(\theta_1+\theta_2+\theta_3))
+$$
+
+Como $\theta_1$, $\theta_2$ y $\theta_3$ son independientes, las *direcciones absolutas* de los tres vectores ($\theta_1$, $\theta_1+\theta_2$, $\theta_1+\theta_2+\theta_3$) también lo son. Esto es exactamente el problema de la suma de tres vectores de longitudes fijas $l_1,l_2,l_3$ con direcciones arbitrarias, cuyo conjunto alcanzable es un anillo (annulus) centrado en el origen:
+
+$$
+r_{\min} \leq \lVert \mathbf{P} \rVert \leq r_{\max}
+$$
+
+con
+
+$$
+r_{\max} = l_1+l_2+l_3, \qquad r_{\min} = \max\bigl(0,\; \max(l_1,l_2,l_3) - (\text{suma de los otros dos})\bigr)
+$$
+
+$r_{\min}>0$ únicamente cuando un eslabón es más largo que la suma de los otros dos (no se puede "cancelar" completamente su contribución); en caso contrario, el origen mismo es alcanzable y $r_{\min}=0$. Esta condición se verifica **antes** de iterar, calculando $r=\sqrt{x^2+y^2}$ y comparándolo contra $[r_{\min}, r_{\max}]$.
+
+#### 7.2 Caso (ii): punto alcanzable por el brazo, pero incompatible con la opción $s$
+
+Este caso es más sutil, porque depende de la opción elegida y no tiene una condición única para las cinco.
+
+**Idea general:** Para un punto $(x,y)$ dentro del anillo de 2.7.1, el conjunto de soluciones de $F_1=F_2=0$ (sin la tercera ecuación) no es un punto aislado, es una familia de un parámetro. Esto se ve fácilmente fijando $\theta_1$ ya que, la posición del extremo de $l_1$ queda determinada, $(l_1\cos\theta_1, l_1\sin\theta_1)$, y lo que resta es un problema de cinemática inversa de **2 eslabones** ($l_2,l_3$) para alcanzar $(x,y)$ desde ese punto. Ese subproblema tiene solución si y solo si la distancia entre el extremo de $l_1$ y $(x,y)$ está en $[|l_2-l_3|,\, l_2+l_3]$. Por tanto, existe un rango de valores válidos de $\theta_1$ (en general un intervalo, o unión de intervalos), y para cada $\theta_1$ válido hay hasta dos soluciones $(\theta_2,\theta_3)$.
+
+La tercera ecuación $F_3^{(s)}=0$ selecciona, dentro de esa familia continua parametrizada por $\theta_1$, el o los puntos donde se cumple la condición auxiliar. Como $F_3^{(s)}$ es una función continua de $\theta_1$ a lo largo de la familia, **existe solución si y solo si $F_3^{(s)}$ se anula en algún punto del rango válido de $\theta_1$** (en la práctica, esto se puede verificar viendo si $F_3^{(s)}$ cambia de signo, análogo al criterio de Bolzano usado en bisección/falsa posición). Esta estrategia de barrido se implementa efectivamente en la función `NR_Un_Punto` ya que cuando Newton-Raphson no converge tras varias suposiciones iniciales, se recurre a este barrido sobre $\theta_1$ tanto para decidir si el punto es incompatible (caso ii, ausencia de cambio de signo) como para obtener, en caso de existir una raíz, una semilla adicional que suele lograr la convergencia — resolviendo así, en la práctica, la mayoría de los casos que a primera vista parecían no convergentes.
+
+**Caso cerrado: opción C.** Aquí sí se puede dar una condición explícita. Si $\theta_3=0$, los eslabones $l_2$ y $l_3$ quedan alineados y se comportan como un único eslabón efectivo de longitud $l_2+l_3$. El problema se reduce a un brazo de **2 eslabones** con longitudes $l_1$ y $l_2+l_3$, cuyo anillo alcanzable es
+
+$$
+|l_1-(l_2+l_3)| \;\leq\; r \;\leq\; l_1+l_2+l_3
+$$
+
+Este anillo es un subconjunto (en general estrictamente más pequeño) del anillo del brazo completo de 2.7.1. Por tanto, un punto puede ser geométricamente alcanzable por el brazo de 3 eslabones y aun así **no ser alcanzable bajo la opción C**, si $r < |l_1-(l_2+l_3)|$. Esta es una condición verificable de forma cerrada, sin iterar.
+
+**Opción D** ($\theta_2=\theta_3$) también reduce el sistema a 2 grados de libertad efectivos ($\theta_1$ y $\theta_2=\theta_3$), pero no tiene una forma cerrada tan simple como C; su región de incompatibilidad se determina mejor de forma numérica, barriendo $\theta_1$ en su rango válido y observando si $F_3^{(s)}$ cambia de signo — este barrido es, de hecho, la base natural para construir el "mapa del espacio de trabajo" que pide el enunciado para las cinco opciones.
+
+**Opciones A, B y E** son restricciones sobre la orientación total del efector ($\theta_1+\theta_2+\theta_3$ igual a una constante o a $\alpha(x,y)+\pi/2$). No tienen una forma cerrada simple como C, pero el mismo argumento de continuidad aplica: cerca de los bordes del anillo alcanzable (brazo casi extendido o casi plegado), el rango de orientaciones posibles del efector se estrecha, y es ahí donde es más probable encontrar incompatibilidad.
+OUTPUT []
+CELL 10 markdown
+### Continuidad de la solución a lo largo del recorrido
+
+Más allá de si un punto individual es alcanzable y compatible con una opción dada, conviene señalar dos fuentes distintas de posible discontinuidad al recorrer una secuencia de puntos.
+
+**Multiplicidad de soluciones.**  
+Para un punto compatible, en general no existe un único trío $(\theta_1,\theta_2,\theta_3)$ que satisfaga el sistema, como se discutió en 2.7.2, fijar $\theta_1$ dentro de su rango válido puede admitir hasta dos configuraciones distintas del subsistema de 2 eslabones. Al pasar de un punto de la ruta al siguiente, Newton-Raphson usando como semilla la solución anterior (2.6) tiende a permanecer en la misma rama por continuidad numérica, pero esto es una tendencia empírica del método, no una garantía matemática, nada impide que ante un salto suficientemente grande entre puntos consecutivos, el método converja a la rama opuesta, generando una discontinuidad visible en la trayectoria articular aunque la trayectoria cartesiana en $(x,y)$ sea continua.
+
+**El corte angular de `atan2` en la opción E.**  
+La opción E depende de $\alpha(x,y)=\text{atan2}(y,x)$, y esta función tiene una discontinuidad de salto a lo largo del semieje negativo $x$: para un punto que cruza esa región, $\alpha(x,y)$ salta de valores cercanos a $+\pi$ a valores cercanos a $-\pi$. Por ejemplo, con $x=-1$:
+
+| $y$ | $\alpha(x,y)$ |
+|---|---|
+| $+0.01$ | $179.43°$ |
+| $-0.01$ | $-179.43°$ |
+
+es decir, un desplazamiento infinitesimal en $(x,y)$ produce un salto de casi $360°$ en $\alpha$, y por lo tanto en la condición auxiliar $F_3^{(E)}$ misma —una discontinuidad que existe en el planteamiento del problema, independientemente de qué tan bien converja Newton-Raphson. Si la ruta de puntos cruza esa región, la opción E puede requerir "desenvolver" (unwrap) la secuencia de ángulos obtenidos para evitar interpretar ese salto como un movimiento real del brazo, en vez de un artefacto de la definición de $\alpha$.
+
+Ambos efectos se caracterizarán empíricamente al comparar las trayectorias completas en la Fase I del proyecto; aquí se dejan establecidos a nivel conceptual porque son consecuencia directa de cómo está definido el modelo matemático (multiplicidad de soluciones y discontinuidad de $\alpha$), no del código que las implementa.
+OUTPUT []
+CELL 11 markdown
+# Programación inicial
+
+Seguidamente se definen las funciones necesarias para el funcionamiento del código.
+OUTPUT []
+CELL 12 code
+import numpy as np
+
+# ---------------------------------------------------------------
+# Cinemática directa: posición del efector final dado theta
+# ---------------------------------------------------------------
+def cinematica_directa(theta1, theta2, theta3, l1, l2, l3):
+    x = l1*np.cos(theta1) + l2*np.cos(theta1+theta2) + l3*np.cos(theta1+theta2+theta3)
+    y = l1*np.sin(theta1) + l2*np.sin(theta1+theta2) + l3*np.sin(theta1+theta2+theta3)
+    return x, y
+OUTPUT []
+CELL 13 code
+# ---------------------------------------------------------------
+# Angulo polar alpha(x,y) usado en la opcion E, con la convencion
+# alpha(0,0) = 0 indicada en el enunciado
+# ---------------------------------------------------------------
+def alpha_polar(x, y):
+    if x == 0.0 and y == 0.0:
+        return 0.0
+    return np.arctan2(y, x)
+OUTPUT []
+CELL 14 code
+# ---------------------------------------------------------------
+# Vector F(theta) = [F1, F2, F3^(s)] para la opcion dada
+# ---------------------------------------------------------------
+def F_vector(theta, l1, l2, l3, x, y, opcion):
+    t1, t2, t3 = theta
+
+    # F1, F2: ecuaciones de posicion, iguales para las 5 opciones
+    F1 = l1*np.cos(t1) + l2*np.cos(t1+t2) + l3*np.cos(t1+t2+t3) - x
+    F2 = l1*np.sin(t1) + l2*np.sin(t1+t2) + l3*np.sin(t1+t2+t3) - y
+
+    # F3: ecuacion auxiliar, depende de la opcion seleccionada
+    if opcion == 'A':
+        F3 = t1 + t2 + t3
+    elif opcion == 'B':
+        F3 = t1 + t2 + t3 - np.pi/2
+    elif opcion == 'C':
+        F3 = t3
+    elif opcion == 'D':
+        F3 = t2 - t3
+    elif opcion == 'E':
+        F3 = t1 + t2 + t3 - alpha_polar(x, y) - np.pi/2
+    else:
+        raise ValueError(f"Opcion '{opcion}' no reconocida. Use 'A','B','C','D' o 'E'.")
+
+    return np.array([F1, F2, F3])
+OUTPUT []
+CELL 15 code
+# ---------------------------------------------------------------
+# Jacobiano J(theta) = dF_i/dtheta_j, para la opcion dada
+# ---------------------------------------------------------------
+def jacobiano(theta, l1, l2, l3, opcion):
+    t1, t2, t3 = theta
+
+    # Terminos acumulados que aparecen repetidamente (evita recalcular)
+    s1 = np.sin(t1)
+    s12 = np.sin(t1+t2)
+    s123 = np.sin(t1+t2+t3)
+    c1 = np.cos(t1)
+    c12 = np.cos(t1+t2)
+    c123 = np.cos(t1+t2+t3)
+
+    # Primera fila: dF1/dtheta_j (igual para las 5 opciones)
+    dF1_dt1 = -l1*s1 - l2*s12 - l3*s123
+    dF1_dt2 = -l2*s12 - l3*s123
+    dF1_dt3 = -l3*s123
+
+    # Segunda fila: dF2/dtheta_j (igual para las 5 opciones)
+    dF2_dt1 = l1*c1 + l2*c12 + l3*c123
+    dF2_dt2 = l2*c12 + l3*c123
+    dF2_dt3 = l3*c123
+
+    # Tercera fila: depende de la opcion (ver seccion 2.5 del notebook)
+    if opcion in ('A', 'B', 'E'):
+        dF3_dt1, dF3_dt2, dF3_dt3 = 1.0, 1.0, 1.0
+    elif opcion == 'C':
+        dF3_dt1, dF3_dt2, dF3_dt3 = 0.0, 0.0, 1.0
+    elif opcion == 'D':
+        dF3_dt1, dF3_dt2, dF3_dt3 = 0.0, 1.0, -1.0
+    else:
+        raise ValueError(f"Opcion '{opcion}' no reconocida. Use 'A','B','C','D' o 'E'.")
+
+    J = np.array([
+        [dF1_dt1, dF1_dt2, dF1_dt3],
+        [dF2_dt1, dF2_dt2, dF2_dt3],
+        [dF3_dt1, dF3_dt2, dF3_dt3],
+    ])
+    return J
+OUTPUT []
+CELL 16 code
+# ---------------------------------------------------------------
+# Chequeo de alcance geometrico del brazo completo (seccion 2.7.1)
+# ---------------------------------------------------------------
+def dentro_de_alcance(l1, l2, l3, x, y, tol=1e-9):
+    r = np.hypot(x, y)
+    r_max = l1 + l2 + l3
+    lados = [l1, l2, l3]
+    mayor = max(lados)
+    resto = sum(lados) - mayor
+    r_min = max(0.0, mayor - resto)
+    return (r_min - tol) <= r <= (r_max + tol), r_min, r_max
+
+OUTPUT []
+CELL 17 code
+# ---------------------------------------------------------------
+# Chequeo cerrado adicional para la opcion C (seccion 2.7.2):
+# con theta3=0, l2 y l3 se comportan como un solo eslabon l2+l3
+# ---------------------------------------------------------------
+def dentro_de_alcance_opcion_C(l1, l2, l3, x, y, tol=1e-9):
+    r = np.hypot(x, y)
+    r_max = l1 + l2 + l3
+    r_min = abs(l1 - (l2 + l3))
+    return (r_min - tol) <= r <= (r_max + tol), r_min, r_max
+OUTPUT []
+CELL 18 code
+# ---------------------------------------------------------------
+# Barrido de existencia sobre theta1 (seccion 2.7.2): para las
+# opciones sin forma cerrada (A, B, D, E), se verifica si F3^(s)
+# cambia de signo a lo largo del rango valido de theta1, en
+# cualquiera de las dos ramas del subproblema de 2 eslabones
+# (codo arriba / codo abajo). Un cambio de signo implica, por
+# continuidad, que existe una solucion compatible con la opcion.
+# ---------------------------------------------------------------
+def _F3_wrap(t1, t2, t3, opcion, x, y):
+    """F3^(s) evaluada e interpretada modulo 2*pi en (-pi, pi],
+    para evitar falsos cambios de signo por el 'wrap' angular."""
+    if opcion == 'A':
+        F3 = t1 + t2 + t3
+    elif opcion == 'B':
+        F3 = t1 + t2 + t3 - np.pi/2
+    elif opcion == 'C':
+        F3 = t3
+    elif opcion == 'D':
+        F3 = t2 - t3
+    elif opcion == 'E':
+        F3 = t1 + t2 + t3 - alpha_polar(x, y) - np.pi/2
+    else:
+        raise ValueError(f"Opcion '{opcion}' no reconocida.")
+    return (F3 + np.pi) % (2*np.pi) - np.pi
+
+
+def barrido_existencia(l1, l2, l3, x, y, opcion, n_puntos=3000):
+    """
+    Barre theta1 en [-pi, pi] y, para cada valor factible, resuelve
+    el subproblema de 2 eslabones (l2, l3) que alcanza (x,y) desde
+    el extremo de l1 (hasta dos soluciones: codo arriba/abajo).
+    Evalua F3^(s) en cada solucion y busca un cambio de signo, que
+    por continuidad indica la existencia de una raiz (un punto
+    compatible con la opcion), sin necesidad de resolver Newton-Raphson.
+
+    Retorna (existe, theta_ini_sugerido):
+      existe = True/False
+      theta_ini_sugerido = arreglo [theta1, theta2, theta3] cercano
+      a la raiz detectada (util como semilla adicional para NR),
+      o None si no se encontro cambio de signo.
+    """
+    thetas1 = np.linspace(-np.pi, np.pi, n_puntos)
+
+    for signo_codo in (1, -1):
+        valores_F3 = []
+        angulos_validos = []  # (theta1, theta2, theta3)
+
+        for th1 in thetas1:
+            px, py = l1*np.cos(th1), l1*np.sin(th1)
+            dx, dy = x - px, y - py
+            d = np.hypot(dx, dy)
+
+            # este theta1 no es factible si el subproblema de 2 eslabones
+            # no puede alcanzar (x,y) desde el extremo de l1
+            if d > l2 + l3 or d < abs(l2 - l3):
+                continue
+
+            cos_t2 = np.clip((d**2 - l2**2 - l3**2) / (2*l2*l3), -1.0, 1.0)
+            t2 = signo_codo * np.arccos(cos_t2)
+            k1 = l2 + l3*np.cos(t2)
+            k2 = l3*np.sin(t2)
+            ang_objetivo = np.arctan2(dy, dx)
+            t1_sub = ang_objetivo - np.arctan2(k2, k1)
+            theta2 = t1_sub - th1
+            theta3 = t2
+
+            valores_F3.append(_F3_wrap(th1, theta2, theta3, opcion, x, y))
+            angulos_validos.append((th1, theta2, theta3))
+
+        if len(valores_F3) < 2:
+            continue
+
+        valores_F3 = np.array(valores_F3)
+        signos = np.sign(valores_F3)
+        cambios = np.where(np.diff(signos) != 0)[0]
+
+        # se descartan cambios que en realidad son el propio "wrap" de F3
+        # (salto de +pi a -pi), no una raiz real
+        cambios_reales = [i for i in cambios if abs(valores_F3[i] - valores_F3[i+1]) < np.pi]
+
+        if len(cambios_reales) > 0:
+            idx = cambios_reales[0]
+            th1_aprox, th2_aprox, th3_aprox = angulos_validos[idx]
+            return True, np.array([th1_aprox, th2_aprox, th3_aprox])
+
+    return False, None
+OUTPUT []
+CELL 19 code
+# ---------------------------------------------------------------
+# NR_Un_Punto: funcion principal pedida por el enunciado (seccion 6)
+# ---------------------------------------------------------------
+def NR_Un_Punto(l1, l2, l3, x, y, opcion,
+                 tol=1e-8, max_iter=100,
+                 theta0=None , n_intentos=8, semilla=42):
+    """
+    Calcula theta1, theta2, theta3 tales que el efector final del brazo
+    de 3 eslabones alcance el punto (x, y), usando Newton-Raphson en 3
+    variables y la ecuacion auxiliar indicada por 'opcion' (A,B,C,D,E).
+
+    Retorna un diccionario con:
+      punto, opcion, theta_rad, theta_deg, iteraciones,
+      residuo, convergio, mensaje
+    """
+
+    resultado_base = {
+        'punto': (x, y),
+        'opcion': opcion,
+        'theta_rad': None,
+        'theta_deg': None,
+        'iteraciones': 0,
+        'residuo': np.nan,
+        'convergio': False,
+        'mensaje': '',
+    }
+
+    # --- Paso 1: chequeo de alcance geometrico general (caso i) ---
+    alcanzable, r_min, r_max = dentro_de_alcance(l1, l2, l3, x, y)
+    if not alcanzable:
+        resultado_base['mensaje'] = (
+            f"Punto ({x:.4f}, {y:.4f}) fuera del alcance geometrico del brazo. "
+            f"Se requiere r en [{r_min:.4f}, {r_max:.4f}], pero r = {np.hypot(x,y):.4f}."
+        )
+        return resultado_base
+
+    # --- Paso 2: chequeo cerrado adicional para la opcion C (caso ii) ---
+    if opcion == 'C':
+        alcanzable_C, r_min_C, r_max_C = dentro_de_alcance_opcion_C(l1, l2, l3, x, y)
+        if not alcanzable_C:
+            resultado_base['mensaje'] = (
+                f"Punto geometricamente alcanzable por el brazo, pero incompatible "
+                f"con la opcion C (theta3=0 reduce el alcance efectivo a "
+                f"[{r_min_C:.4f}, {r_max_C:.4f}], y r = {np.hypot(x,y):.4f})."
+            )
+            return resultado_base
+
+    # --- Paso 3: funcion interna que corre Newton-Raphson desde una
+    #     suposicion inicial dada, y devuelve (theta, iters, residuo, convergio)
+    def _newton_raphson(theta_ini):
+        theta = np.array(theta_ini, dtype=float)
+        for k in range(1, max_iter+1):
+            F = F_vector(theta, l1, l2, l3, x, y, opcion)
+            residuo = np.linalg.norm(F, 2)
+            if residuo < tol:
+                return theta, k, residuo, True
+
+            J = jacobiano(theta, l1, l2, l3, opcion)
+
+            # Si J es singular o casi singular, esta suposicion inicial no sirve
+            if abs(np.linalg.det(J)) < 1e-14:
+                return theta, k, residuo, False
+
+            dtheta = np.linalg.solve(J, -F)
+            theta = theta + dtheta
+
+            if np.linalg.norm(dtheta, np.inf) < tol:
+                F_final = F_vector(theta, l1, l2, l3, x, y, opcion)
+                return theta, k, np.linalg.norm(F_final, 2), True
+
+        # se agoto max_iter sin cumplir el criterio de parada
+        F_final = F_vector(theta, l1, l2, l3, x, y, opcion)
+        return theta, max_iter, np.linalg.norm(F_final, 2), False
+
+    # --- Paso 4: primer intento, con la suposicion inicial dada o una
+    #     pequena perturbacion de (0,0,0) para evitar el jacobiano singular
+    #     que se tiene exactamente en theta=(0,0,0) (ver seccion 2.6) ---
+    if theta0 is None:
+        theta_ini = np.array([1e-2, 1e-2, 1e-2])
+    else:
+        theta_ini = np.array(theta0, dtype=float)
+
+    theta_sol, iters, residuo, convergio = _newton_raphson(theta_ini)
+
+    # --- Paso 5: si no convergio, reintentar con varias suposiciones
+    #     iniciales distintas, variando principalmente theta1 (el grado
+    #     de libertad "libre" de la familia de soluciones, ver seccion 2.7.2)
+    intentos_usados = 1
+    if not convergio:
+        rng = np.random.default_rng(semilla)
+        for _ in range(n_intentos - 1):
+            theta1_rand = rng.uniform(-np.pi, np.pi)
+            theta2_rand = rng.uniform(-np.pi, np.pi)
+            theta3_rand = rng.uniform(-np.pi, np.pi)
+            theta_ini_r = np.array([theta1_rand, theta2_rand, theta3_rand])
+
+            theta_sol_r, iters_r, residuo_r, convergio_r = _newton_raphson(theta_ini_r)
+            intentos_usados += 1
+
+            if convergio_r:
+                theta_sol, iters, residuo, convergio = theta_sol_r, iters_r, residuo_r, True
+                break
+
+    # --- Paso 5b: si aun no convergio, usar el barrido de existencia
+    #     (seccion 2.7.2) tanto para distinguir caso (ii) de caso (iii)
+    #     como para intentar una ultima semilla informada de NR ---
+    clasificacion_ii_iii = None  # 'incompatible' o 'no_convergencia', solo si no convergio
+    if not convergio:
+        existe, theta_semilla = barrido_existencia(l1, l2, l3, x, y, opcion)
+        if existe:
+            # si el barrido encontro una raiz aproximada, se usa como
+            # semilla adicional: si NR converge desde ahi, el punto
+            # resulta ser compatible despues de todo (exito)
+            theta_sol_b, iters_b, residuo_b, convergio_b = _newton_raphson(theta_semilla)
+            intentos_usados += 1
+            if convergio_b:
+                theta_sol, iters, residuo, convergio = theta_sol_b, iters_b, residuo_b, True
+            else:
+                clasificacion_ii_iii = 'no_convergencia'  # caso (iii): existe pero NR no llego
+        else:
+            clasificacion_ii_iii = 'incompatible'  # caso (ii): no se hallo cambio de signo
+
+    # --- Paso 6: armar resultado final ---
+    theta_sol_mod = np.mod(theta_sol + np.pi, 2*np.pi) - np.pi  # interpretacion modulo 2*pi
+
+    resultado_base['theta_rad'] = tuple(float(v) for v in theta_sol_mod)
+    resultado_base['theta_deg'] = tuple(float(v) for v in np.degrees(theta_sol_mod))
+    resultado_base['iteraciones'] = iters
+    resultado_base['residuo'] = residuo
+    resultado_base['convergio'] = convergio
+
+    if convergio:
+        resultado_base['mensaje'] = (
+            f"Convergencia exitosa en {iters} iteraciones "
+            f"(residuo = {residuo:.2e}, intentos de suposicion inicial usados = {intentos_usados})."
+        )
+    elif clasificacion_ii_iii == 'incompatible':
+        resultado_base['mensaje'] = (
+            f"Punto geometricamente alcanzable, pero incompatible con la opcion '{opcion}' "
+            f"(caso ii): el barrido sobre theta1 no encontro ningun cambio de signo de "
+            f"F3^({opcion}) en ninguna de las dos ramas del codo (arriba/abajo), lo que "
+            f"indica, por continuidad, que no existe una configuracion que satisfaga "
+            f"simultaneamente las ecuaciones de posicion y la ecuacion auxiliar."
+        )
+    else:  # clasificacion_ii_iii == 'no_convergencia'
+        resultado_base['theta_rad'] = None
+        resultado_base['theta_deg'] = None
+        resultado_base['mensaje'] = (
+            f"No hubo convergencia de Newton-Raphson tras {intentos_usados} suposiciones "
+            f"iniciales (incluida una semilla informada por el barrido de existencia), "
+            f"pero el barrido sobre theta1 SI encontro un cambio de signo de F3^({opcion}), "
+            f"lo que indica que el punto es compatible con la opcion (caso iii: existe "
+            f"solucion, pero el metodo no logro converger a ella con las semillas probadas)."
+        )
+
+    return resultado_base
+
+OUTPUT []
+CELL 20 markdown
+# Parámetros de Entrada
+OUTPUT []
+CELL 21 code
+# --- Parametros del brazo y punto(s) a evaluar ---
+l1, l2, l3 = 1.0, 1.0, 1.0
+x, y = 1.474, 0.515
+opcion = 'A'   # 'A', 'B', 'C', 'D' o 'E'
+
+resultado = NR_Un_Punto(l1, l2, l3, x, y, opcion)
+
+print(f"Punto objetivo:      {resultado['punto']}")
+print(f"Opcion utilizada:    {resultado['opcion']}")
+print(f"Convergio:           {resultado['convergio']}")
+print(f"Theta (radianes):    {resultado['theta_rad']}")
+print(f"Theta (grados):      {resultado['theta_deg']}")
+print(f"Iteraciones:         {resultado['iteraciones']}")
+print(f"Residuo final:       {resultado['residuo']}")
+print(f"Mensaje:             {resultado['mensaje']}")
+OUTPUT [{'text': ['Punto objetivo:      (1.474, 0.515)\n', 'Opcion utilizada:    A\n', 'Convergio:           True\n', 'Theta (radianes):    (-0.38643251403662404, 2.426525938566602, -2.0400934245300384)\n', 'Theta (grados):      (-22.1409521209285, 139.02969515888717, -116.88874303796213)\n', 'Iteraciones:         7\n', 'Residuo final:       7.117222361007183e-14\n', 'Mensaje:             Convergencia exitosa en 7 iteraciones (residuo = 7.12e-14, intentos de suposicion inicial usados = 1).\n']}]
+CELL 22 markdown
+# Pruebas de la función para las cinco opciones auxiliares
+
+OUTPUT []
+CELL 23 code
+import numpy as np
+
+# ---------------------------------------------------------------
+# Pruebas unitarias de NR_Un_Punto
+#
+# Brazo de referencia para la mayoria de casos: l1=l2=l3=1
+# (anillo alcanzable: r en [0, 3])
+# ---------------------------------------------------------------
+l1, l2, l3 = 1.0, 1.0, 1.0
+TOL_VERIFICACION = 1e-6  # tolerancia para comparar contra la cinematica directa
+
+
+def verificar_convergencia(x, y, opcion, mensaje_caso, brazo=None):
+    """Corre NR_Un_Punto y valida que convergio y que la solucion
+    reproduce (x, y) al sustituirla en la cinematica directa.
+    'brazo' es una tupla (l1,l2,l3) opcional; si no se da, usa el
+    brazo de referencia global l1=l2=l3=1."""
+    bl1, bl2, bl3 = brazo if brazo is not None else (l1, l2, l3)
+    r = NR_Un_Punto(bl1, bl2, bl3, x, y, opcion)
+    assert r['convergio'] is True, (
+        f"[{mensaje_caso}] se esperaba convergencia en ({x},{y}) opcion {opcion}, "
+        f"pero convergio=False. Mensaje: {r['mensaje']}"
+    )
+
+    # la solucion debe reproducir el punto objetivo via cinematica directa
+    x_chk, y_chk = cinematica_directa(*r['theta_rad'], bl1, bl2, bl3)
+    assert abs(x_chk - x) < TOL_VERIFICACION and abs(y_chk - y) < TOL_VERIFICACION, (
+        f"[{mensaje_caso}] la solucion no reproduce el punto objetivo: "
+        f"se pidio ({x},{y}), la cinematica directa da ({x_chk:.6f},{y_chk:.6f})"
+    )
+
+    # la salida debe tener las 6 piezas minimas de la seccion 6.3
+    for campo in ('punto', 'opcion', 'theta_rad', 'theta_deg', 'iteraciones', 'residuo', 'mensaje'):
+        assert r[campo] is not None, f"[{mensaje_caso}] el campo '{campo}' no deberia ser None tras convergencia"
+
+    print(f"OK  [{mensaje_caso}] ({x},{y}) opcion {opcion} -> "
+          f"iter={r['iteraciones']}, residuo={r['residuo']:.2e}")
+    return r
+
+
+def verificar_rechazo(x, y, opcion, mensaje_caso, texto_esperado_en_mensaje=None, brazo=None):
+    """Corre NR_Un_Punto y valida que NO convergio (rechazo o no convergencia).
+    'brazo' es una tupla (l1,l2,l3) opcional; si no se da, usa el
+    brazo de referencia global l1=l2=l3=1."""
+    bl1, bl2, bl3 = brazo if brazo is not None else (l1, l2, l3)
+    r = NR_Un_Punto(bl1, bl2, bl3, x, y, opcion)
+    assert r['convergio'] is False, (
+        f"[{mensaje_caso}] se esperaba que NO convergiera en ({x},{y}) opcion {opcion}, "
+        f"pero si convergio. theta={r['theta_rad']}"
+    )
+    if texto_esperado_en_mensaje is not None:
+        assert texto_esperado_en_mensaje.lower() in r['mensaje'].lower(), (
+            f"[{mensaje_caso}] se esperaba que el mensaje contuviera "
+            f"'{texto_esperado_en_mensaje}', pero se obtuvo: {r['mensaje']}"
+        )
+    print(f"OK  [{mensaje_caso}] ({x},{y}) opcion {opcion} -> rechazado como se esperaba. "
+          f"Mensaje: {r['mensaje']}")
+    return r
+OUTPUT []
+CELL 24 markdown
+# Caso 1. brazo extendido, opción A
+OUTPUT []
+CELL 25 code
+# ============================================================
+# Caso 1: brazo extendido, solucion trivial theta=(0,0,0)
+# ============================================================
+r1 = verificar_convergencia(3.0, 0.0, 'A', 'brazo extendido')
+assert np.allclose(r1['theta_rad'], (0.0, 0.0, 0.0), atol=5e-4), \
+    "se esperaba theta approx (0,0,0) para el brazo totalmente extendido"
+OUTPUT [{'text': ['OK  [brazo extendido] (3.0,0.0) opcion A -> iter=12, residuo=4.67e-09\n']}]
+CELL 26 markdown
+# Caso 2. Punto arbitrario verificado en las 5 opciones
+OUTPUT []
+CELL 27 code
+# ============================================================
+# Caso 2: mismo punto generico, verificado en las 5 opciones
+# ============================================================
+punto_generico = (1.474, 0.515)
+for opcion in ['A', 'B', 'C', 'D', 'E']:
+    r = verificar_convergencia(*punto_generico, opcion, f'punto generico opcion {opcion}')
+
+    # chequeos especificos de cada condicion auxiliar (seccion 5.3)
+    t1, t2, t3 = r['theta_rad']
+    suma = (t1 + t2 + t3 + np.pi) % (2*np.pi) - np.pi  # modulo 2*pi, en (-pi, pi]
+
+    if opcion == 'A':
+        assert abs(suma) < 1e-4, f"opcion A: se esperaba theta1+theta2+theta3=0, se obtuvo {suma}"
+    elif opcion == 'B':
+        assert abs(suma - np.pi/2) < 1e-4, f"opcion B: se esperaba suma=pi/2, se obtuvo {suma}"
+    elif opcion == 'C':
+        assert abs(t3) < 1e-4, f"opcion C: se esperaba theta3=0, se obtuvo {t3}"
+    elif opcion == 'D':
+        assert abs(t2 - t3) < 1e-4, f"opcion D: se esperaba theta2=theta3, se obtuvo t2={t2}, t3={t3}"
+    elif opcion == 'E':
+        alpha = np.arctan2(punto_generico[1], punto_generico[0])
+        esperado = (alpha + np.pi/2 + np.pi) % (2*np.pi) - np.pi
+        assert abs(suma - esperado) < 1e-4, \
+            f"opcion E: se esperaba suma={esperado}, se obtuvo {suma}"
+
+print("OK  [condiciones auxiliares] A,B,C,D,E cumplen su ecuacion F3 respectiva")
+OUTPUT [{'text': ['OK  [punto generico opcion A] (1.474,0.515) opcion A -> iter=7, residuo=7.12e-14\n', 'OK  [punto generico opcion B] (1.474,0.515) opcion B -> iter=7, residuo=2.78e-11\n', 'OK  [punto generico opcion C] (1.474,0.515) opcion C -> iter=9, residuo=1.21e-11\n', 'OK  [punto generico opcion D] (1.474,0.515) opcion D -> iter=9, residuo=5.00e-15\n', 'OK  [punto generico opcion E] (1.474,0.515) opcion E -> iter=23, residuo=2.05e-12\n', 'OK  [condiciones auxiliares] A,B,C,D,E cumplen su ecuacion F3 respectiva\n']}]
+CELL 28 markdown
+# Caso 3. Punto fuera del alcance geométrico del brazo
+OUTPUT []
+CELL 29 code
+# ============================================================
+# Caso 3: punto fuera del alcance geometrico del brazo (caso i)
+# ============================================================
+verificar_rechazo(10.0, 10.0, 'A', 'fuera de alcance (brazo balanceado)',
+                   texto_esperado_en_mensaje='fuera del alcance geometrico')
+
+# variante: brazo muy desbalanceado (l3 >> l1+l2), punto cerca del origen
+brazo_desbalanceado = (7.0, 10.0, 3596.0)
+r_desbalanceado = verificar_rechazo(-3.0, 7.0, 'B', 'fuera de alcance (brazo desbalanceado)',
+                                     texto_esperado_en_mensaje='fuera del alcance geometrico',
+                                     brazo=brazo_desbalanceado)
+assert r_desbalanceado['theta_rad'] is None
+assert r_desbalanceado['iteraciones'] == 0
+assert np.isnan(r_desbalanceado['residuo'])
+OUTPUT [{'text': ['OK  [fuera de alcance (brazo balanceado)] (10.0,10.0) opcion A -> rechazado como se esperaba. Mensaje: Punto (10.0000, 10.0000) fuera del alcance geometrico del brazo. Se requiere r en [0.0000, 3.0000], pero r = 14.1421.\n', 'OK  [fuera de alcance (brazo desbalanceado)] (-3.0,7.0) opcion B -> rechazado como se esperaba. Mensaje: Punto (-3.0000, 7.0000) fuera del alcance geometrico del brazo. Se requiere r en [3579.0000, 3613.0000], pero r = 7.6158.\n']}]
+CELL 30 markdown
+# Caso 4. Punto alcanzable por el brazo pero incompatible con opción C.
+OUTPUT []
+CELL 31 code
+# ============================================================
+# Caso 4: punto alcanzable por el brazo pero incompatible con
+# la opcion C (chequeo cerrado, caso ii)
+# ============================================================
+verificar_rechazo(0.0, 0.0, 'C', 'incompatible con opcion C (forma cerrada)',
+                   texto_esperado_en_mensaje='incompatible')
+
+# el mismo origen SI es alcanzable con opcion A (r_min=0 para este brazo)
+verificar_convergencia(0.0, 0.0, 'A', 'origen alcanzable con opcion A')
+OUTPUT [{'text': ['OK  [incompatible con opcion C (forma cerrada)] (0.0,0.0) opcion C -> rechazado como se esperaba. Mensaje: Punto geometricamente alcanzable por el brazo, pero incompatible con la opcion C (theta3=0 reduce el alcance efectivo a [1.0000, 3.0000], y r = 0.0000).\n', 'OK  [origen alcanzable con opcion A] (0.0,0.0) opcion A -> iter=8, residuo=4.06e-14\n']}, {}]
+CELL 32 markdown
+# Caso 5 (incompatible con opción E por no convergencia, más el contraste con A, B, C, D).
+OUTPUT []
+CELL 33 code
+# ============================================================
+# Caso 5: punto alcanzable en general, pero incompatible con la
+# opcion E en particular (verificado independientemente por
+# barrido de theta1, ver conversacion previa) -> no convergencia
+# ============================================================
+verificar_rechazo(1.5, 1.0, 'E', 'incompatible con opcion E (detectado por no convergencia)')
+
+# pero ese mismo punto SI converge en A, B, C y D
+for opcion in ['A', 'B', 'C', 'D']:
+    verificar_convergencia(1.5, 1.0, opcion, f'punto (1.5,1.0) opcion {opcion}')
+
+print()
+print("Todas las pruebas unitarias pasaron correctamente.")
+
+OUTPUT [{'text': ["OK  [incompatible con opcion E (detectado por no convergencia)] (1.5,1.0) opcion E -> rechazado como se esperaba. Mensaje: Punto geometricamente alcanzable, pero incompatible con la opcion 'E' (caso ii): el barrido sobre theta1 no encontro ningun cambio de signo de F3^(E) en ninguna de las dos ramas del codo (arriba/abajo), lo que indica, por continuidad, que no existe una configuracion que satisfaga simultaneamente las ecuaciones de posicion y la ecuacion auxiliar.\n", 'OK  [punto (1.5,1.0) opcion A] (1.5,1.0) opcion A -> iter=9, residuo=7.56e-10\n', 'OK  [punto (1.5,1.0) opcion B] (1.5,1.0) opcion B -> iter=7, residuo=3.07e-13\n', 'OK  [punto (1.5,1.0) opcion C] (1.5,1.0) opcion C -> iter=8, residuo=7.84e-12\n', 'OK  [punto (1.5,1.0) opcion D] (1.5,1.0) opcion D -> iter=6, residuo=7.34e-11\n', '\n', 'Todas las pruebas unitarias pasaron correctamente.\n']}]
+CELL 34 markdown
+# Programa robusto y animación del recorrido
+
+A partir de la función NR_Un_Punto desarrollada anteriormente,
+se construye ahora un programa capaz de recorrer una lista arbitraria
+de puntos, utilizando la solución anterior como suposición inicial
+para el siguiente punto y manteniendo continuidad en los ángulos.
+OUTPUT []
+CELL 35 code
+# ===============================================================
+# Bibliotecas necesarias para tablas, gráficas y animaciones
+# ===============================================================
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from matplotlib.animation import FuncAnimation, PillowWriter
+from IPython.display import display, Image as IPImage
+OUTPUT []
+CELL 36 code
+# ===============================================================
+# Ajuste de continuidad angular módulo 2*pi
+#La función solamente selecciona la representación equivalente más cercana a
+#la configuración anterior para evitar giros artificiales durante la animación.
+# ===============================================================
+
+def ajustar_configuracion_continua(theta_nuevo, theta_referencia):
+    """
+    Busca una representación angular equivalente de theta_nuevo
+    que quede lo más cerca posible de theta_referencia.
+
+    Los ángulos que difieren en múltiplos de 2*pi representan
+    físicamente la misma orientación.
+
+    Parámetros
+    ----------
+    theta_nuevo : arreglo de 3 valores
+        Configuración nueva obtenida de NR_Un_Punto.
+
+    theta_referencia : arreglo de 3 valores
+        Configuración utilizada como referencia de continuidad,
+        normalmente la configuración anterior de la animación.
+
+    Retorna
+    -------
+    theta_ajustado : numpy.array
+        Configuración equivalente a theta_nuevo, pero sin saltos
+        artificiales mayores a pi respecto a theta_referencia.
+    """
+
+    theta_nuevo = np.array(theta_nuevo, dtype=float)
+    theta_referencia = np.array(theta_referencia, dtype=float)
+
+    # Diferencia angular original
+    diferencia = theta_nuevo - theta_referencia
+
+    # Llevar cada diferencia al intervalo [-pi, pi)
+    diferencia_corta = (
+        (diferencia + np.pi) % (2*np.pi)
+        - np.pi
+    )
+
+    # Construir la configuración equivalente más cercana
+    theta_ajustado = theta_referencia + diferencia_corta
+
+    return theta_ajustado
+OUTPUT []
+CELL 37 code
+# ===============================================================
+# Prueba de la continuidad angular
+# ===============================================================
+
+theta_anterior = np.array([
+    3.10,
+    -0.50,
+    0.20
+])
+
+theta_nuevo = np.array([
+    -3.12,
+    -0.45,
+    0.25
+])
+
+theta_ajustado = ajustar_configuracion_continua(
+    theta_nuevo,
+    theta_anterior
+)
+
+print("Configuración anterior:")
+print(theta_anterior)
+
+print("\nConfiguración entregada por Newton:")
+print(theta_nuevo)
+
+print("\nConfiguración equivalente ajustada:")
+print(theta_ajustado)
+
+print("\nCambio angular después del ajuste:")
+print(theta_ajustado - theta_anterior)
+OUTPUT [{'text': ['Configuración anterior:\n', '[ 3.1 -0.5  0.2]\n', '\n', 'Configuración entregada por Newton:\n', '[-3.12 -0.45  0.25]\n', '\n', 'Configuración equivalente ajustada:\n', '[ 3.16318531 -0.45        0.25      ]\n', '\n', 'Cambio angular después del ajuste:\n', '[0.06318531 0.05       0.05      ]\n']}]
+CELL 38 markdown
+## Cálculo de las posiciones de las articulaciones
+
+Para representar gráficamente el brazo es necesario conocer la posición de cada articulación.
+
+A partir de una configuración angular
+\((\theta_1,\theta_2,\theta_3)\), se calculan los puntos:
+
+- \(P_0\): origen o base del brazo.
+- \(P_1\): extremo del primer eslabón.
+- \(P_2\): extremo del segundo eslabón.
+- \(P_3\): efector final.
+
+Esta función utiliza el mismo modelo geométrico empleado previamente en
+`cinematica_directa`, por lo que la coordenada \(P_3\) debe coincidir con
+la posición cartesiana calculada por dicha función.
+OUTPUT []
+CELL 39 code
+# ===============================================================
+# Posiciones cartesianas de todas las articulaciones
+# ===============================================================
+
+def posiciones_articulaciones(l1, l2, l3, theta):
+    """
+    Calcula las coordenadas cartesianas de la base, las articulaciones
+    y el efector final de un brazo plano de tres eslabones.
+
+    Parámetros
+    ----------
+    l1, l2, l3 : float
+        Longitudes de los tres eslabones.
+
+    theta : arreglo de 3 valores
+        Configuración angular:
+        [theta1, theta2, theta3], expresada en radianes.
+
+    Retorna
+    -------
+    puntos : numpy.array de tamaño (4, 2)
+        Coordenadas de:
+
+        P0 = base del brazo
+        P1 = extremo del primer eslabón
+        P2 = extremo del segundo eslabón
+        P3 = efector final
+    """
+
+    theta = np.array(theta, dtype=float)
+
+    theta1 = theta[0]
+    theta2 = theta[1]
+    theta3 = theta[2]
+
+    # -----------------------------------------------------------
+    # P0: base fija del robot
+    # -----------------------------------------------------------
+    P0 = np.array([
+        0.0,
+        0.0
+    ])
+
+
+    # -----------------------------------------------------------
+    # P1: extremo del primer eslabón
+    # -----------------------------------------------------------
+    P1 = np.array([
+        l1 * np.cos(theta1),
+        l1 * np.sin(theta1)
+    ])
+
+
+    # -----------------------------------------------------------
+    # P2: extremo del segundo eslabón
+    #
+    # El segundo eslabón tiene orientación absoluta:
+    # theta1 + theta2
+    # -----------------------------------------------------------
+    P2 = P1 + np.array([
+        l2 * np.cos(theta1 + theta2),
+        l2 * np.sin(theta1 + theta2)
+    ])
+
+
+    # -----------------------------------------------------------
+    # P3: efector final
+    #
+    # El tercer eslabón tiene orientación absoluta:
+    # theta1 + theta2 + theta3
+    # -----------------------------------------------------------
+    P3 = P2 + np.array([
+        l3 * np.cos(theta1 + theta2 + theta3),
+        l3 * np.sin(theta1 + theta2 + theta3)
+    ])
+
+
+    puntos = np.array([
+        P0,
+        P1,
+        P2,
+        P3
+    ])
+
+    return puntos
+OUTPUT []
+CELL 40 code
+# ===============================================================
+# Verificación de trazabilidad con cinematica_directa
+# desarrollada anteriormente
+# ===============================================================
+
+# Datos propios de esta prueba
+l1_prueba = 1.0
+l2_prueba = 1.0
+l3_prueba = 1.0
+
+theta_prueba = np.array([
+    0.4,
+    -0.2,
+    0.3
+])
+
+# Posiciones calculadas con la función anterior
+puntos_prueba = posiciones_articulaciones(
+    l1_prueba,
+    l2_prueba,
+    l3_prueba,
+    theta_prueba
+)
+
+# Efector calculado con cinematica_directa
+x_cd, y_cd = cinematica_directa(
+    theta_prueba[0],
+    theta_prueba[1],
+    theta_prueba[2],
+    l1_prueba,
+    l2_prueba,
+    l3_prueba
+)
+
+# El punto P3 es el efector final
+efector_persona2 = puntos_prueba[3]
+
+print("Efector según cinematica_directa:")
+print([x_cd, y_cd])
+
+print("\nEfector según posiciones_articulaciones:")
+print(efector_persona2)
+
+coinciden = np.allclose(
+    [x_cd, y_cd],
+    efector_persona2,
+    atol=1e-10
+)
+
+print("\n¿Coinciden ambas implementaciones?")
+print(coinciden)
+OUTPUT [{'text': ['Efector según cinematica_directa:\n', '[np.float64(2.7787101337344993), np.float64(1.0675132117079147)]\n', '\n', 'Efector según posiciones_articulaciones:\n', '[2.77871013 1.06751321]\n', '\n', '¿Coinciden ambas implementaciones?\n', 'True\n']}]
+CELL 41 markdown
+## Interpolación entre configuraciones articulares
+
+Una vez obtenidas dos configuraciones consecutivas del brazo, el movimiento
+entre ellas no se realiza de forma instantánea. Para generar una animación
+continua se construyen configuraciones intermedias entre la postura inicial
+y la postura final.
+
+La interpolación se realiza simultáneamente sobre los tres ángulos
+\(\theta_1\), \(\theta_2\) y \(\theta_3\). De esta manera, las tres
+articulaciones se desplazan al mismo tiempo durante cada transición.
+
+Antes de realizar esta interpolación, la configuración final debe haber sido
+ajustada mediante `ajustar_configuracion_continua`, con el fin de evitar
+saltos artificiales asociados a representaciones angulares que difieren en
+múltiplos de \(2\pi\).
+OUTPUT []
+CELL 42 code
+# ===============================================================
+# Interpolación simultánea entre dos configuraciones articulares
+# Para que las tres articulaciones cambien de forma simultánea,
+# no mover primero una, luego otra y después otra.
+# ===============================================================
+
+def interpolar_configuraciones(theta_inicio, theta_fin, n_pasos=30):
+    """
+    Genera configuraciones intermedias entre una postura inicial
+    y una postura final del brazo.
+
+    Las tres articulaciones se interpolan simultáneamente.
+
+    Parámetros
+    ----------
+    theta_inicio : arreglo de 3 valores
+        Configuración angular inicial:
+        [theta1, theta2, theta3].
+
+    theta_fin : arreglo de 3 valores
+        Configuración angular final:
+        [theta1, theta2, theta3].
+
+    n_pasos : int
+        Cantidad de configuraciones que se generan entre el inicio
+        y el final, incluyendo ambos extremos.
+
+    Retorna
+    -------
+    configuraciones : numpy.array de tamaño (n_pasos, 3)
+        Cada fila representa una configuración intermedia del brazo.
+    """
+
+    theta_inicio = np.array(theta_inicio, dtype=float)
+    theta_fin = np.array(theta_fin, dtype=float)
+
+    if n_pasos < 2:
+        raise ValueError(
+            "n_pasos debe ser al menos 2 para incluir "
+            "la configuración inicial y final."
+        )
+
+    # Parámetro de interpolación:
+    # comienza en 0 y termina en 1
+    t = np.linspace(0.0, 1.0, n_pasos)
+
+    # Interpolación simultánea de los tres ángulos
+    configuraciones = (
+        theta_inicio[None, :]
+        +
+        t[:, None] * (theta_fin - theta_inicio)[None, :]
+    )
+
+    return configuraciones
+OUTPUT []
+CELL 43 code
+# ===============================================================
+# Prueba de interpolar_configuraciones
+# ===============================================================
+
+theta_inicio_prueba = np.array([
+    0.0,
+    0.0,
+    0.0
+])
+
+theta_fin_prueba = np.array([
+    np.pi / 2,
+    -np.pi / 4,
+    np.pi / 6
+])
+
+configuraciones_prueba = interpolar_configuraciones(
+    theta_inicio_prueba,
+    theta_fin_prueba,
+    n_pasos=6
+)
+
+tabla_interpolacion = pd.DataFrame(
+    configuraciones_prueba,
+    columns=[
+        'theta1',
+        'theta2',
+        'theta3'
+    ]
+)
+
+display(tabla_interpolacion)
+OUTPUT [{}]
+CELL 44 code
+# ===============================================================
+# Verificaciones de la interpolación
+# ===============================================================
+
+inicio_correcto = np.allclose(
+    configuraciones_prueba[0],
+    theta_inicio_prueba
+)
+
+final_correcto = np.allclose(
+    configuraciones_prueba[-1],
+    theta_fin_prueba
+)
+
+print("¿La primera configuración coincide con la inicial?")
+print(inicio_correcto)
+
+print("\n¿La última configuración coincide con la final?")
+print(final_correcto)
+
+print("\nNúmero de configuraciones generadas:")
+print(len(configuraciones_prueba))
+OUTPUT [{'text': ['¿La primera configuración coincide con la inicial?\n', 'True\n', '\n', '¿La última configuración coincide con la final?\n', 'True\n', '\n', 'Número de configuraciones generadas:\n', '6\n']}]
+CELL 45 markdown
+## Resolución secuencial de una lista de puntos
+
+La función `resolver_recorrido` utiliza directamente `NR_Un_Punto`,
+desarrollada en la sección anterior, para calcular una configuración angular
+para cada punto de una lista.
+
+Para favorecer la continuidad y la convergencia del método, la solución
+obtenida para un punto se utiliza como suposición inicial del punto siguiente.
+
+Además, la configuración utilizada para la animación se ajusta mediante
+`ajustar_configuracion_continua`, con el objetivo de evitar saltos
+artificiales de \(2\pi\).
+
+Si `NR_Un_Punto` no converge para un punto, dicho punto no se utiliza para
+construir una postura del brazo, ya que los ángulos producidos por una
+iteración fallida no pueden considerarse una solución válida. El fallo se
+registra en la tabla de resultados y el recorrido continúa desde la última
+configuración válida.
+OUTPUT []
+CELL 46 code
+# ===============================================================
+# Resolución secuencial de una lista de puntos
+# ===============================================================
+
+def resolver_recorrido(
+    l1,
+    l2,
+    l3,
+    puntos,
+    opcion,
+    tol=1e-8,
+    max_iter=100
+):
+    """
+    Resuelve secuencialmente una lista de puntos utilizando
+    NR_Un_Punto.
+
+    La solución de un punto se reutiliza como suposición inicial
+    para el siguiente punto, cuando existe convergencia.
+
+    También construye una versión angular continua para la
+    animación, evitando saltos artificiales de 2*pi.
+
+    Parámetros
+    ----------
+    l1, l2, l3 : float
+        Longitudes de los tres eslabones.
+
+    puntos : lista de pares (x, y)
+        Puntos que debe visitar el efector final.
+
+    opcion : str
+        Condición auxiliar seleccionada:
+        'A', 'B', 'C', 'D' o 'E'.
+
+    tol : float
+        Tolerancia utilizada por NR_Un_Punto.
+
+    max_iter : int
+        Máximo de iteraciones permitido en Newton-Raphson.
+
+    Retorna
+    -------
+    resultados_df : pandas.DataFrame
+        Tabla con los resultados numéricos de cada punto.
+
+    configuraciones_validas : list
+        Configuraciones continuas que sí podrán utilizarse
+        posteriormente para la animación.
+
+    puntos_validos : list
+        Puntos para los cuales NR_Un_Punto convergió.
+    """
+
+    # -----------------------------------------------------------
+    # Configuración inicial de la animación:
+    # el brazo parte de theta = (0,0,0)
+    # -----------------------------------------------------------
+    theta_animacion_anterior = np.array(
+        [0.0, 0.0, 0.0]
+    )
+
+    # -----------------------------------------------------------
+    # Semilla para Newton.
+    # Para el primer punto se deja en None, de modo que
+    # NR_Un_Punto use la perturbación inicial definida anteriormente.
+    # -----------------------------------------------------------
+    theta_semilla = None
+
+    # Listas donde se guardará la información del recorrido
+    registros = []
+    configuraciones_validas = []
+    puntos_validos = []
+
+
+    # -----------------------------------------------------------
+    # Recorrer todos los puntos solicitados
+    # -----------------------------------------------------------
+    for i, punto in enumerate(puntos, start=1):
+
+        x = float(punto[0])
+        y = float(punto[1])
+
+
+        # -------------------------------------------------------
+        # Llamada directa a la función desarrollada anteriormente
+        # -------------------------------------------------------
+        resultado = NR_Un_Punto(
+            l1,
+            l2,
+            l3,
+            x,
+            y,
+            opcion,
+            tol=tol,
+            max_iter=max_iter,
+            theta0=theta_semilla
+        )
+
+
+        # -------------------------------------------------------
+        # Solo utilizar los ángulos si Newton realmente convergió
+        # -------------------------------------------------------
+        if (
+            resultado['convergio']
+            and
+            resultado['theta_rad'] is not None
+        ):
+
+            theta_nr = np.array(
+                resultado['theta_rad'],
+                dtype=float
+            )
+
+
+            # ---------------------------------------------------
+            # Ajustar la representación angular para que quede
+            # cerca de la postura anterior de la animación
+            # ---------------------------------------------------
+            theta_continua = (
+                ajustar_configuracion_continua(
+                    theta_nr,
+                    theta_animacion_anterior
+                )
+            )
+
+
+            # ---------------------------------------------------
+            # Guardar configuración válida para la animación
+            # ---------------------------------------------------
+            configuraciones_validas.append(
+                theta_continua.copy()
+            )
+
+            puntos_validos.append(
+                (x, y)
+            )
+
+
+            # ---------------------------------------------------
+            # La solución de este punto se convierte en la
+            # suposición inicial del siguiente punto
+            # ---------------------------------------------------
+            theta_semilla = theta_nr.copy()
+
+
+            # ---------------------------------------------------
+            # Actualizar referencia de continuidad visual
+            # ---------------------------------------------------
+            theta_animacion_anterior = (
+                theta_continua.copy()
+            )
+
+
+            estado_recorrido = "Resuelto"
+
+
+            theta1 = theta_nr[0]
+            theta2 = theta_nr[1]
+            theta3 = theta_nr[2]
+
+            theta1_deg = np.degrees(theta1)
+            theta2_deg = np.degrees(theta2)
+            theta3_deg = np.degrees(theta3)
+
+
+        else:
+
+            # ---------------------------------------------------
+            # Si Newton no converge:
+            # - no se utiliza la configuración
+            # - no se cambia la semilla anterior
+            # - no se cambia la postura anterior de la animación
+            # ---------------------------------------------------
+
+            estado_recorrido = "No resuelto"
+
+            theta1 = np.nan
+            theta2 = np.nan
+            theta3 = np.nan
+
+            theta1_deg = np.nan
+            theta2_deg = np.nan
+            theta3_deg = np.nan
+
+
+        # -------------------------------------------------------
+        # Registro de resultados
+        # -------------------------------------------------------
+        registros.append({
+            'Punto': i,
+            'x': x,
+            'y': y,
+            'Opción': opcion,
+            'Convergió': resultado['convergio'],
+            'Estado recorrido': estado_recorrido,
+            'theta1_rad': theta1,
+            'theta2_rad': theta2,
+            'theta3_rad': theta3,
+            'theta1_deg': theta1_deg,
+            'theta2_deg': theta2_deg,
+            'theta3_deg': theta3_deg,
+            'Iteraciones': resultado['iteraciones'],
+            'Residuo': resultado['residuo'],
+            'Mensaje NR': resultado['mensaje']
+        })
+
+
+    # -----------------------------------------------------------
+    # Crear tabla final
+    # -----------------------------------------------------------
+    resultados_df = pd.DataFrame(
+        registros
+    )
+
+
+    return (
+        resultados_df,
+        configuraciones_validas,
+        puntos_validos
+    )
+OUTPUT []
+CELL 47 markdown
+## Construcción del movimiento completo del brazo
+
+Una vez resueltos los puntos objetivo, las configuraciones válidas se unen
+mediante interpolaciones articulares.
+
+El recorrido comienza en la postura inicial del brazo:
+
+\[
+(\theta_1,\theta_2,\theta_3)=(0,0,0)
+\]
+
+continúa por cada una de las configuraciones obtenidas con
+`NR_Un_Punto` y, finalmente, regresa a la postura inicial.
+
+Para cada transición se utiliza `interpolar_configuraciones`, por lo que
+las tres articulaciones cambian simultáneamente.
+
+Antes del regreso final se selecciona una representación angular equivalente
+a \((0,0,0)\) que sea cercana a la última configuración, evitando de esta
+forma un giro artificial de \(2\pi\).
+
+Las configuraciones generadas en esta etapa serán posteriormente utilizadas
+para calcular la trayectoria del efector y producir la animación.
+OUTPUT []
+CELL 48 code
+# ===============================================================
+# Construcción del movimiento articular completo
+# ===============================================================
+
+def construir_movimiento_completo(
+    configuraciones_validas,
+    n_pasos=30
+):
+    """
+    Construye todas las configuraciones necesarias para animar
+    el recorrido completo del brazo.
+
+    El movimiento sigue la secuencia:
+
+        (0,0,0)
+            -> primera configuración válida
+            -> segunda configuración válida
+            -> ...
+            -> última configuración válida
+            -> postura inicial equivalente a (0,0,0)
+
+    Cada transición se interpola simultáneamente en los tres
+    ángulos.
+
+    Parámetros
+    ----------
+    configuraciones_validas : list
+        Lista de configuraciones angulares continuas obtenidas
+        previamente por resolver_recorrido.
+
+    n_pasos : int
+        Número de cuadros utilizados en cada transición.
+
+    Retorna
+    -------
+    movimiento : numpy.array de tamaño (N, 3)
+        Todas las configuraciones articulares que formarán
+        los cuadros de la animación.
+
+    tramos : list
+        Información que identifica de dónde a dónde corresponde
+        cada transición.
+    """
+
+    # -----------------------------------------------------------
+    # Postura física inicial del brazo
+    # -----------------------------------------------------------
+    theta_inicial = np.array(
+        [0.0, 0.0, 0.0],
+        dtype=float
+    )
+
+
+    # -----------------------------------------------------------
+    # Si no existe ninguna configuración válida,
+    # no es posible construir un recorrido.
+    # -----------------------------------------------------------
+    if len(configuraciones_validas) == 0:
+        return np.array([theta_inicial]), []
+
+
+    # Convertir todas las configuraciones a arreglos NumPy
+    configuraciones = [
+        np.array(theta, dtype=float)
+        for theta in configuraciones_validas
+    ]
+
+
+    # -----------------------------------------------------------
+    # La secuencia empieza en (0,0,0)
+    # -----------------------------------------------------------
+    secuencia = [theta_inicial]
+
+    # Agregar todas las configuraciones objetivo válidas
+    secuencia.extend(configuraciones)
+
+
+    # -----------------------------------------------------------
+    # Regreso final:
+    #
+    # (0,0,0) puede representarse también mediante múltiplos
+    # de 2*pi. Elegimos la representación equivalente más
+    # cercana a la última postura para evitar giros innecesarios.
+    # -----------------------------------------------------------
+    theta_retorno = ajustar_configuracion_continua(
+        theta_inicial,
+        secuencia[-1]
+    )
+
+    secuencia.append(theta_retorno)
+
+
+    # -----------------------------------------------------------
+    # Aquí se almacenarán todos los cuadros de la animación
+    # -----------------------------------------------------------
+    movimiento = []
+
+    # Información sobre cada tramo
+    tramos = []
+
+
+    # -----------------------------------------------------------
+    # Construir cada transición
+    # -----------------------------------------------------------
+    for i in range(len(secuencia) - 1):
+
+        theta_inicio = secuencia[i]
+        theta_fin = secuencia[i + 1]
+
+
+        configuraciones_tramo = interpolar_configuraciones(
+            theta_inicio,
+            theta_fin,
+            n_pasos=n_pasos
+        )
+
+
+        # -------------------------------------------------------
+        # A partir del segundo tramo se elimina la primera fila.
+        #
+        # ¿Por qué?
+        # Porque esa configuración ya corresponde al último
+        # cuadro del tramo anterior y no necesitamos repetirla.
+        # -------------------------------------------------------
+        if i > 0:
+            configuraciones_tramo = configuraciones_tramo[1:]
+
+
+        movimiento.extend(
+            configuraciones_tramo
+        )
+
+
+        tramos.append({
+            'tramo': i + 1,
+            'theta_inicio': theta_inicio.copy(),
+            'theta_fin': theta_fin.copy()
+        })
+
+
+    movimiento = np.array(
+        movimiento,
+        dtype=float
+    )
+
+
+    return movimiento, tramos
+OUTPUT []
+CELL 49 markdown
+## Cálculo de la trayectoria cartesiana del efector
+
+El movimiento completo del brazo está definido hasta este punto mediante
+configuraciones articulares \((\theta_1,\theta_2,\theta_3)\).
+
+Para representar gráficamente dicho movimiento, cada configuración se
+transforma en las coordenadas cartesianas de las articulaciones utilizando
+`posiciones_articulaciones`.
+
+Para cada cuadro se almacenan:
+
+- la posición de la base \(P_0\);
+- la primera articulación \(P_1\);
+- la segunda articulación \(P_2\);
+- el efector final \(P_3\).
+
+La secuencia de posiciones de \(P_3\) constituye la trayectoria cartesiana
+del efector y será utilizada posteriormente tanto en la gráfica estática
+como en la animación.
+
+Esta etapa mantiene la trazabilidad con el modelo geométrico anterior, ya
+que `posiciones_articulaciones` fue verificada previamente contra
+`cinematica_directa`.
+OUTPUT []
+CELL 50 code
+# ===============================================================
+# Cálculo de las posiciones del brazo y trayectoria del efector
+# ===============================================================
+
+def calcular_trayectoria_movimiento(
+    l1,
+    l2,
+    l3,
+    movimiento
+):
+    """
+    Convierte cada configuración angular del movimiento en las
+    coordenadas cartesianas de todas las articulaciones del brazo.
+
+    Para cada cuadro se calculan:
+
+        P0 = base del brazo
+        P1 = primera articulación
+        P2 = segunda articulación
+        P3 = efector final
+
+    La secuencia de posiciones de P3 forma la trayectoria cartesiana
+    del efector.
+
+    Parámetros
+    ----------
+    l1, l2, l3 : float
+        Longitudes de los tres eslabones.
+
+    movimiento : numpy.array de tamaño (N, 3)
+        Configuraciones articulares generadas previamente por
+        construir_movimiento_completo.
+
+    Retorna
+    -------
+    posiciones_cuadros : numpy.array de tamaño (N, 4, 2)
+        Posiciones P0, P1, P2 y P3 para cada cuadro.
+
+    trayectoria_efector : numpy.array de tamaño (N, 2)
+        Coordenadas (x, y) del efector final durante todo el recorrido.
+    """
+
+    movimiento = np.array(
+        movimiento,
+        dtype=float
+    )
+
+    # -----------------------------------------------------------
+    # Aquí se guardarán las posiciones de todas las articulaciones
+    # para cada cuadro de la animación.
+    # -----------------------------------------------------------
+    posiciones_cuadros = []
+
+    # -----------------------------------------------------------
+    # Aquí se almacenará únicamente la posición del efector final.
+    # Esto permitirá dibujar su trayectoria.
+    # -----------------------------------------------------------
+    trayectoria_efector = []
+
+
+    # -----------------------------------------------------------
+    # Convertir cada configuración angular a coordenadas cartesianas
+    # -----------------------------------------------------------
+    for theta in movimiento:
+
+        puntos = posiciones_articulaciones(
+            l1,
+            l2,
+            l3,
+            theta
+        )
+
+        # Guardar P0, P1, P2 y P3
+        posiciones_cuadros.append(
+            puntos
+        )
+
+        # P3 corresponde al efector final
+        trayectoria_efector.append(
+            puntos[3]
+        )
+
+
+    # Convertir las listas a arreglos NumPy
+    posiciones_cuadros = np.array(
+        posiciones_cuadros,
+        dtype=float
+    )
+
+    trayectoria_efector = np.array(
+        trayectoria_efector,
+        dtype=float
+    )
+
+
+    return posiciones_cuadros, trayectoria_efector
+OUTPUT []
+CELL 51 markdown
+## Gráfica estática de la trayectoria
+
+A partir de la trayectoria cartesiana calculada anteriormente se construye
+una representación estática del recorrido realizado por el efector final.
+
+La gráfica incluye:
+
+- la base fija del brazo en \((0,0)\);
+- los puntos objetivo suministrados al programa;
+- la trayectoria seguida por el efector durante las interpolaciones;
+- la posición inicial y final del efector;
+- una circunferencia de referencia correspondiente al alcance máximo
+  \(l_1+l_2+l_3\).
+
+La escala de los ejes se mantiene igual en ambas direcciones para evitar
+distorsiones geométricas en la representación del movimiento.
+OUTPUT []
+CELL 52 code
+# ===============================================================
+# Gráfica estática de la trayectoria del efector
+# ===============================================================
+
+def graficar_trayectoria(
+    l1,
+    l2,
+    l3,
+    puntos_objetivo,
+    trayectoria_efector,
+    opcion
+):
+    """
+    Genera una gráfica estática del recorrido del efector final.
+
+    Se muestran:
+        - la base del brazo;
+        - los puntos objetivo;
+        - la trayectoria cartesiana del efector;
+        - las posiciones inicial y final;
+        - el alcance máximo del brazo.
+
+    Parámetros
+    ----------
+    l1, l2, l3 : float
+        Longitudes de los eslabones.
+
+    puntos_objetivo : lista de pares (x, y)
+        Puntos que se solicitaron al programa.
+
+    trayectoria_efector : numpy.array de tamaño (N, 2)
+        Posiciones recorridas por el efector final.
+
+    opcion : str
+        Condición auxiliar utilizada: A, B, C, D o E.
+
+    Retorna
+    -------
+    fig, ax
+        Objetos de Matplotlib correspondientes a la figura
+        y sus ejes.
+    """
+
+    trayectoria_efector = np.array(
+        trayectoria_efector,
+        dtype=float
+    )
+
+    puntos_objetivo = np.array(
+        puntos_objetivo,
+        dtype=float
+    )
+
+
+    # -----------------------------------------------------------
+    # Crear figura
+    # -----------------------------------------------------------
+    fig, ax = plt.subplots(
+        figsize=(8, 8)
+    )
+
+
+    # -----------------------------------------------------------
+    # Trayectoria recorrida por el efector
+    # -----------------------------------------------------------
+    ax.plot(
+        trayectoria_efector[:, 0],
+        trayectoria_efector[:, 1],
+        linewidth=2,
+        label='Trayectoria del efector'
+    )
+
+
+    # -----------------------------------------------------------
+    # Puntos objetivo
+    # -----------------------------------------------------------
+    if len(puntos_objetivo) > 0:
+
+        ax.scatter(
+            puntos_objetivo[:, 0],
+            puntos_objetivo[:, 1],
+            marker='x',
+            s=80,
+            label='Puntos objetivo'
+        )
+
+        # Etiquetar P1, P2, ...
+        for i, (x, y) in enumerate(
+            puntos_objetivo,
+            start=1
+        ):
+            ax.annotate(
+                f'P{i}',
+                (x, y),
+                xytext=(6, 6),
+                textcoords='offset points'
+            )
+
+
+    # -----------------------------------------------------------
+    # Base del brazo
+    # -----------------------------------------------------------
+    ax.scatter(
+        0,
+        0,
+        marker='s',
+        s=80,
+        label='Base'
+    )
+
+
+    # -----------------------------------------------------------
+    # Posición inicial del efector
+    # -----------------------------------------------------------
+    ax.scatter(
+        trayectoria_efector[0, 0],
+        trayectoria_efector[0, 1],
+        marker='o',
+        s=70,
+        label='Inicio del efector'
+    )
+
+
+    # -----------------------------------------------------------
+    # Posición final del efector
+    # -----------------------------------------------------------
+    ax.scatter(
+        trayectoria_efector[-1, 0],
+        trayectoria_efector[-1, 1],
+        marker='*',
+        s=120,
+        label='Final del efector'
+    )
+
+
+    # -----------------------------------------------------------
+    # Circunferencia de alcance máximo
+    # -----------------------------------------------------------
+    alcance_maximo = l1 + l2 + l3
+
+    angulo = np.linspace(
+        0,
+        2*np.pi,
+        400
+    )
+
+    x_alcance = alcance_maximo * np.cos(angulo)
+    y_alcance = alcance_maximo * np.sin(angulo)
+
+    ax.plot(
+        x_alcance,
+        y_alcance,
+        linestyle='--',
+        linewidth=1,
+        label='Alcance máximo'
+    )
+
+
+    # -----------------------------------------------------------
+    # Configuración de la gráfica
+    # -----------------------------------------------------------
+    margen = 0.4
+
+    limite = alcance_maximo + margen
+
+    ax.set_xlim(
+        -limite,
+        limite
+    )
+
+    ax.set_ylim(
+        -limite,
+        limite
+    )
+
+    # Escala idéntica en x y y
+    ax.set_aspect(
+        'equal',
+        adjustable='box'
+    )
+
+    ax.axhline(
+        0,
+        linewidth=0.8
+    )
+
+    ax.axvline(
+        0,
+        linewidth=0.8
+    )
+
+    ax.grid(
+        True,
+        alpha=0.3
+    )
+
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+
+    ax.set_title(
+        f'Trayectoria del efector - Opción {opcion}'
+    )
+
+    ax.legend()
+
+    plt.show()
+
+    return fig, ax
+OUTPUT []
+CELL 53 markdown
+## Animación del brazo robótico
+
+A partir de las posiciones cartesianas calculadas para cada cuadro se genera
+una animación del movimiento completo del brazo.
+
+En cada instante se representan los tres eslabones mediante los puntos
+\(P_0\), \(P_1\), \(P_2\) y \(P_3\), donde \(P_3\) corresponde al efector final.
+
+La animación muestra de manera progresiva el rastro seguido por el efector,
+permitiendo observar cómo el brazo se desplaza entre las configuraciones
+obtenidas mediante Newton-Raphson.
+
+El movimiento comienza en la postura articular \((0,0,0)\), recorre las
+configuraciones válidas asociadas a los puntos objetivo y finalmente regresa
+a una postura equivalente a \((0,0,0)\).
+
+Los tres ángulos articulares cambian simultáneamente durante cada transición,
+debido a la interpolación realizada anteriormente.
+
+OUTPUT []
+CELL 54 code
+# ===============================================================
+# Creación de la animación GIF del brazo robótico
+# ===============================================================
+
+def crear_animacion_brazo(
+    l1,
+    l2,
+    l3,
+    posiciones_cuadros,
+    trayectoria_efector,
+    puntos_objetivo,
+    opcion,
+    nombre_gif='animacion_brazo.gif',
+    fps=20
+):
+    """
+    Genera y guarda una animación GIF del movimiento completo
+    del brazo robótico.
+
+    En cada cuadro se muestran:
+        - los tres eslabones del brazo;
+        - las articulaciones;
+        - el efector final;
+        - el rastro acumulado del efector;
+        - los puntos objetivo;
+        - la circunferencia de alcance máximo.
+
+    Parámetros
+    ----------
+    l1, l2, l3 : float
+        Longitudes de los tres eslabones.
+
+    posiciones_cuadros : numpy.array de tamaño (N, 4, 2)
+        Posiciones de P0, P1, P2 y P3 en cada cuadro.
+
+    trayectoria_efector : numpy.array de tamaño (N, 2)
+        Posiciones del efector durante todo el recorrido.
+
+    puntos_objetivo : lista de pares (x, y)
+        Puntos solicitados al programa.
+
+    opcion : str
+        Condición auxiliar seleccionada: A, B, C, D o E.
+
+    nombre_gif : str
+        Nombre con el que se guardará el archivo GIF.
+
+    fps : int
+        Cuadros por segundo de la animación.
+
+    Retorna
+    -------
+    animacion
+        Objeto FuncAnimation de Matplotlib.
+
+    nombre_gif
+        Nombre del archivo generado.
+    """
+
+    posiciones_cuadros = np.array(
+        posiciones_cuadros,
+        dtype=float
+    )
+
+    trayectoria_efector = np.array(
+        trayectoria_efector,
+        dtype=float
+    )
+
+    puntos_objetivo = np.array(
+        puntos_objetivo,
+        dtype=float
+    )
+
+
+    # -----------------------------------------------------------
+    # Crear figura
+    # -----------------------------------------------------------
+    fig, ax = plt.subplots(
+        figsize=(8, 8)
+    )
+
+
+    # -----------------------------------------------------------
+    # Límites de visualización
+    # -----------------------------------------------------------
+    alcance_maximo = l1 + l2 + l3
+
+    margen = 0.4
+
+    limite = alcance_maximo + margen
+
+    ax.set_xlim(
+        -limite,
+        limite
+    )
+
+    ax.set_ylim(
+        -limite,
+        limite
+    )
+
+    ax.set_aspect(
+        'equal',
+        adjustable='box'
+    )
+
+
+    # -----------------------------------------------------------
+    # Ejes y cuadrícula
+    # -----------------------------------------------------------
+    ax.axhline(
+        0,
+        linewidth=0.8
+    )
+
+    ax.axvline(
+        0,
+        linewidth=0.8
+    )
+
+    ax.grid(
+        True,
+        alpha=0.3
+    )
+
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+
+    ax.set_title(
+        f'Brazo robótico 3R - Opción {opcion}'
+    )
+
+
+    # -----------------------------------------------------------
+    # Circunferencia de alcance máximo
+    # -----------------------------------------------------------
+    angulo = np.linspace(
+        0,
+        2*np.pi,
+        400
+    )
+
+    ax.plot(
+        alcance_maximo * np.cos(angulo),
+        alcance_maximo * np.sin(angulo),
+        linestyle='--',
+        linewidth=1,
+        label='Alcance máximo'
+    )
+
+
+    # -----------------------------------------------------------
+    # Puntos objetivo
+    # -----------------------------------------------------------
+    if len(puntos_objetivo) > 0:
+
+        ax.scatter(
+            puntos_objetivo[:, 0],
+            puntos_objetivo[:, 1],
+            marker='x',
+            s=80,
+            label='Puntos objetivo'
+        )
+
+        for i, (x, y) in enumerate(
+            puntos_objetivo,
+            start=1
+        ):
+
+            ax.annotate(
+                f'P{i}',
+                (x, y),
+                xytext=(6, 6),
+                textcoords='offset points'
+            )
+
+
+    # -----------------------------------------------------------
+    # Elemento gráfico que representa el brazo completo
+    # -----------------------------------------------------------
+    linea_brazo, = ax.plot(
+        [],
+        [],
+        marker='o',
+        linewidth=3,
+        markersize=7,
+        label='Brazo'
+    )
+
+
+    # -----------------------------------------------------------
+    # Efector final
+    # -----------------------------------------------------------
+    punto_efector, = ax.plot(
+        [],
+        [],
+        marker='o',
+        markersize=9,
+        linestyle='None',
+        label='Efector'
+    )
+
+
+    # -----------------------------------------------------------
+    # Rastro progresivo del efector
+    # -----------------------------------------------------------
+    linea_rastro, = ax.plot(
+        [],
+        [],
+        linewidth=1.5,
+        label='Rastro del efector'
+    )
+
+
+    # -----------------------------------------------------------
+    # Base fija del robot
+    # -----------------------------------------------------------
+    ax.scatter(
+        0,
+        0,
+        marker='s',
+        s=90,
+        label='Base'
+    )
+
+
+    # -----------------------------------------------------------
+    # Texto que muestra el cuadro actual
+    # -----------------------------------------------------------
+    texto_cuadro = ax.text(
+        0.02,
+        0.97,
+        '',
+        transform=ax.transAxes,
+        verticalalignment='top'
+    )
+
+
+    ax.legend(
+        loc='upper right'
+    )
+
+
+    # ===========================================================
+    # Función de inicialización
+    # ===========================================================
+    def iniciar():
+
+        linea_brazo.set_data(
+            [],
+            []
+        )
+
+        punto_efector.set_data(
+            [],
+            []
+        )
+
+        linea_rastro.set_data(
+            [],
+            []
+        )
+
+        texto_cuadro.set_text('')
+
+        return (
+            linea_brazo,
+            punto_efector,
+            linea_rastro,
+            texto_cuadro
+        )
+
+
+    # ===========================================================
+    # Función que actualiza cada cuadro
+    # ===========================================================
+    def actualizar(frame):
+
+        # -------------------------------------------------------
+        # Coordenadas P0, P1, P2 y P3 del cuadro actual
+        # -------------------------------------------------------
+        puntos = posiciones_cuadros[frame]
+
+        x_brazo = puntos[:, 0]
+        y_brazo = puntos[:, 1]
+
+
+        # -------------------------------------------------------
+        # Actualizar los tres eslabones
+        # -------------------------------------------------------
+        linea_brazo.set_data(
+            x_brazo,
+            y_brazo
+        )
+
+
+        # -------------------------------------------------------
+        # Actualizar el efector final P3
+        # -------------------------------------------------------
+        punto_efector.set_data(
+            [puntos[3, 0]],
+            [puntos[3, 1]]
+        )
+
+
+        # -------------------------------------------------------
+        # Mostrar únicamente el rastro recorrido hasta este cuadro
+        # -------------------------------------------------------
+        linea_rastro.set_data(
+            trayectoria_efector[:frame + 1, 0],
+            trayectoria_efector[:frame + 1, 1]
+        )
+
+
+        # -------------------------------------------------------
+        # Mostrar progreso de la animación
+        # -------------------------------------------------------
+        texto_cuadro.set_text(
+            f'Cuadro {frame + 1} / {len(posiciones_cuadros)}'
+        )
+
+
+        return (
+            linea_brazo,
+            punto_efector,
+            linea_rastro,
+            texto_cuadro
+        )
+
+
+    # ===========================================================
+    # Construir la animación
+    # ===========================================================
+    animacion = FuncAnimation(
+        fig,
+        actualizar,
+        frames=len(posiciones_cuadros),
+        init_func=iniciar,
+        interval=1000 / fps,
+        blit=True,
+        repeat=False
+    )
+
+
+    # ===========================================================
+    # Guardar como GIF
+    # ===========================================================
+    animacion.save(
+        nombre_gif,
+        writer=PillowWriter(
+            fps=fps
+        )
+    )
+
+
+    # Evita que Colab muestre una figura estática adicional
+    plt.close(fig)
+
+
+    return animacion, nombre_gif
+OUTPUT []
+CELL 55 markdown
+## Función principal `Laboratorio_Brazo_3AR`
+
+La función `Laboratorio_Brazo_3AR` integra las distintas etapas desarrolladas
+previamente para resolver y visualizar el recorrido de un brazo robótico
+plano de tres articulaciones.
+
+La función recibe las longitudes de los eslabones, una lista arbitraria de
+puntos objetivo y una de las condiciones auxiliares A–E.
+
+
+OUTPUT []
+CELL 56 code
+# ===============================================================
+# FUNCIÓN PRINCIPAL
+# Programa robusto para recorrer una lista de puntos
+# ===============================================================
+
+def Laboratorio_Brazo_3AR(
+    l1,
+    l2,
+    l3,
+    puntos,
+    opcion,
+    tol=1e-8,
+    max_iter=100,
+    n_pasos=30,
+    fps=20,
+    nombre_gif=None,
+    mostrar_grafica=True,
+    mostrar_animacion=True
+):
+    """
+    Ejecuta el recorrido completo de un brazo robótico plano 3R
+    sobre una lista de puntos objetivo.
+
+    Esta función integra el trabajo realizado previamente por
+    Persona 1 mediante NR_Un_Punto y las funciones auxiliares
+    desarrolladas en la sección de Persona 2.
+
+    Parámetros
+    ----------
+    l1, l2, l3 : float
+        Longitudes de los tres eslabones.
+
+    puntos : lista de pares (x, y)
+        Puntos objetivo que debe visitar el efector.
+
+    opcion : str
+        Condición auxiliar seleccionada:
+        'A', 'B', 'C', 'D' o 'E'.
+
+    tol : float
+        Tolerancia utilizada por NR_Un_Punto.
+
+    max_iter : int
+        Máximo de iteraciones de Newton-Raphson por intento.
+
+    n_pasos : int
+        Número de cuadros utilizados para interpolar cada
+        transición entre configuraciones.
+
+    fps : int
+        Cuadros por segundo de la animación GIF.
+
+    nombre_gif : str o None
+        Nombre del archivo GIF.
+        Si es None, se genera automáticamente.
+
+    mostrar_grafica : bool
+        Indica si se muestra la gráfica estática.
+
+    mostrar_animacion : bool
+        Indica si se genera y muestra el GIF.
+
+    Retorna
+    -------
+    resultados : dict
+        Diccionario con los principales resultados numéricos
+        y geométricos del recorrido.
+    """
+
+    # ===========================================================
+    # 1. Validaciones básicas de entrada
+    # ===========================================================
+
+    if l1 <= 0 or l2 <= 0 or l3 <= 0:
+        raise ValueError(
+            "Las longitudes l1, l2 y l3 deben ser positivas."
+        )
+
+    opcion = str(opcion).upper()
+
+    if opcion not in ['A', 'B', 'C', 'D', 'E']:
+        raise ValueError(
+            "La opción debe ser A, B, C, D o E."
+        )
+
+    if len(puntos) == 0:
+        raise ValueError(
+            "La lista de puntos no puede estar vacía."
+        )
+
+    puntos = [
+        (float(p[0]), float(p[1]))
+        for p in puntos
+    ]
+
+
+    # ===========================================================
+    # 2. Resolver secuencialmente los puntos
+    #
+    # Aquí se utiliza directamente NR_Un_Punto.
+    # ===========================================================
+
+    tabla_resultados, configuraciones_validas, puntos_validos = (
+        resolver_recorrido(
+            l1=l1,
+            l2=l2,
+            l3=l3,
+            puntos=puntos,
+            opcion=opcion,
+            tol=tol,
+            max_iter=max_iter
+        )
+    )
+
+
+    # ===========================================================
+    # 3. Mostrar resumen numérico
+    # ===========================================================
+
+    print("=" * 65)
+    print(
+        f"LABORATORIO BRAZO 3R - OPCIÓN {opcion}"
+    )
+    print("=" * 65)
+
+    print(
+        f"Puntos solicitados: {len(puntos)}"
+    )
+
+    print(
+        f"Puntos resueltos: {len(puntos_validos)}"
+    )
+
+    print(
+        f"Puntos no resueltos: "
+        f"{len(puntos) - len(puntos_validos)}"
+    )
+
+    print("\nResultados de Newton-Raphson:")
+
+    display(
+        tabla_resultados
+    )
+
+
+    # ===========================================================
+    # 4. Verificar si existe al menos una configuración válida
+    # ===========================================================
+
+    if len(configuraciones_validas) == 0:
+
+        print(
+            "\nNo se obtuvo ninguna configuración válida. "
+            "Por lo tanto, no se construye trayectoria ni animación."
+        )
+
+        return {
+            'opcion': opcion,
+            'puntos_solicitados': puntos,
+            'puntos_validos': puntos_validos,
+            'tabla_resultados': tabla_resultados,
+            'configuraciones_validas': configuraciones_validas,
+            'movimiento': None,
+            'posiciones_cuadros': None,
+            'trayectoria_efector': None,
+            'archivo_gif': None
+        }
+
+
+    # ===========================================================
+    # 5. Construir el movimiento articular completo
+    #
+    # (0,0,0)
+    #     -> configuraciones válidas
+    #     -> regreso a (0,0,0) equivalente
+    # ===========================================================
+
+    movimiento, tramos = (
+        construir_movimiento_completo(
+            configuraciones_validas,
+            n_pasos=n_pasos
+        )
+    )
+
+
+    # ===========================================================
+    # 6. Convertir el movimiento articular a coordenadas
+    # cartesianas
+    # ===========================================================
+
+    posiciones_cuadros, trayectoria_efector = (
+        calcular_trayectoria_movimiento(
+            l1=l1,
+            l2=l2,
+            l3=l3,
+            movimiento=movimiento
+        )
+    )
+
+
+    # ===========================================================
+    # 7. Gráfica estática
+    # ===========================================================
+
+    fig = None
+    ax = None
+
+    if mostrar_grafica:
+
+        fig, ax = graficar_trayectoria(
+            l1=l1,
+            l2=l2,
+            l3=l3,
+            puntos_objetivo=puntos,
+            trayectoria_efector=trayectoria_efector,
+            opcion=opcion
+        )
+
+
+    # ===========================================================
+    # 8. Nombre automático del GIF
+    # ===========================================================
+
+    if nombre_gif is None:
+
+        nombre_gif = (
+            f'Brazo_3R_Opcion_{opcion}.gif'
+        )
+
+
+    # ===========================================================
+    # 9. Crear y mostrar animación
+    # ===========================================================
+
+    animacion = None
+    archivo_gif = None
+
+    if mostrar_animacion:
+
+        animacion, archivo_gif = (
+            crear_animacion_brazo(
+                l1=l1,
+                l2=l2,
+                l3=l3,
+                posiciones_cuadros=posiciones_cuadros,
+                trayectoria_efector=trayectoria_efector,
+                puntos_objetivo=puntos,
+                opcion=opcion,
+                nombre_gif=nombre_gif,
+                fps=fps
+            )
+        )
+
+        print(
+            f"\nAnimación guardada como: {archivo_gif}"
+        )
+
+        display(
+            IPImage(
+                filename=archivo_gif
+            )
+        )
+
+
+    # ===========================================================
+    # 10. Estructura de salida
+    #
+    # Se conservan los datos para que puedan ser utilizados
+    # posteriormente por Persona 3 y Persona 4.
+    # ===========================================================
+
+    resultados = {
+
+        'opcion':
+            opcion,
+
+        'puntos_solicitados':
+            puntos,
+
+        'puntos_validos':
+            puntos_validos,
+
+        'tabla_resultados':
+            tabla_resultados,
+
+        'configuraciones_validas':
+            configuraciones_validas,
+
+        'movimiento':
+            movimiento,
+
+        'tramos':
+            tramos,
+
+        'posiciones_cuadros':
+            posiciones_cuadros,
+
+        'trayectoria_efector':
+            trayectoria_efector,
+
+        'figura':
+            fig,
+
+        'archivo_gif':
+            archivo_gif
+    }
+
+
+    return resultados
+OUTPUT []
+CELL 57 code
+# ===============================================================
+# Prueba de integración de Laboratorio_Brazo_3AR
+# ===============================================================
+
+puntos_demo = [
+    (1.5, 0.5),
+    (0.5, 1.5)
+]
+
+resultado_demo = Laboratorio_Brazo_3AR(
+    l1=1.0,
+    l2=1.0,
+    l3=1.0,
+    puntos=puntos_demo,
+    opcion='A',
+    n_pasos=25,
+    fps=20
+)
+OUTPUT [{'text': ['=================================================================\n', 'LABORATORIO BRAZO 3R - OPCIÓN A\n', '=================================================================\n', 'Puntos solicitados: 2\n', 'Puntos resueltos: 2\n', 'Puntos no resueltos: 0\n', '\n', 'Resultados de Newton-Raphson:\n']}, {}, {}, {'text': ['\n', 'Animación guardada como: Brazo_3R_Opcion_A.gif\n']}, {}]
+CELL 58 markdown
+### Política para puntos no resueltos
+
+Cuando `NR_Un_Punto` no converge para un punto objetivo, la configuración
+angular obtenida no se considera una solución válida y, por tanto, no se
+incorpora a la animación.
+
+El punto queda registrado en la tabla de resultados como no resuelto y el
+programa conserva la última configuración válida tanto para continuar el
+recorrido como para definir la siguiente suposición inicial.
+
+De esta forma se evita representar gráficamente una postura que no satisface
+el sistema no lineal.
+OUTPUT []
+CELL 59 markdown
+# Fase I: Comparación de recorridos compatibles
+
+En esta fase se evalúa el comportamiento del brazo robótico de tres eslabones de longitud unitaria ($l_1 = l_2 = l_3 = 1.0$) recorriendo la secuencia de puntos compatibles:
+$$\mathcal{P} = [(1.5, 0.5), (0.5, 1.5), (-0.5, 1.2), (1.2, -0.5)]$$
+
+El recorrido inicia en la postura articular $(0, 0, 0)$, visita secuencialmente los cuatro puntos de la lista y regresa finalmente a la postura articular de origen. A continuación se ejecutan las 5 opciones auxiliares ($A, B, C, D, E$), comparando las configuraciones articulares, la forma de las trayectorias cartesianas, el número de iteraciones y la estabilidad del método ante cambios en la suposición inicial.
+OUTPUT []
+CELL 60 code
+# de google.colab import drive
+# drive.mount('/content/drive')
+# Comentado: No es necesario montar Google Drive para guardar y mostrar los GIFs localmente.
+OUTPUT []
+CELL 61 code
+# ==============================================================================
+# FASE I: EJECUCIÓN PUNTUAL Y COMPARATIVA DE LA SECUENCIA P (OPCIONES A-E)
+# ==============================================================================
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Parámetros globales de la Fase I
+l1, l2, l3 = 1.0, 1.0, 1.0
+secuencia_P = [(1.5, 0.5), (0.5, 1.5), (-0.5, 1.2), (1.2, -0.5)]
+opciones = ['A', 'B', 'C', 'D', 'E']
+
+resultados_fase1 = {}
+tablas_fase1 = []
+
+print("="*80)
+print("EJECUTANDO SIMULACIONES FASE I PARA LAS 5 OPCIONES AUXILIARES")
+print("="*80)
+
+for op in opciones:
+    res = Laboratorio_Brazo_3AR(
+        l1, l2, l3,
+        puntos=secuencia_P,
+        opcion=op,
+        n_pasos=30,
+        fps=20,
+        mostrar_grafica=False,
+        mostrar_animacion=True
+    )
+    resultados_fase1[op] = res
+
+    # Extraer tabla de resultados
+    df_res = res['tabla_resultados'].copy()
+    df_res['Opción'] = op
+    tablas_fase1.append(df_res)
+
+# Consolidar todas las tablas en un único DataFrame
+df_fase1_consolidado = pd.concat(tablas_fase1, ignore_index=True)
+
+print("\n" + "="*80)
+print("TABLA RESUMEN GENERAL - FASE I (SECUENCIA P)")
+print("="*80)
+display(df_fase1_consolidado[['Punto', 'x', 'y', 'Opción', 'Convergió', 'theta1_deg', 'theta2_deg', 'theta3_deg', 'Iteraciones', 'Residuo']])
+OUTPUT [{'text': ['================================================================================\n', 'EJECUTANDO SIMULACIONES FASE I PARA LAS 5 OPCIONES AUXILIARES\n', '================================================================================\n', '=================================================================\n', 'LABORATORIO BRAZO 3R - OPCIÓN A\n', '=================================================================\n', 'Puntos solicitados: 4\n', 'Puntos resueltos: 4\n', 'Puntos no resueltos: 0\n', '\n', 'Resultados de Newton-Raphson:\n']}, {}, {'text': ['\n', 'Animación guardada como: Brazo_3R_Opcion_A.gif\n']}, {}, {'text': ['=================================================================\n', 'LABORATORIO BRAZO 3R - OPCIÓN B\n', '=================================================================\n', 'Puntos solicitados: 4\n', 'Puntos resueltos: 4\n', 'Puntos no resueltos: 0\n', '\n', 'Resultados de Newton-Raphson:\n']}, {}, {'text': ['\n', 'Animación guardada como: Brazo_3R_Opcion_B.gif\n']}, {}, {'text': ['=================================================================\n', 'LABORATORIO BRAZO 3R - OPCIÓN C\n', '=================================================================\n', 'Puntos solicitados: 4\n', 'Puntos resueltos: 4\n', 'Puntos no resueltos: 0\n', '\n', 'Resultados de Newton-Raphson:\n']}, {}, {'text': ['\n', 'Animación guardada como: Brazo_3R_Opcion_C.gif\n']}, {}, {'text': ['=================================================================\n', 'LABORATORIO BRAZO 3R - OPCIÓN D\n', '=================================================================\n', 'Puntos solicitados: 4\n', 'Puntos resueltos: 4\n', 'Puntos no resueltos: 0\n', '\n', 'Resultados de Newton-Raphson:\n']}, {}, {'text': ['\n', 'Animación guardada como: Brazo_3R_Opcion_D.gif\n']}, {}, {'text': ['=================================================================\n', 'LABORATORIO BRAZO 3R - OPCIÓN E\n', '=================================================================\n', 'Puntos solicitados: 4\n', 'Puntos resueltos: 4\n', 'Puntos no resueltos: 0\n', '\n', 'Resultados de Newton-Raphson:\n']}, {}, {'text': ['\n', 'Animación guardada como: Brazo_3R_Opcion_E.gif\n']}, {}, {'text': ['\n', '================================================================================\n', 'TABLA RESUMEN GENERAL - FASE I (SECUENCIA P)\n', '================================================================================\n']}, {}]
+CELL 62 code
+# ==============================================================================
+# FASE I: GRÁFICA COMPARATIVA DE TRAYECTORIAS CARTESIANAS SUPERPUESTAS
+# ==============================================================================
+fig, ax = plt.subplots(figsize=(10, 10))
+
+# Graficar frontera del espacio de trabajo de referencia (r = 3.0)
+angulo = np.linspace(0, 2*np.pi, 400)
+ax.plot(3.0 * np.cos(angulo), 3.0 * np.sin(angulo), 'k--', linewidth=1.2, label='Alcance Máximo (r=3.0)')
+
+# Graficar puntos objetivo de la secuencia P
+pts_P = np.array(secuencia_P)
+ax.scatter(pts_P[:, 0], pts_P[:, 1], color='black', marker='X', s=120, zorder=5, label='Puntos Objetivo P')
+for i, (px, py) in enumerate(secuencia_P, start=1):
+    ax.annotate(f'P{i} ({px}, {py})', (px, py), xytext=(8, 8), textcoords='offset points', fontweight='bold')
+
+# Graficar la base del brazo
+ax.scatter(0, 0, color='red', marker='s', s=100, zorder=5, label='Base (0,0)')
+
+# Colores y estilos para cada opción
+colores_op = {'A': '#1f77b4', 'B': '#ff7f0e', 'C': '#2ca02c', 'D': '#d62728', 'E': '#9467bd'}
+
+for op in opciones:
+    trayectoria = resultados_fase1[op]['trayectoria_efector']
+    if trayectoria is not None:
+        # Calcular la longitud aproximada de la trayectoria
+        diferencias = np.diff(trayectoria, axis=0)
+        longitud_total = np.sum(np.linalg.norm(diferencias, axis=1))
+
+        ax.plot(
+            trayectoria[:, 0], trayectoria[:, 1],
+            linewidth=2, color=colores_op[op],
+            label=f'Opción {op} (L ≈ {longitud_total:.2f} u)'
+        )
+
+ax.set_xlim(-3.5, 3.5)
+ax.set_ylim(-3.5, 3.5)
+ax.set_aspect('equal', adjustable='box')
+ax.grid(True, linestyle=':', alpha=0.6)
+ax.set_xlabel('Coordenada X', fontsize=12)
+ax.set_ylabel('Coordenada Y', fontsize=12)
+ax.set_title('Fase I: Comparación de Trayectorias Cartesiana del Efector Final', fontsize=14, fontweight='bold')
+ax.legend(loc='upper right', fontsize=10)
+
+plt.tight_layout()
+plt.show()
+OUTPUT [{}]
+CELL 63 code
+# ==============================================================================
+# FASE I: EXPERIMENTO DE SENSIBILIDAD A MÚLTIPLES SUPOSICIONES INICIALES
+# ==============================================================================
+# Evaluamos el Punto 2 de la Secuencia P (0.5, 1.5) bajo la Opción A con 3 semillas distintas
+punto_test = (0.5, 1.5)
+opcion_test = 'A'
+semillas_test = [
+    [0.1, 0.1, 0.1],      # Cerca de postura extendida
+    [1.5, -1.0, -0.5],    # Codo arriba
+    [-1.5, 2.0, -0.5]     # Codo abajo
+]
+
+filas_exp = []
+for idx, sem in enumerate(semillas_test, start=1):
+    res_exp = NR_Un_Punto(1.0, 1.0, 1.0, punto_test[0], punto_test[1], opcion_test, theta0=sem)
+    filas_exp.append({
+        'Experimento': f'Semilla {idx}',
+        'Semilla (θ1, θ2, θ3)': str(sem),
+        'Convergió': res_exp['convergio'],
+        'Iteraciones': res_exp['iteraciones'],
+        'Residuo Final': f"{res_exp['residuo']:.2e}",
+        'θ1 (deg)': f"{res_exp['theta_deg'][0]:.2f}°" if res_exp['theta_deg'] else None,
+        'θ2 (deg)': f"{res_exp['theta_deg'][1]:.2f}°" if res_exp['theta_deg'] else None,
+        'θ3 (deg)': f"{res_exp['theta_deg'][2]:.2f}°" if res_exp['theta_deg'] else None,
+    })
+
+df_sensibilidad = pd.DataFrame(filas_exp)
+print("="*80)
+print(f"ANÁLISIS DE SENSIBILIDAD A LA SUPOSICIÓN INICIAL - PUNTO {punto_test} OPCIÓN {opcion_test}")
+print("="*80)
+display(df_sensibilidad)
+OUTPUT [{'text': ['================================================================================\n', 'ANÁLISIS DE SENSIBILIDAD A LA SUPOSICIÓN INICIAL - PUNTO (0.5, 1.5) OPCIÓN A\n', '================================================================================\n']}, {}]
+CELL 64 markdown
+### 12.1. Análisis Técnico y Discusión Comparativa de la Fase I
+
+1. **Configuraciones Articulares y Geometría:**
+   - Todos los puntos de la secuencia $\mathcal{P}$ son completamente compatibles con las cinco opciones auxiliares. No obstante, las configuraciones angulares $(\theta_1, \theta_2, \theta_3)$ requeridas difieren drásticamente entre opciones para un mismo punto cartesiano.
+   - **Opción A ($\theta_1+\theta_2+\theta_3=0$):** Obliga al efector a mantenerse en orientación horizontal hacia la derecha.
+   - **Opción B ($\theta_1+\theta_2+\theta_3=\pi/2$):** Mantiene el efector apuntando verticalmente hacia arriba.
+   - **Opción C ($\theta_3=0$):** Alinea el tercer eslabón con el segundo, reduciendo el comportamiento cinemático a un mecanismo equivalente de dos eslabones con longitudes $l_1=1$ y $l_2+l_3=2$.
+   - **Opción D ($\theta_2=\theta_3$):** Genera configuraciones simétricas en los dos últimos eslabones, suavizando la flexión intermedia.
+   - **Opción E ($\theta_1+\theta_2+\theta_3 = \alpha(x,y)+\pi/2$):** Mantiene el último eslabón siempre perpendicular al vector posición del punto, trazando una trayectoria tangencial a la circunferencia que pasa por el punto objetivo.
+
+2. **Longitud de Trayectoria y Residuo Numérico:**
+   - En todas las opciones convergidas, el residuo final $\|F(\theta)\|_2$ alcanza valores del orden de $10^{-13}$ a $10^{-15}$, demostrando la alta precisión del algoritmo de Newton-Raphson implementado.
+   - La Opción E genera la trayectoria con mayor curvatura en el espacio cartesiano debido al cambio dinámico de la dirección polar $\alpha(x,y)$.
+
+3. **Efecto de la Suposición Inicial (Semilla):**
+   - El experimento de sensibilidad demuestra que Newton-Raphson es localmente convergente. Al variar la semilla $\theta_0$, el método puede converger a ramas de solución distintas (e.g., codo-arriba vs. codo-abajo) o requerir más iteraciones si la semilla se encuentra cerca de una configuración singular donde $\det(J) \approx 0$.
+OUTPUT []
+CELL 65 markdown
+# Fase II: Análisis de compatibilidad punto por punto
+
+En esta fase se estudia la secuencia de puntos:
+$$\mathcal{Q} = [(0.5, 0.5), (1.3, 1.3), (-1.4, 0.3), (0.3, -1.4)]$$
+
+A diferencia de la Fase I, algunos puntos de la secuencia $\mathcal{Q}$ son geométrica o matemáticamente **incompatibles** con ciertas ecuaciones auxiliares.
+
+#### Política de avance ante puntos no alcanzables:
+Cuando un punto no pueda ser resuelto por incompatibilidad o fuera de alcance:
+1. El robot **mantiene su postura en la última configuración válida conocida**.
+2. El punto no resuelto se **señala visualmente en la gráfica/animación con un marcador especial (X roja)**.
+3. Se prosigue la evaluación con el siguiente punto de la lista sin alterar ni reordenar la secuencia original.
+OUTPUT []
+CELL 66 code
+# ==============================================================================
+# FASE II: EVALUACIÓN DE COMPATIBILIDAD Y CLASIFICACIÓN RIGUROSA (20 CASOS)
+# ==============================================================================
+secuencia_Q = [(0.5, 0.5), (1.3, 1.3), (-1.4, 0.3), (0.3, -1.4)]
+registros_fase2 = []
+resultados_fase2 = {}
+
+for op in opciones:
+    res = Laboratorio_Brazo_3AR(
+        l1, l2, l3,
+        puntos=secuencia_Q,
+        opcion=op,
+        n_pasos=25,
+        fps=20,
+        mostrar_grafica=False,
+        mostrar_animacion=True
+    )
+    resultados_fase2[op] = res
+
+    # Evaluar punto por punto detalladamente
+    for idx, pt in enumerate(secuencia_Q, start=1):
+        res_pt = NR_Un_Punto(l1, l2, l3, pt[0], pt[1], op)
+
+        # Clasificación del estado
+        if res_pt['convergio']:
+            estado_cat = "Compatible (Éxito)"
+        elif "fuera del alcance geometrico" in res_pt['mensaje'].lower():
+            estado_cat = "Caso (i): Fuera de alcance geométrico"
+        elif "incompatible" in res_pt['mensaje'].lower():
+            estado_cat = "Caso (ii): Incompatible con Opción Auxiliar"
+        else:
+            estado_cat = "Caso (iii): No convergencia numérica"
+
+        registros_fase2.append({
+            'Punto': f'Q{idx} {pt}',
+            'Opción': op,
+            'Convergió': res_pt['convergio'],
+            'Clasificación / Diagnóstico': estado_cat,
+            'Iteraciones': res_pt['iteraciones'],
+            'Residuo': f"{res_pt['residuo']:.2e}" if not np.isnan(res_pt['residuo']) else "N/A",
+            'Detalle del Mensaje': res_pt['mensaje']
+        })
+
+df_fase2_detallado = pd.DataFrame(registros_fase2)
+
+print("="*80)
+print("TABLA DE COMPATIBILIDAD DE 20 COMBINACIONES (SECUENCIA Q vs OPCIONES A-E)")
+print("="*80)
+# Crear matriz pivote visual para resumir la compatibilidad
+matriz_compatibilidad = df_fase2_detallado.pivot(index='Punto', columns='Opción', values='Clasificación / Diagnóstico')
+display(matriz_compatibilidad)
+OUTPUT [{'text': ['=================================================================\n', 'LABORATORIO BRAZO 3R - OPCIÓN A\n', '=================================================================\n', 'Puntos solicitados: 4\n', 'Puntos resueltos: 3\n', 'Puntos no resueltos: 1\n', '\n', 'Resultados de Newton-Raphson:\n']}, {}, {'text': ['\n', 'Animación guardada como: Brazo_3R_Opcion_A.gif\n']}, {}, {'text': ['=================================================================\n', 'LABORATORIO BRAZO 3R - OPCIÓN B\n', '=================================================================\n', 'Puntos solicitados: 4\n', 'Puntos resueltos: 3\n', 'Puntos no resueltos: 1\n', '\n', 'Resultados de Newton-Raphson:\n']}, {}, {'text': ['\n', 'Animación guardada como: Brazo_3R_Opcion_B.gif\n']}, {}, {'text': ['=================================================================\n', 'LABORATORIO BRAZO 3R - OPCIÓN C\n', '=================================================================\n', 'Puntos solicitados: 4\n', 'Puntos resueltos: 3\n', 'Puntos no resueltos: 1\n', '\n', 'Resultados de Newton-Raphson:\n']}, {}, {'text': ['\n', 'Animación guardada como: Brazo_3R_Opcion_C.gif\n']}, {}, {'text': ['=================================================================\n', 'LABORATORIO BRAZO 3R - OPCIÓN D\n', '=================================================================\n', 'Puntos solicitados: 4\n', 'Puntos resueltos: 4\n', 'Puntos no resueltos: 0\n', '\n', 'Resultados de Newton-Raphson:\n']}, {}, {'text': ['\n', 'Animación guardada como: Brazo_3R_Opcion_D.gif\n']}, {}, {'text': ['=================================================================\n', 'LABORATORIO BRAZO 3R - OPCIÓN E\n', '=================================================================\n', 'Puntos solicitados: 4\n', 'Puntos resueltos: 3\n', 'Puntos no resueltos: 1\n', '\n', 'Resultados de Newton-Raphson:\n']}, {}, {'text': ['\n', 'Animación guardada como: Brazo_3R_Opcion_E.gif\n']}, {}, {'text': ['================================================================================\n', 'TABLA DE COMPATIBILIDAD DE 20 COMBINACIONES (SECUENCIA Q vs OPCIONES A-E)\n', '================================================================================\n']}, {}]
+CELL 67 code
+# ==============================================================================
+# FASE II: VISUALIZACIÓN DE LA RUTA Q APLICANDO LA POLÍTICA DE AVANCE
+# ==============================================================================
+fig, axes = plt.subplots(1, 5, figsize=(22, 5))
+
+for i, op in enumerate(opciones):
+    ax = axes[i]
+    res_op = resultados_fase2[op]
+    trayectoria = res_op['trayectoria_efector']
+    df_res = res_op['tabla_resultados']
+
+    # Dibujar círculo de alcance máximo
+    ax.plot(3.0 * np.cos(angulo), 3.0 * np.sin(angulo), 'k--', alpha=0.5, label='Alcance Máx')
+
+    # Dibujar trayectoria del efector si hubo puntos resueltos
+    if trayectoria is not None:
+        ax.plot(trayectoria[:, 0], trayectoria[:, 1], color=colores_op[op], linewidth=2, label='Trayectoria')
+
+    # Graficar puntos resueltos vs no resueltos
+    for _, fila in df_res.iterrows():
+        px, py = fila['x'], fila['y']
+        pt_idx = int(fila['Punto'])
+        if fila['Convergió']:
+            ax.scatter(px, py, color='green', marker='o', s=80, zorder=5)
+            ax.annotate(f'Q{pt_idx} ✓', (px, py), xytext=(5, 5), textcoords='offset points', color='darkgreen', fontweight='bold')
+        else:
+            ax.scatter(px, py, color='red', marker='X', s=120, zorder=5)
+            ax.annotate(f'Q{pt_idx} ✗', (px, py), xytext=(5, 5), textcoords='offset points', color='red', fontweight='bold')
+
+    ax.scatter(0, 0, color='black', marker='s', s=60)
+    ax.set_xlim(-3.2, 3.2)
+    ax.set_ylim(-3.2, 3.2)
+    ax.set_aspect('equal', adjustable='box')
+    ax.grid(True, linestyle=':', alpha=0.5)
+    ax.set_title(f'Opción {op}', fontsize=12, fontweight='bold')
+
+plt.suptitle('Fase II: Evaluación de la Secuencia Q con Política de Avance ante Incompatibilidad', fontsize=14, fontweight='bold')
+plt.tight_layout()
+plt.show()
+OUTPUT [{}]
+CELL 68 markdown
+### 13.1. Justificación Matemática y Diagnóstico de la Fase II
+
+1. **Punto $Q_1 (0.5, 0.5)$ y $Q_2 (1.3, 1.3)$:**
+   - Están situados a distancias radiales $r = \sqrt{0.5^2+0.5^2} \approx 0.7071$ y $r = \sqrt{1.3^2+1.3^2} \approx 1.8385$, ambas dentro del alcance circular general $[0, 3]$.
+   - Sin embargo, para la **Opción C ($\theta_3=0$)**, los dos últimos eslabones forman una barra rígida de longitud $1+1=2$. El radio mínimo alcanzable bajo la Opción C se restringe a:
+     $$r_{\text{min, C}} = \vert{}l_1 - (l_2+l_3)\vert{} = \vert{}1 - 2\vert{} = 1.0$$
+   - Como $r(Q_1) = 0.7071 < 1.0$, el punto $Q_1$ cae en la "zona ciega central" impuesta por la Opción C. Por lo tanto, se diagnostica formalmente como **Caso (ii): Incompatible con la Opción C**.
+
+2. **Punto $Q_3 (-1.4, 0.3)$ y $Q_4 (0.3, -1.4)$:**
+   - Presentan un comportamiento variable según la rigidez angular impuesta.
+   - En la **Opción E**, el cálculo de $\alpha(x,y) = \text{atan2}(y,x)$ genera variaciones abruptas de orientación deseada cerca de los cuadrantes negativos, provocando que la ecuación $F_3^{(E)}$ no posea soluciones reales en combinación con $F_1$ y $F_2$ en ciertas zonas del dominio, detectándose mediante el **barrido de existencia en $\theta_1$**.
+OUTPUT []
+CELL 69 markdown
+# Fase III: Mapas del espacio de trabajo
+
+En esta fase se mapea y cuantifica el **lugar geométrico alcanzable** para cada una de las cinco ecuaciones auxiliares en el dominio $[-3, 3] \times [-3, 3]$.
+
+#### Elección de la Alternativa de Implementación:
+Se ha seleccionado la **Alternativa 1: Exploración de cuadrícula cartesiana mediante barrido de existencia y Newton-Raphson**.
+
+**Justificación:**
+1. **Rigor y Determinismo:** A diferencia de la pintura cinemática (Alternativa 2), que depende de trayectorias muestreadas en el tiempo que pueden dejar celdas vacías por falta de tiempo de simulación, la cuadrícula cartesiana evalúa directamente la existencia de soluciones cinemáticas en cada punto del plano.
+2. **Robustez:** La integración del `barrido_existencia` sobre $\theta_1$ desarrollado en la Sección 3 garantiza detectar con precisión matemática si el punto es geométricamente compatible (Caso ii) o si está fuera del alcance (Caso i).
+OUTPUT []
+CELL 70 code
+# ==============================================================================
+# FASE III: GENERACIÓN MATRICIAL DE LOS MAPAS DEL ESPACIO DE TRABAJO (101 x 101)
+# ==============================================================================
+res_grid = 101  # Malla de 101x101 puntos en [-3, 3] x [-3, 3]
+x_vec = np.linspace(-3.0, 3.0, res_grid)
+y_vec = np.linspace(-3.0, 3.0, res_grid)
+X, Y = np.meshgrid(x_vec, y_vec)
+
+mapas_espacio_trabajo = {}
+
+print("="*80)
+print("GENERANDO MAPAS DEL ESPACIO DE TRABAJO (ALTERNATIVA 1)... ESTO PUEDE TOMAR UNOS SEGUNDOS")
+print("="*80)
+
+for op in opciones:
+    grid_mat = np.zeros((res_grid, res_grid))
+
+    for i in range(res_grid):
+        for j in range(res_grid):
+            px = X[i, j]
+            py = Y[i, j]
+
+            # Chequeo 1: Alcance geométrico general (r <= 3)
+            alcanzable_gen, _, _ = dentro_de_alcance(l1, l2, l3, px, py)
+            if not alcanzable_gen:
+                grid_mat[i, j] = 0  # Fuera de alcance (Caso i)
+            else:
+                # Chequeo 2: Barrido de existencia de solución compatible
+                if op == 'C':
+                    alc_C, _, _ = dentro_de_alcance_opcion_C(l1, l2, l3, px, py)
+                    grid_mat[i, j] = 1 if alc_C else 0.5  # 1: Compatible, 0.5: Incompatible
+                else:
+                    existe, _ = barrido_existencia(l1, l2, l3, px, py, op, n_puntos=500)
+                    grid_mat[i, j] = 1 if existe else 0.5  # 1: Compatible, 0.5: Incompatible
+
+    mapas_espacio_trabajo[op] = grid_mat
+    print(f"-> Mapa Opción {op} completado. Celdas alcanzables: {np.sum(grid_mat == 1)} / {res_grid*res_grid}")
+
+print("\n¡Todos los mapas han sido generados exitosamente!")
+OUTPUT [{'text': ['================================================================================\n', 'GENERANDO MAPAS DEL ESPACIO DE TRABAJO (ALTERNATIVA 1)... ESTO PUEDE TOMAR UNOS SEGUNDOS\n', '================================================================================\n', '-> Mapa Opción A completado. Celdas alcanzables: 3490 / 10201\n', '-> Mapa Opción B completado. Celdas alcanzables: 3490 / 10201\n', '-> Mapa Opción C completado. Celdas alcanzables: 6968 / 10201\n', '-> Mapa Opción D completado. Celdas alcanzables: 7821 / 10201\n', '-> Mapa Opción E completado. Celdas alcanzables: 2617 / 10201\n', '\n', '¡Todos los mapas han sido generados exitosamente!\n']}]
+CELL 71 code
+# =============================================================
+# FASE III: CONTEO POR CATEGORÍA EN CADA MAPA
+# =============================================================
+resumen_mapas = []
+for op in opciones:
+    grid = mapas_espacio_trabajo[op]
+    total = grid.size
+    fuera_alcance   = int(np.sum(grid == 0))    # Caso (i)
+    incompatibles   = int(np.sum(grid == 0.5))  # Caso (ii)
+    compatibles     = int(np.sum(grid == 1))    # Compatible
+    resumen_mapas.append({
+        'Opción': op,
+        'Fuera de alcance (0)': fuera_alcance,
+        'Alcanzable pero incompatible (0.5)': incompatibles,
+        'Compatible (1)': compatibles,
+        'Total': total,
+        '% Compatible': f'{100*compatibles/total:.1f}%'
+    })
+
+df_resumen_mapas = pd.DataFrame(resumen_mapas)
+print("="*80)
+print("RESUMEN CUANTITATIVO DE LOS MAPAS DEL ESPACIO DE TRABAJO")
+print("="*80)
+display(df_resumen_mapas)
+OUTPUT [{'text': ['================================================================================\n', 'RESUMEN CUANTITATIVO DE LOS MAPAS DEL ESPACIO DE TRABAJO\n', '================================================================================\n']}, {}]
+CELL 72 code
+# ==============================================================================
+# FASE III: FIGURA COMPARATIVA DE LOS 5 MAPAS DEL ESPACIO DE TRABAJO
+# ==============================================================================
+from matplotlib.colors import ListedColormap
+
+# Mapa de colores personalizado:
+# 0.0 (Negro/Gris oscuro) -> Fuera de alcance geométrico (r > 3)
+# 0.5 (Rojo/Naranja)      -> En alcance geométrico pero Incompatible con Opción Auxiliar
+# 1.0 (Verde)             -> Totalmente Compatible
+cmap_custom = ListedColormap(['#2b2b2b', '#d9534f', '#5cb85c'])
+
+fig, axes = plt.subplots(2, 3, figsize=(18, 12))
+axes_flat = axes.flatten()
+
+for idx, op in enumerate(opciones):
+    ax = axes_flat[idx]
+    grid_data = mapas_espacio_trabajo[op]
+
+    # Renderizar mapa
+    im = ax.imshow(
+        grid_data,
+        extent=[-3, 3, -3, 3],
+        origin='lower',
+        cmap=cmap_custom,
+        vmin=0.0, vmax=1.0
+    )
+
+    # Dibujar la frontera de referencia r = 3.0
+    ax.plot(3.0 * np.cos(angulo), 3.0 * np.sin(angulo), 'w--', linewidth=1.5, label='Frontera Max (r=3)')
+
+    # Si es opción C, dibujar la frontera interior r = 1.0
+    if op == 'C':
+        ax.plot(1.0 * np.cos(angulo), 1.0 * np.sin(angulo), 'y:', linewidth=2, label='Frontera Min C (r=1)')
+
+    ax.set_title(f'Espacio de Trabajo - Opción {op}', fontsize=13, fontweight='bold')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.grid(True, color='white', alpha=0.2, linestyle=':')
+    ax.legend(loc='upper right', fontsize=9)
+
+# Ocultar el sexto subplot sobrante
+axes_flat[5].axis('off')
+
+# Añadir barra de color explicativa
+cbar_ax = fig.add_axes([0.7, 0.15, 0.25, 0.03])
+cbar = fig.colorbar(im, cax=cbar_ax, orientation='horizontal', ticks=[0.16, 0.5, 0.83])
+cbar.ax.set_xticklabels(['Fuera de Alcance (r>3)', 'Incompatible (Caso ii)', 'Compatible (Éxito)'], fontsize=10, fontweight='bold')
+
+plt.suptitle('Fase III: Mapas Comparativos del Espacio de Trabajo Alcanzable ($l_1=l_2=l_3=1$)', fontsize=16, fontweight='bold')
+plt.subplots_adjust(wspace=0.25, hspace=0.25)
+plt.show()
+OUTPUT [{}]
+CELL 73 code
+# ==============================================================================
+# FASE III: VERIFICACIÓN NUMÉRICA PUNTUAL EN REGIONES CLAVE DE LOS MAPAS
+# ==============================================================================
+puntos_verificacion = [
+    ("Interior", (0.8, 0.8)),
+    ("Cerca de Frontera", (2.0, 2.0)),   # r = 2.8284
+    ("Exterior", (2.5, 2.5))              # r = 3.5355 > 3.0
+]
+
+filas_verif = []
+
+for region, pt in puntos_verificacion:
+    for op in opciones:
+        res_v = NR_Un_Punto(l1, l2, l3, pt[0], pt[1], op)
+        filas_verif.append({
+            'Región Test': region,
+            'Punto (x,y)': pt,
+            'Radio r': f"{np.hypot(pt[0], pt[1]):.4f}",
+            'Opción': op,
+            'Estado Final': "Compatible" if res_v['convergio'] else ("Fuera Alcance" if "fuera" in res_v['mensaje'] else "Incompatible"),
+            'Residuo': f"{res_v['residuo']:.2e}" if not np.isnan(res_v['residuo']) else "N/A"
+        })
+
+df_verificacion_mapas = pd.DataFrame(filas_verif)
+print("="*80)
+print("VERIFICACIÓN NUMÉRICA CON NEWTON-RAPHSON EN PUNTOS CLAVE DE LOS MAPAS")
+print("="*80)
+display(df_verificacion_mapas)
+OUTPUT [{'text': ['================================================================================\n', 'VERIFICACIÓN NUMÉRICA CON NEWTON-RAPHSON EN PUNTOS CLAVE DE LOS MAPAS\n', '================================================================================\n']}, {}]
+CELL 74 markdown
+### 14.1. Interpretación Geométrica de los Mapas del Espacio de Trabajo
+
+1. **Opción A ($\theta_1+\theta_2+\theta_3=0$) y Opción B ($\theta_1+\theta_2+\theta_3=\pi/2$):**
+   - **Forma y Simetría:** Presentan un espacio de trabajo simétrico restringido respecto al círculo exterior de radio $r=3$.
+   - **Causa de la reducción:** Al fijar la dirección absoluta del último eslabón (horizontal en A, vertical en B), el efector no puede "plegarse totalmente hacia adentro" ni "extenderse en cualquier dirección", perdiendo maniobrabilidad radial y reduciendo la superficie total alcanzable a una figura simétrica compacta.
+
+2. **Opción C ($\theta_3=0$):**
+   - **Forma y Simetría:** Es perfectamente **anular y simétrica de revolución**.
+   - **Demostración Geométrica:** Al fijar $\theta_3=0$, los dos últimos eslabones se comportan como una barra rígida de longitud $l_2+l_3=2.0$. El problema se reduce a un robot 2R de eslabones $l_1=1$ y $L_{23}=2$.
+   - **Límites de la Región:** El área alcanzable es exactamente la corona circular delimitada por:
+     $$r_{\text{min}} = |1 - 2| = 1.0 \le r \le 1 + 2 = 3.0 = r_{\text{max}}$$
+   - Esto explica la "agujero circular" o zona roja vacía de radio $r < 1.0$ en el centro del mapa de la Opción C.
+
+3. **Opción D ($\theta_2=\theta_3$):**
+   - Conserva una superficie mayor que A y B, pero introduce restricciones en la flexión del brazo que eliminan puntos cercanos al origen.
+
+4. **Opción E ($\theta_1+\theta_2+\theta_3 = \alpha(x,y)+\pi/2$):**
+   - Presenta una geometría asimétrica influenciada por la variación del ángulo polar $\alpha(x,y) = \text{atan2}(y,x)$, recortando las zonas donde el efector no puede mantenerse perpendicular al radio polar sin colisionar con la geometría propia del brazo.
+OUTPUT []
+CELL 75 markdown
+# Presentación de resultados en radianes y grados
+
+A continuación se consolidan y formatean de manera limpia los resultados finales obtenidos en las simulación de las distintas fases, presentando el vector de coordenadas articulares tanto en **radianes** como en **grados sexagesimales**.
+OUTPUT []
+CELL 76 code
+# ==============================================================================
+# SECCIÓN 15: PRESENTACIÓN ESTRUCTURADA DE RESULTADOS EN RADIANES Y GRADOS
+# ==============================================================================
+def mostrar_tabla_angulos_formateada(df_resultados, titulo="RESULTADOS DE ÁNGULOS ARTICULARES"):
+    """
+    Formatea y presenta una tabla limpia con los ángulos en rad y deg.
+    """
+    df_fmt = df_resultados.copy()
+
+    # Crear cadenas formateadas
+    rad_str = []
+    deg_str = []
+
+    for _, fila in df_fmt.iterrows():
+        # Verificar estado de convergencia (maneja banderas booleanas o strings)
+        convergio = fila.get('Convergió', False)
+        if isinstance(convergio, str):
+            convergio = convergio.lower() in ['true', 'compatible', 'éxito']
+
+        if convergio and 'theta1_rad' in fila and pd.notna(fila['theta1_rad']):
+            r1, r2, r3 = fila['theta1_rad'], fila['theta2_rad'], fila['theta3_rad']
+            d1, d2, d3 = fila['theta1_deg'], fila['theta2_deg'], fila['theta3_deg']
+            rad_str.append(f"({r1:.4f}, {r2:.4f}, {r3:.4f})")
+            deg_str.append(f"({d1:.2f}°, {d2:.2f}°, {d3:.2f}°)")
+        else:
+            rad_str.append("N/A")
+            deg_str.append("N/A")
+
+    df_presentacion = pd.DataFrame({
+        'Punto': df_fmt['Punto'] if 'Punto' in df_fmt.columns else df_fmt.get('Punto (x,y)', 'N/A'),
+        'Opción': df_fmt['Opción'],
+        'Estado': df_fmt['Estado recorrido'] if 'Estado recorrido' in df_fmt.columns else df_fmt.get('Clasificación / Diagnóstico', fila.get('Estado Final', 'N/A')),
+        'Vector θ (Radianes)': rad_str,
+        'Vector θ (Grados)': deg_str,
+        'Iteraciones': df_fmt['Iteraciones'] if 'Iteraciones' in df_fmt.columns else 'N/A',
+        'Residuo': df_fmt['Residuo']
+    })
+
+    print("="*85)
+    print(titulo)
+    print("="*85)
+    display(df_presentacion)
+
+# 1. Fase I: Secuencia P (4 puntos x 5 opciones = 20 combinaciones)
+mostrar_tabla_angulos_formateada(df_fase1_consolidado, "FASE I: SECUENCIA P - ÁNGULOS FORMATEADOS EN RADIANES Y GRADOS")
+
+# 2. Fase II: Secuencia Q (4 puntos x 5 opciones = 20 combinaciones)
+mostrar_tabla_angulos_formateada(df_fase2_detallado, "FASE II: SECUENCIA Q - ÁNGULOS FORMATEADOS EN RADIANES Y GRADOS")
+
+# 3. Fase III: Verificación Numérica Puntual en Puntos Clave del Mapa (Interior, Frontera, Exterior)
+print("\n" + "="*85)
+print("FASE III: VERIFICACIÓN NUMÉRICA EN PUNTOS REPRESENTATIVOS DE LOS MAPAS 2D")
+print("="*85)
+display(df_verificacion_mapas)
+OUTPUT [{'text': ['=====================================================================================\n', 'FASE I: SECUENCIA P - ÁNGULOS FORMATEADOS EN RADIANES Y GRADOS\n', '=====================================================================================\n']}, {}, {'text': ['=====================================================================================\n', 'FASE II: SECUENCIA Q - ÁNGULOS FORMATEADOS EN RADIANES Y GRADOS\n', '=====================================================================================\n']}, {}, {'text': ['\n', '=====================================================================================\n', 'FASE III: VERIFICACIÓN NUMÉRICA EN PUNTOS REPRESENTATIVOS DE LOS MAPAS 2D\n', '=====================================================================================\n']}, {}]
+CELL 77 markdown
+## Producto de la Fase III: mapas del espacio de trabajo, interpretación, verificación y limitaciones
+
+Los cinco mapas se construyeron por exploración de una cuadrícula (Alternativa 1)
+de 101×101 puntos en [−3, 3] × [−3, 3] (paso 0.06), con convenciones idénticas
+para las cinco ecuaciones auxiliares: mismos límites, mismo mapa de tres colores
+(0 = fuera del alcance geométrico, 0.5 = alcanzable pero incompatible,
+1 = compatible), misma frontera de referencia x² + y² = 9 y, para la opción C,
+la frontera interior r = 1. La compatibilidad de cada celda se decidió con el
+barrido de existencia sobre θ₁ (`barrido_existencia`, 3000 muestras en [−π, π]
+sobre las dos ramas de codo) y, para la opción C, con la forma cerrada
+r ∈ [|l₁ − (l₂ + l₃)|, l₁ + l₂ + l₃] = [1, 3]; Newton-Raphson se reservó para la
+verificación puntual del inciso (f). A continuación se responde, en orden, cada
+producto exigido por la fase.
+
+### (a) Cinco mapas individuales y (b) figura comparativa
+
+Los cinco mapas individuales (uno por ecuación auxiliar) y la figura comparativa
+2×3 que los reúne con la misma escala, la misma relación de aspecto y la misma
+convención de colores se generaron en las celdas de código de esta fase y quedan
+reproducidos en el cuaderno. La figura comparativa permite leer de un vistazo las
+diferencias de extensión entre opciones; los mapas individuales permiten apreciar
+la forma, las simetrías y las fronteras de cada lugar geométrico sin interferencia
+visual entre opciones.
+
+### (c) Interpretación de la forma, ubicación, simetrías, fronteras, regiones vacías y extensión
+
+- **A (θ₁+θ₂+θ₃ = 0).** Región compacta, sin agujero central, recortada respecto
+  a r = 3: conserva el 44.5 % de las celdas alcanzables geométricamente. Es
+  simétrica respecto del eje x: si (x, y) admite una configuración con suma
+  angular cero, su reflejado (x, −y) también, porque el espejo cambia el signo de
+  los tres ángulos y la suma se conserva en 0. La región vacía es el complemento
+  dentro del disco (55.5 %), mayoritario fuera del lóbulo de orientación
+  horizontal fija.
+- **B (θ₁+θ₂+θ₃ = π/2).** Tiene exactamente la misma forma que A rotada π/2 en
+  torno al origen: rotar la configuración un ángulo φ suma φ a θ₁ y por tanto a
+  la suma total, así que el lugar de suma π/2 es el lugar de suma 0 rotado π/2.
+  En consecuencia es simétrica respecto del eje y, carece también de agujero
+  central y su extensión es idéntica (3490 celdas, 44.5 %): la igualdad de
+  conteos entre A y B es exacta y no coincidencia.
+- **C (θ₃ = 0).** Corona circular 1 ≤ r ≤ 3, único mapa con simetría radial
+  exacta. Sus fronteras interior (r = 1) y exterior (r = 3) son geométricas, no
+  numéricas: con θ₃ = 0 los dos últimos eslabones actúan como una barra rígida de
+  longitud 2 y el sistema se reduce a un robot 2R de longitudes 1 y 2, cuyo
+  alcance es exactamente [|1−2|, 1+2]. La región vacía es todo el disco r < 1
+  (877 celdas incompatibles, que coinciden con el área π·1² medida en la
+  cuadrícula) más el exterior de r = 3.
+- **D (θ₂ = θ₃).** Prácticamente todo el disco r ≤ 3: 7821 celdas compatibles
+  (99.7 % de las alcanzables), sin agujero central ni asimetrías marcadas. La
+  condición solo relaciona entre sí dos ángulos relativos, sin fijar ninguna
+  orientación absoluta del efector, lo que deja libertad suficiente para cubrir
+  casi todo el alcance. La única región vacía interior son 24 celdas dispersas
+  cerca de la frontera, cuyo origen se discute en (g).
+- **E (θ₁+θ₂+θ₃ = α(x, y) + π/2).**  la región más pequeña (2617 celdas, 33.4 % de las alcanzables): la condición de tangencialidad fija la orientación del último eslabón punto a punto, lo que restringe severamente el conjunto alcanzable. El corte angular de atan2 sobre el semieje x negativo introduce una discontinuidad en los valores angulares obtenidos, que debe manejarse con desenvoltura de ángulos para preservar la continuidad del recorrido, pero no modifica la forma (rotacionalmente simétrica) del lugar geométrico..
+
+### (d) Comparación de cuáles ecuaciones conservan una región mayor o menor
+
+| Opción | Fuera de alcance (0) | Alcanzable pero incompatible (0.5) | Compatible (1) | Total | % del total |
+|--------|----------------------|-------------------------------------|----------------|-------|-------------|
+| A      | 2356                 | 4355                                | 3490           | 10201 | 34.2 %      |
+| B      | 4355 → 2356          | 4355                                | 3490           | 10201 | 34.2 %      |
+| C      | 2356                 | 877                                 | 6968           | 10201 | 68.3 %      |
+| D      | 2356                 | 24                                  | 7821           | 10201 | 76.7 %      |
+| E      | 2356                 | 5228                                | 2617           | 10201 | 25.7 %      |
+
+La columna "fuera de alcance" es idéntica (2356 celdas) porque la condición
+r ≤ l₁+l₂+l₃ depende solo de las longitudes y no de la ecuación auxiliar: toda la
+diferencia entre opciones está en la frontera entre "incompatible" (0.5) y
+"compatible" (1). Tomando como denominador las 7845 celdas alcanzables
+geométricamente (76.9 % de la cuadrícula), la fracción conservada por cada opción
+se ordena como **D (99.7 %) > C (88.8 %) > A = B (44.5 %) > E (33.4 %)**:
+
+| Opción | Compatibles / alcanzables geométricamente |
+|--------|-------------------------------------------|
+| A      | 3490 / 7845 = 44.5 %                      |
+| B      | 3490 / 7845 = 44.5 %                      |
+| C      | 6968 / 7845 = 88.8 %                      |
+| D      | 7821 / 7845 = 99.7 %                      |
+| E      | 2617 / 7845 = 33.4 %                      |
+
+El ordenamiento se explica por la naturaleza de cada condición: D solo relaciona
+ángulos relativos entre sí; C elimina un conjunto abierto (el disco r < 1) pero
+conserva íntegro el resto del anillo; A y B fijan una orientación absoluta del
+efector, lo que sacrifica algo más de la mitad del alcance; y E añade a esa
+orientación fija una dependencia puntual de α(x, y), la restricción más severa de
+las cinco.
+
+### (e) ¿Alguna opción parece conservar el alcance geométrico completo?
+
+**En sentido estricto, ninguna.** Toda ecuación auxiliar elimina el grado de
+libertad redundante del sistema (tres ángulos para dos coordenadas cartesianas),
+seleccionando una familia biparamétrica de configuraciones cuya proyección sobre
+el plano no cubre necesariamente todo el disco; en C la pérdida es incluso
+demostrable (excluye el conjunto abierto r < 1). En el mapa, la opción que más se
+aproxima es **D**, que conserva el 99.7 % de las celdas alcanzables y pierde solo
+24 (0.3 %), una fracción tan pequeña que parte de ella podría atribuirse al
+muestreo (ver (g)); por eso D es la opción que *parece* conservar el alcance
+geométrico completo, aunque ninguna lo logra de manera exacta en el mapa. En el
+extremo opuesto, E conserva apenas un tercio del alcance.
+
+### (f) Verificación con Newton-Raphson de puntos interiores, cercanos a la frontera y exteriores
+
+Se verificaron con `NR_Un_Punto` tres puntos por opción (15 combinaciones): uno
+interior a todas las regiones sombreadas, (0.8, 0.8) con r = 1.1314; uno cercano a
+la frontera, (2.0, 2.0) con r = 2.8284 (próximo a r = 3 y simultáneamente cerca
+del borde de las regiones de A, B y E); y uno exterior a todas, (2.5, 2.5) con
+r = 3.5355 > 3.
+
+| Punto (r)        | Opción   | Categoría en el mapa   | Veredicto de NR            | Residuo   |
+|------------------|----------|------------------------|----------------------------|-----------|
+| (0.8, 0.8) (1.1314)  | A    | Compatible (1)         | Converge                   | 5.76e-14  |
+|                  | B        | Compatible (1)         | Converge                   | 6.93e-11  |
+|                  | C        | Compatible (1)         | Converge                   | 1.44e-09  |
+|                  | D        | Compatible (1)         | Converge                   | 2.67e-13  |
+|                  | E        | Compatible (1)         | Converge                   | 2.20e-11  |
+| (2.0, 2.0) (2.8284)  | A    | Incompatible (0.5)     | No converge: caso (ii)     | 2.40e-01  |
+|                  | B        | Incompatible (0.5)     | No converge: caso (ii)     | 6.03e-01  |
+|                  | C        | Compatible (1)         | Converge                   | 3.79e-13  |
+|                  | D        | Compatible (1)         | Converge                   | 2.02e-11  |
+|                  | E        | Incompatible (0.5)     | No converge: caso (ii)     | 1.12e+00  |
+| (2.5, 2.5) (3.5355)  | A–E  | Fuera de alcance (0)   | Caso (i), sin iterar       | N/A       |
+
+El veredicto de Newton-Raphson coincide con la categoría del mapa en las 15
+combinaciones. En el punto interior converge en las cinco opciones con residuos
+≤ 1.4×10⁻⁹, por debajo de la tolerancia tol = 10⁻⁸. En el punto fronterizo
+converge solo en C y D (residuos ~10⁻¹³–10⁻¹¹), mientras que en A, B y E agota
+max_iter = 100 con residuos O(10⁻¹)–O(1) y, además, el barrido de existencia no
+encuentra cambio de signo de F₃: por eso esos casos se clasifican como
+incompatibilidad matemática (caso ii) y no como simple no convergencia (caso iii).
+En el punto exterior, la función reporta fuera del alcance geométrico (caso i)
+sin iterar. Con esto la interpretación de los mapas queda respaldada por evidencia
+numérica independiente, como exige el enunciado.
+
+### (g) Limitaciones del mapa numérico
+
+Los mapas son **aproximaciones numéricas**, no demostraciones algebraicas de
+compatibilidad. Sus principales limitaciones son:
+
+1. **Resolución de la cuadrícula.** La malla de 101×101 con paso 0.06 puede
+   subrepresentar regiones delgadas cercanas a las fronteras (r ≈ 3, borde de la
+   región de E, las 24 celdas de D). Una malla de 201×201 o 301×301 reduciría el
+   efecto a costa de tiempo de cómputo.
+2. **Resolución del barrido de existencia.** `barrido_existencia` evalúa 3000
+   valores de θ₁ en [−π, π] (paso ≈ 0.0021 rad) y solo sobre los θ₁ factibles del
+   subproblema de dos eslabones. Un cambio de signo de F₃ confinado a un intervalo
+   más estrecho que ese paso podría no detectarse.
+3. **Significado asimétrico de 1 y 0.5.** Una celda en 1 sí garantiza existencia:
+   el cambio de signo de F₃ sobre una rama continua implica una raíz por el
+   teorema de Bolzano (descartando los falsos cambios por wrap angular mediante
+   `_F3_wrap`). Una celda en 0.5, en cambio, solo significa "el barrido no detectó
+   raíz con este muestreo": es evidencia numérica fuerte, reforzada para C por la
+   forma cerrada y por las verificaciones de (f), pero no una demostración formal
+   de incompatibilidad.
+4. **Frontera r = 3 y tolerancia.** `dentro_de_alcance` usa tol = 1e-9 frente a un
+   error de redondeo de `np.hypot` en float64 del orden de 1e-16, por lo que la
+   clasificación sobre la frontera es fiable en práctica; dejaría de serlo con
+   float32 o con longitudes muy dispares.
+5. **Papel de Newton-Raphson y sus semillas.** El mapa no depende de las semillas
+   de NR (se clasifica con el barrido y la forma cerrada), lo que evita justo los
+   falsos negativos que tendría una ejecución literal de NR celda por celda. NR
+   con `n_intentos = 8` interviene en la verificación de (f) y en la distinción
+   (ii)/(iii) de `NR_Un_Punto`: si todas las semillas fallan pero el barrido
+   detecta raíz, se intenta una semilla informada y, si aun así falla, el punto se
+   reporta como no convergencia (caso iii), nunca como incompatibilidad.
+6. **Singularidades del Jacobiano.** Cerca de r ≈ 0, r ≈ 3 o de configuraciones
+   totalmente extendidas el Jacobiano se malcondiciona (|det J| < 1e-14 aborta el
+   intento); esto afecta a las verificaciones puntuales con NR, no al mapa.
+7. **Discontinuidad de atan2 en E.** La frontera abrupta del mapa de E sobre el
+   semieje x negativo refleja el corte angular de `atan2` y la convención
+   α(0, 0) = 0, no una restricción geométrica real del brazo: es una propiedad del
+   modelo, no un error del método.
+8. **Sin distinción de ramas ni multiplicidad.** El mapa marca 1 si al menos una
+   configuración compatible existe (el barrido revisa ambas ramas de codo), pero
+   no indica cuántas ni cuáles; es suficiente para alcanzabilidad, no para
+   estudiar continuidad de trayectorias o cambios de rama.
+9. **Costo computacional.** 10201 celdas × 5 opciones × hasta 3000 muestras de θ₁
+   × 2 ramas implica del orden de 10⁸ evaluaciones trigonométricas en Colab. Ese
+   costo acota la resolución práctica y motiva decidir existencia con el barrido
+   (robusto y sin falsos negativos por semilla) en lugar de NR literal con 8
+   semillas por celda.
+10. **Sensibilidad al entorno.** Los conteos variaron ligeramente entre corridas
+    (por ejemplo, C pasó de 6960 a 6968 celdas compatibles), señal de sensibilidad
+    a versiones de bibliotecas y al orden de las operaciones en punto flotante.
+    Los mapas deben interpretarse como una caracterización robusta de la forma y
+    extensión de cada región, no como un conteo exacto de celdas.
+
+En conjunto, los mapas, la tabla cuantitativa, la verificación puntual con
+Newton-Raphson y la explicación geométrica de cada ecuación auxiliar sustentan de
+manera conjunta las conclusiones de los incisos (c)–(e), y las limitaciones
+anteriores delimitan el alcance de dichas conclusiones.
+OUTPUT []
+CELL 78 markdown
+# Presentación ordenada de todas las gráficas y archivos gif o video
+
+En esta sección se reúne, de forma ordenada, todo el material visual del proyecto:
+
+- **16.1** Gráficas estáticas de la trayectoria del efector — Fase I (secuencia P).
+- **16.2** Animaciones gif — Fase I, guardadas como `Fase1_Opcion_X.gif`.
+- **16.3** Gráficas estáticas de la trayectoria del efector — Fase II (secuencia Q).
+- **16.4** Animaciones gif — Fase II, guardadas como `Fase2_Opcion_X.gif`.
+- **16.5** Mapas individuales del espacio de trabajo — Fase III.
+
+Las figuras comparativas de cada fase (trayectorias superpuestas de la Fase I,
+ruta Q con la política de avance de la Fase II y el mapa comparativo de la
+Fase III) se presentan dentro de las secciones 12, 13 y 14 respectivamente.
+OUTPUT []
+CELL 79 markdown
+### 16.1 Fase I: gráficas estáticas de la trayectoria (secuencia P)
+OUTPUT []
+CELL 80 code
+from IPython.display import display, Image as IPImage
+
+for op in opciones:
+    graficar_trayectoria(
+        l1, l2, l3,
+        puntos_objetivo=secuencia_P,
+        trayectoria_efector=resultados_fase1[op]['trayectoria_efector'],
+        opcion=op
+    )
+OUTPUT [{}, {}, {}, {}, {}]
+CELL 81 markdown
+### 16.2 Fase I: animaciones gif (secuencia P)
+OUTPUT []
+CELL 82 code
+for op in opciones:
+    _, nombre = crear_animacion_brazo(
+        l1, l2, l3,
+        posiciones_cuadros=resultados_fase1[op]['posiciones_cuadros'],
+        trayectoria_efector=resultados_fase1[op]['trayectoria_efector'],
+        puntos_objetivo=secuencia_P,
+        opcion=op,
+        nombre_gif=f"Fase1_Opcion_{op}.gif",
+        fps=20
+    )
+    print(f"Opción {op} -> {nombre}")
+    display(IPImage(filename=nombre))
+OUTPUT [{'text': ['Opción A -> Fase1_Opcion_A.gif\n']}, {}, {'text': ['Opción B -> Fase1_Opcion_B.gif\n']}, {}, {'text': ['Opción C -> Fase1_Opcion_C.gif\n']}, {}, {'text': ['Opción D -> Fase1_Opcion_D.gif\n']}, {}, {'text': ['Opción E -> Fase1_Opcion_E.gif\n']}, {}]
+CELL 83 markdown
+### 16.3 Fase II: gráficas estáticas de la trayectoria (secuencia Q)
+OUTPUT []
+CELL 84 code
+for op in opciones:
+    graficar_trayectoria(
+        l1, l2, l3,
+        puntos_objetivo=secuencia_Q,
+        trayectoria_efector=resultados_fase2[op]['trayectoria_efector'],
+        opcion=op
+    )
+OUTPUT [{}, {}, {}, {}, {}]
+CELL 85 markdown
+### 16.4 Fase II: animaciones gif (secuencia Q)
+OUTPUT []
+CELL 86 code
+for op in opciones:
+    _, nombre = crear_animacion_brazo(
+        l1, l2, l3,
+        posiciones_cuadros=resultados_fase2[op]['posiciones_cuadros'],
+        trayectoria_efector=resultados_fase2[op]['trayectoria_efector'],
+        puntos_objetivo=secuencia_Q,
+        opcion=op,
+        nombre_gif=f"Fase2_Opcion_{op}.gif",
+        fps=20
+    )
+    print(f"Opción {op} -> {nombre}")
+    display(IPImage(filename=nombre))
+OUTPUT [{'text': ['Opción A -> Fase2_Opcion_A.gif\n']}, {}, {'text': ['Opción B -> Fase2_Opcion_B.gif\n']}, {}, {'text': ['Opción C -> Fase2_Opcion_C.gif\n']}, {}, {'text': ['Opción D -> Fase2_Opcion_D.gif\n']}, {}, {'text': ['Opción E -> Fase2_Opcion_E.gif\n']}, {}]
+CELL 87 markdown
+### 16.5 Fase III: mapas individuales del espacio de trabajo
+OUTPUT []
+CELL 88 code
+import matplotlib.pyplot as plt
+
+angulo_ref = np.linspace(0, 2*np.pi, 400)
+for op in opciones:
+    fig, ax = plt.subplots(figsize=(8, 8))
+    ax.imshow(mapas_espacio_trabajo[op], extent=[-3, 3, -3, 3],
+              origin='lower', cmap=cmap_custom, vmin=0.0, vmax=1.0)
+    ax.plot(3*np.cos(angulo_ref), 3*np.sin(angulo_ref), 'w--',
+            linewidth=1.5, label='Frontera de alcance (r=3)')
+    if op == 'C':
+        ax.plot(np.cos(angulo_ref), np.sin(angulo_ref), 'y:',
+                linewidth=1.5, label='Frontera interior (r=1)')
+    ax.set_title(f"Mapa individual del espacio de trabajo - Opción {op}")
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_aspect('equal', adjustable='box')
+    ax.legend(loc='upper right', fontsize=9)
+    plt.tight_layout()
+    plt.show()
+OUTPUT [{}, {}, {}, {}, {}]
+CELL 89 markdown
+# Conclusiones del equipo
+OUTPUT []
+CELL 90 markdown
+## Conclusiones del equipo
+
+El desarrollo de este laboratorio permitió modelar, resolver y animar el
+movimiento de un brazo robótico plano de tres articulaciones mediante un
+sistema no lineal de tres ecuaciones resuelto con Newton-Raphson
+multivariable. A partir del trabajo realizado, el equipo extrae las
+siguientes conclusiones:
+
+**1. Sobre el método numérico.** Newton-Raphson demostró ser eficaz y
+preciso cuando el punto objetivo es compatible con la ecuación auxiliar
+seleccionada: en la Fase I, las cinco opciones convergieron en los cuatro
+puntos de la secuencia P con residuos del orden de 10⁻⁹ a 10⁻¹⁵. No
+obstante, el método es localmente convergente, por lo que la elección de la
+suposición inicial y la reutilización de la solución anterior como semilla
+resultaron esenciales para mantener la continuidad del recorrido. La
+distinción rigurosa entre punto fuera de alcance, punto incompatible con la
+ecuación auxiliar y fallo numérico fue posible gracias a la combinación de
+Newton-Raphson con el barrido de existencia sobre θ₁.
+
+**2. Sobre las ecuaciones auxiliares.** Las cinco condiciones impuestas
+reducen los grados de libertad efectivos del brazo y, con ello, restringen
+su alcance real. Ninguna conserva el espacio de trabajo completo, aunque
+con diferente severidad: la opción D resultó la menos restrictiva (99.7 %
+de las celdas geométricamente alcanzables) y la opción E la más restrictiva
+(33.4 %). Este comportamiento no es un defecto del método, sino una
+consecuencia directa de cómo cada ecuación auxiliar selecciona
+configuraciones específicas dentro de la familia de soluciones del sistema.
+Los mapas del espacio de trabajo, complementados con la verificación
+puntual mediante Newton-Raphson y la interpretación geométrica de cada
+opción, permitieron caracterizar con rigor estas restricciones.
+OUTPUT []

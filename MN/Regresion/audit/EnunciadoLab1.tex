@@ -1,0 +1,1040 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{amsmath,amssymb,amsfonts,mathtools}
+\usepackage{array,booktabs,longtable,multirow}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{longtable}
+
+%\usepackage{lmodern}
+\usepackage[sfdefault]{carlito}
+\renewcommand{\familydefault}{\sfdefault}
+
+
+\geometry{letterpaper, margin=2.2cm}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\usetikzlibrary{angles,quotes,calc,arrows.meta,positioning}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue
+}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    columns=fullflexible,
+    frame=single,
+    backgroundcolor=\color{gray!8}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{15pt}
+\lhead{Métodos Numéricos}
+\rhead{Laboratorio -- Proyecto}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{Laboratorio -- Proyecto}}\\[0.4em]
+    {\large \textbf{Simulación bidimensional de un brazo robótico plano de tres articulaciones}}\\[1em]
+    \textbf{Curso:} Métodos Numéricos\\
+    \textbf{Modalidad de entrega:} Cuaderno de Google Colab\\
+    \textbf{Tamaño del equipo:} 4 integrantes\\
+    \textbf{Fecha de entrega:} Día de aplicación del I parcial
+\end{center}
+
+\section*{1. Descripción general}
+
+Se deberá desarrollar, en equipos de \textbf{cuatro integrantes}, un proyecto computacional en \textbf{Python}, ejecutable en \textbf{Google Colab}, para modelar y simular el movimiento de un \textbf{brazo robótico plano de tres articulaciones}. El programa deberá recibir las longitudes \(l_1\), \(l_2\) y \(l_3\) de los eslabones del brazo y una lista arbitraria de puntos del plano. A partir de esa información, se deberán calcular las configuraciones angulares necesarias para que el efector final del robot visite todos los puntos solicitados, en orden, y posteriormente regrese a la postura articular inicial \((\theta_1,\theta_2,\theta_3)=(0,0,0)\). Esta postura coloca el efector en \((l_1+l_2+l_3,0)\), por lo que no debe confundirse con el origen cartesiano.
+
+La animación deberá iniciar con las tres articulaciones en cero, es decir, con
+\[
+\theta_1=0,\qquad \theta_2=0,\qquad \theta_3=0,
+\]
+y luego deberá mostrar el desplazamiento fluido del brazo hasta recorrer toda la ruta. Durante cada transición, las tres articulaciones deberán moverse \textbf{simultáneamente}. Además, durante la animación deberá mostrarse la trayectoria trazada por el extremo final del brazo robótico.
+
+El proyecto deberá formularse matemáticamente como un problema de \textbf{Newton-Raphson en tres variables}, implementarse computacionalmente y documentarse con el nivel de detalle suficiente para evidenciar comprensión del problema y del método numérico empleado.
+
+\section*{2. Objetivos}
+
+\subsection*{Objetivo general}
+
+Desarrollar un laboratorio computacional que permita modelar, resolver y animar el movimiento de un brazo robótico plano de tres articulaciones mediante la formulación de un sistema no lineal resuelto con el método de Newton-Raphson en tres variables.
+
+\subsection*{Objetivos específicos}
+
+\begin{enumerate}[label=\arabic*.]
+    \item Modelar matemáticamente la posición del efector final de un brazo robótico plano de tres eslabones.
+    \item Formular el problema de determinación de ángulos articulares como un sistema no lineal de tres ecuaciones con tres incógnitas y analizar el papel de la ecuación auxiliar que cierra el sistema.
+    \item Implementar las cinco ecuaciones auxiliares establecidas en este enunciado y calcular los ángulos necesarios para alcanzar un punto dado, o reportar adecuadamente la incompatibilidad del punto o la no convergencia del método.
+    \item Construir un programa robusto que permita recorrer una lista arbitraria de puntos de manera secuencial, usando la configuración de cada punto como referencia para el siguiente.
+    \item Generar, para cada ecuación auxiliar, una gráfica cartesiana de la trayectoria del efector y una animación en formato \texttt{gif} o \texttt{video} del recorrido completo.
+    \item Comparar las trayectorias, estudiar casos en que algunas ecuaciones auxiliares impiden alcanzar puntos geométricamente alcanzables y construir mapas del espacio de trabajo de las cinco opciones.
+    \item Documentar el proceso de trabajo del equipo, el uso responsable de inteligencia artificial y la distribución de responsabilidades.
+\end{enumerate}
+
+\section*{3. Instrucciones generales}
+
+\begin{enumerate}[label=\arabic*.]
+    \item El laboratorio deberá entregarse el \textbf{día de la aplicación del I parcial}.
+    
+    \item El trabajo deberá realizarse en \textbf{grupos de cuatro personas}.
+    
+    \item En cada grupo deberá designarse una persona con el rol de \textbf{coordinador o coordinadora}. Este rol tendrá la responsabilidad de organizar las reuniones, velar por el cumplimiento del cronograma, consolidar la versión final del trabajo y verificar que todos los integrantes conozcan y comprendan la solución implementada.
+    
+    \item Deberá elaborarse una \textbf{bitácora de reuniones y distribución del trabajo}. En dicha bitácora deberá registrarse, como mínimo, la fecha de cada reunión, los acuerdos tomados, la distribución de tareas, la persona responsable de cada tarea, las metas propuestas, el avance logrado y la evidencia del trabajo realizado. Cada integrante deberá tener \textbf{trabajo asignado, metas concretas y objetivos específicos} dentro del desarrollo del proyecto.
+    
+    \item Se permitirá y se incentivará el uso de \textbf{inteligencia artificial} como herramienta de apoyo, exploración, programación, revisión y mejora del proyecto. Su utilización no será penalizada. Sin embargo, deberá incorporarse una \textbf{declaración de uso responsable de IA}, en la que se indique qué herramientas se utilizaron, para qué se usaron y de qué manera el equipo revisó, adaptó y comprendió el trabajo presentado. El uso de IA no exime de responsabilidad académica sobre la solución final.
+    
+    \item La entrega deberá realizarse mediante un \textbf{cuaderno de Google Colab} que contenga \textbf{todo lo solicitado} en este enunciado: formulación matemática, explicación del modelo, implementación del primer programa, implementación del programa robusto, resultados, impresión de ángulos en radianes y grados, animación \texttt{gif}, bitácora de trabajo y declaración de uso responsable de IA.
+\end{enumerate}
+
+\section*{4. Modelo geométrico del brazo robótico}
+
+Se considerará un brazo robótico plano formado por tres eslabones de longitudes \(l_1\), \(l_2\) y \(l_3\), unidos por tres articulaciones rotacionales con ángulos \(\theta_1\), \(\theta_2\) y \(\theta_3\). El punto terminal del brazo será el efector final \(P(x,y)\).
+
+La siguiente figura ilustra la interpretación geométrica de las longitudes y de los ángulos articulares.
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[scale=1.05,>=Stealth]
+    % Coordenadas
+    \coordinate (O) at (0,0);
+    \coordinate (X) at (1.7,0);
+    \coordinate (A) at (2.5,1.1);
+    \coordinate (B) at ($(A)+(1.8,1.5)$);
+    \coordinate (C) at ($(B)+(1.3,0.4)$);
+
+    % Ejes
+    \draw[->,gray] (-0.6,0) -- (6.3,0) node[right] {$x$};
+    \draw[->,gray] (0,-0.6) -- (0,4.0) node[above] {$y$};
+
+    % Brazo
+    \draw[line width=1.6pt] (O) -- (A) node[midway, below left=2pt] {$l_1$};
+    \draw[line width=1.6pt] (A) -- (B) node[midway, above left=1pt] {$l_2$};
+    \draw[line width=1.6pt] (B) -- (C) node[midway, above=2pt] {$l_3$};
+
+    % Articulaciones
+    \filldraw[black] (O) circle (2pt) node[below left] {$O$};
+    \filldraw[black] (A) circle (2pt);
+    \filldraw[black] (B) circle (2pt);
+    \filldraw[red]   (C) circle (2.4pt) node[above right] {$P(x,y)$};
+
+    % Ángulos
+    \draw pic[
+        draw=blue,
+        ->,
+        "$\theta_1$",
+        angle eccentricity=1.35,
+        angle radius=10mm
+    ] {angle = X--O--A};
+
+    \draw pic[
+        draw=blue,
+        ->,
+        "$\theta_2$",
+        angle eccentricity=1.45,
+        angle radius=8mm
+    ] {angle = O--A--B};
+
+    \draw pic[
+        draw=blue,
+        ->,
+        "$\theta_3$",
+        angle eccentricity=1.50,
+        angle radius=7mm
+    ] {angle = A--B--C};
+
+    % Proyecciones del punto final
+    \draw[dashed] (C) -- (C |- O);
+    \draw[dashed] (C) -- (C -| O);
+\end{tikzpicture}
+\caption{Brazo robótico plano de tres articulaciones.}
+\end{figure}
+
+\section*{5. Planteamiento matemático del problema}
+
+\subsection*{5.1. Variables conocidas e incógnitas}
+
+Para cada punto objetivo del recorrido se considerarán como \textbf{datos conocidos}:
+
+\[
+l_1,\qquad l_2,\qquad l_3,\qquad x,\qquad y.
+\]
+
+Las \textbf{incógnitas} del problema serán los ángulos articulares:
+
+\[
+\theta_1,\qquad \theta_2,\qquad \theta_3.
+\]
+
+\subsection*{5.2. Ecuaciones de posición}
+
+La posición del efector final en el plano estará dada por
+
+\[
+x=l_1\cos(\theta_1)+l_2\cos(\theta_1+\theta_2)+l_3\cos(\theta_1+\theta_2+\theta_3),
+\]
+
+\[
+y=l_1\sin(\theta_1)+l_2\sin(\theta_1+\theta_2)+l_3\sin(\theta_1+\theta_2+\theta_3).
+\]
+
+Estas dos ecuaciones, por sí solas, no determinan de manera única los tres ángulos, pues existen tres incógnitas y solamente dos ecuaciones. Por tanto, para formular el problema como un sistema de \textbf{tres ecuaciones con tres incógnitas}, deberá añadirse una tercera condición.
+
+\subsection*{5.3. Tercera ecuación para cerrar el sistema}
+
+Las dos ecuaciones de posición dejan un grado de libertad: un mismo punto puede corresponder a diferentes configuraciones del brazo. La tercera ecuación no es solamente un recurso algebraico para completar el sistema; selecciona determinadas posturas y puede restringir el conjunto de puntos compatibles con el modelo.
+
+Para definir la quinta opción se utilizará el ángulo polar
+
+\[
+\alpha(x,y)=
+\begin{cases}
+\operatorname{atan2}(y,x), & (x,y)\neq(0,0),\\[0.3em]
+0, & (x,y)=(0,0).
+\end{cases}
+\]
+
+En este laboratorio deberán implementarse y compararse exactamente las cinco opciones siguientes:
+
+\begin{align*}
+\text{Opción A:}\qquad &F_3^{(A)}=\theta_1+\theta_2+\theta_3=0,
+&&\text{orientación horizontal del efector},\\[0.4em]
+\text{Opción B:}\qquad &F_3^{(B)}=\theta_1+\theta_2+\theta_3-\frac{\pi}{2}=0,
+&&\text{orientación vertical del efector},\\[0.4em]
+\text{Opción C:}\qquad &F_3^{(C)}=\theta_3=0,
+&&\text{tercer eslabón alineado con el segundo},\\[0.4em]
+\text{Opción D:}\qquad &F_3^{(D)}=\theta_2-\theta_3=0,
+&&\text{ángulos relativos segundo y tercero iguales}. \\[0.4em]
+\text{Opción E:}\qquad
+&F_3^{(E)}=\theta_1+\theta_2+\theta_3-\alpha(x,y)-\frac{\pi}{2}=0,
+&& \text{orientación tangencial respecto del origen}.
+\end{align*}
+
+En la opción E, el último eslabón queda perpendicular al segmento que une el origen con el punto objetivo; por tanto, es tangente a la circunferencia centrada en el origen que pasa por dicho punto. En el origen no existe una dirección tangente única y se utilizará la convención \(\alpha(0,0)=0\), cuyo efecto deberá discutirse.
+
+Los ángulos se interpretarán módulo \(2\pi\). Cada equipo deberá explicar la interpretación geométrica de las cinco condiciones, construir el jacobiano correspondiente a cada una y analizar cómo la condición auxiliar modifica las configuraciones, la alcanzabilidad, las singularidades y la continuidad del recorrido. Para la opción E también deberá analizarse el manejo computacional de \(\operatorname{atan2}\), su corte angular y el posible desenvolvimiento de ángulos para mantener la continuidad.
+
+\subsection*{5.4. Sistema no lineal a resolver}
+
+Para cada punto \((x,y)\) y cada opción \(s\in\{A,B,C,D,E\}\), deberá resolverse el sistema no lineal
+
+\[
+F_1(\theta_1,\theta_2,\theta_3)=
+l_1\cos(\theta_1)+l_2\cos(\theta_1+\theta_2)+l_3\cos(\theta_1+\theta_2+\theta_3)-x=0,
+\]
+
+\[
+F_2(\theta_1,\theta_2,\theta_3)=
+l_1\sin(\theta_1)+l_2\sin(\theta_1+\theta_2)+l_3\sin(\theta_1+\theta_2+\theta_3)-y=0,
+\]
+
+\[
+F_3^{(s)}(\theta_1,\theta_2,\theta_3)=0,
+\]
+
+Es decir,
+
+\[
+\mathbf{F}(\boldsymbol{\theta})=
+\begin{pmatrix}
+F_1(\theta_1,\theta_2,\theta_3)\\
+F_2(\theta_1,\theta_2,\theta_3)\\
+F_3^{(s)}(\theta_1,\theta_2,\theta_3)
+\end{pmatrix}
+=
+\begin{pmatrix}
+0\\
+0\\
+0
+\end{pmatrix},
+\qquad
+\boldsymbol{\theta}=
+\begin{pmatrix}
+\theta_1\\
+\theta_2\\
+\theta_3
+\end{pmatrix}.
+\]
+
+\subsection*{5.5. Jacobiano del sistema}
+
+Deberá construirse explícitamente la matriz jacobiana
+
+\[
+J(\theta_1,\theta_2,\theta_3)=
+\begin{pmatrix}
+\dfrac{\partial F_1}{\partial \theta_1} &
+\dfrac{\partial F_1}{\partial \theta_2} &
+\dfrac{\partial F_1}{\partial \theta_3} \\[1em]
+\dfrac{\partial F_2}{\partial \theta_1} &
+\dfrac{\partial F_2}{\partial \theta_2} &
+\dfrac{\partial F_2}{\partial \theta_3} \\[1em]
+\dfrac{\partial F_3^{(s)}}{\partial \theta_1} &
+\dfrac{\partial F_3^{(s)}}{\partial \theta_2} &
+\dfrac{\partial F_3^{(s)}}{\partial \theta_3}
+\end{pmatrix}.
+\]
+
+%En este caso,
+%
+%\[
+%\resizebox{\textwidth}{!}{$
+%J(\theta_1,\theta_2,\theta_3)=
+%\begin{pmatrix}
+%-l_1\sin(\theta_1)-l_2\sin(\theta_1+\theta_2)-l_3\sin(\theta_1+\theta_2+\theta_3)
+%&
+%-l_2\sin(\theta_1+\theta_2)-l_3\sin(\theta_1+\theta_2+\theta_3)
+%&
+%-l_3\sin(\theta_1+\theta_2+\theta_3)
+%\\[0.8em]
+%l_1\cos(\theta_1)+l_2\cos(\theta_1+\theta_2)+l_3\cos(\theta_1+\theta_2+\theta_3)
+%&
+%l_2\cos(\theta_1+\theta_2)+l_3\cos(\theta_1+\theta_2+\theta_3)
+%&
+%l_3\cos(\theta_1+\theta_2+\theta_3)
+%\\[0.8em]
+%1 & 1 & 1
+%\end{pmatrix}
+%$}
+%\]
+
+\subsection*{5.6. Método de Newton-Raphson en tres variables}
+
+El planteamiento numérico deberá basarse en la iteración
+
+\[
+J(\boldsymbol{\theta}^{(k)})\,\Delta \boldsymbol{\theta}^{(k)}
+=
+-\mathbf{F}(\boldsymbol{\theta}^{(k)}),
+\]
+
+\[
+\boldsymbol{\theta}^{(k+1)}
+=
+\boldsymbol{\theta}^{(k)}+\Delta \boldsymbol{\theta}^{(k)}.
+\]
+
+Deberá explicarse claramente en el cuaderno de Colab:
+
+\begin{itemize}
+    \item cuál será la suposición inicial utilizada;
+    \item qué criterio de convergencia se implementará;
+    \item cuál será el máximo número de iteraciones;
+    \item qué condición se utilizará para reportar no convergencia o punto no alcanzable.
+\end{itemize}
+
+Deberá distinguirse entre: (i) un punto fuera del alcance geométrico del brazo; (ii) un punto geométricamente alcanzable pero incompatible con una ecuación auxiliar; y (iii) un punto compatible para el cual Newton-Raphson no converge con la estrategia numérica utilizada. La postura inicial de la animación es \((0,0,0)\), pero esto no obliga a utilizar un jacobiano singular como primera suposición de Newton-Raphson. La elección o perturbación de la primera suposición deberá documentarse. Para los puntos posteriores se utilizará, siempre que sea posible, la solución del punto anterior como suposición inicial.
+
+Como mínimo, se recomienda utilizar un criterio de parada del tipo
+
+\[
+\|\Delta \boldsymbol{\theta}^{(k)}\|_{\infty}<\varepsilon
+\qquad \text{o bien} \qquad
+\|\mathbf{F}(\boldsymbol{\theta}^{(k)})\|_2<\varepsilon,
+\]
+con una tolerancia apropiada.
+
+\section*{6. Primera programación: función para un solo punto}
+
+Deberá implementarse una primera función con la siguiente interfaz mínima:
+
+\begin{lstlisting}[language=Python]
+NR_Un_Punto(l1, l2, l3, x, y, opcion)
+\end{lstlisting}
+
+\subsection*{6.1. Propósito}
+
+Esta función deberá calcular los ángulos \(\theta_1\), \(\theta_2\) y \(\theta_3\) para que el efector final del brazo alcance el punto \((x,y)\), utilizando el método de Newton-Raphson en tres variables y la opción auxiliar indicada por \texttt{opcion}.
+
+\subsection*{6.2. Requisitos mínimos de la función}
+
+La función \texttt{NR\_Un\_Punto(l1,l2,l3,x,y,opcion)} deberá:
+
+\begin{enumerate}[label=\alph*)]
+    \item admitir las cinco opciones \texttt{A}, \texttt{B}, \texttt{C}, \texttt{D} y \texttt{E};
+    \item construir el sistema no lineal y el jacobiano correspondiente a la opción seleccionada;
+    \item aplicar Newton-Raphson en tres variables;
+    \item retornar los ángulos encontrados, en caso de convergencia;
+    \item reportar claramente si el punto es incompatible con la opción, si está fuera del alcance geométrico o si el método no converge;
+    \item documentar la tolerancia, el máximo de iteraciones y la suposición inicial utilizada;
+    \item mostrar la solución en \textbf{radianes} y en \textbf{grados}.
+\end{enumerate}
+
+\subsection*{6.3. Salida mínima esperada}
+
+La salida podrá implementarse mediante una tupla, un diccionario o una estructura equivalente. Como mínimo, deberá contener:
+
+\begin{itemize}
+    \item el punto objetivo \((x,y)\) y la opción auxiliar utilizada;
+    \item los valores de \(\theta_1,\theta_2,\theta_3\) en radianes;
+    \item los valores de \(\theta_1,\theta_2,\theta_3\) en grados;
+    \item el número de iteraciones realizadas;
+    \item el valor final del residuo o una medida del error;
+    \item un mensaje de éxito o de error.
+\end{itemize}
+
+\subsection*{6.4. Observaciones}
+
+La interfaz mínima exigida será la indicada anteriormente. No obstante, si se considera necesario ampliar internamente la función para mejorar la robustez, ello podrá hacerse, siempre que la versión mínima solicitada exista, funcione y quede claramente identificada en el cuaderno.
+
+\section*{7. Segunda programación: programa robusto para una lista de puntos}
+
+Una vez construida la función para un solo punto, deberá desarrollarse un programa más robusto que la reutilice o que integre su lógica de manera organizada.
+
+\subsection*{7.1. Función principal}
+
+Deberá implementarse una función principal que reciba las longitudes \(l_1\), \(l_2\), \(l_3\) y una lista de puntos de tamaño arbitrario con el siguiente formato:
+
+\begin{lstlisting}[language=Python]
+puntos = [(x1, y1), (x2, y2), ..., (xn, yn)]
+\end{lstlisting}
+
+\subsection*{7.2. Condición de la ruta}
+
+La ruta completa deberá construirse de manera que:
+
+\begin{itemize}
+    \item el recorrido cartesiano \textbf{inicia con } $(\theta_1,\theta_2,\theta_3)=(0,0,0).$;
+    \item luego se visiten, en orden, todos los puntos de la lista recibida;
+    \item y finalmente deberá regresar a la posición $(\theta_1,\theta_2,\theta_3)=(0,0,0).$
+\end{itemize}
+
+\textbf{Importante:} la postura articular inicial y final de la animación deberá ser
+\[
+(\theta_1,\theta_2,\theta_3)=(0,0,0).
+\]
+Por lo tanto, la animación comenzará en esa postura y luego deberá desplazarse hasta el primer punto del recorrido. El regreso final corresponde a la postura articular inicial y no a la posición cartesiana \((0,0)\).
+
+\subsection*{7.3. Requisitos del programa robusto}
+
+La función principal se llamará
+
+\begin{lstlisting}[language=Python]
+Laboratorio_Brazo_3AR(l1, l2, l3, puntos, opcion)
+\end{lstlisting}
+
+y deberá:
+
+\begin{enumerate}[label=\alph*)]
+    \item recibir \(l_1\), \(l_2\), \(l_3\), una lista arbitraria de puntos y una de las cinco opciones auxiliares;
+    \item calcular, punto por punto, la información angular necesaria para todo el recorrido;
+    \item mostrar para cada punto los ángulos en radianes y en grados;
+    \item identificar y reportar adecuadamente los puntos imposibles o los casos de no convergencia;
+    \item generar una gráfica estática de la trayectoria cartesiana del efector final;
+    \item generar una animación en formato \texttt{gif};
+    \item marcar durante la animación la trayectoria del extremo final del brazo robótico;
+    \item mover las tres articulaciones \textbf{simultáneamente} en cada transición;
+    \item mostrar, de manera ordenada, la información correspondiente a cada tramo del recorrido.
+\end{enumerate}
+
+En cada transición deberán interpolarse simultáneamente los tres ángulos. Para favorecer la continuidad, se utilizará la configuración obtenida en el punto anterior como suposición inicial del punto siguiente y se deberá tratar de evitar saltos artificiales de \(2\pi\). No se regresará a la postura de reposo entre puntos. Después del último punto, la animación regresará a \((0,0,0)\).
+
+\subsection*{7.4. Creatividad en la animación}
+
+Se solicita incorporar un componente de creatividad en la animación. Por ejemplo, podrá agregarse una o varias de las siguientes ideas:
+
+\begin{itemize}
+    \item colorear de manera distinta cada eslabón;
+    \item rotular el punto objetivo actual;
+    \item mostrar el número de paso o de tramo en la pantalla;
+    \item pausar brevemente al llegar a cada punto;
+    \item cambiar el color de la trayectoria;
+    \item destacar visualmente el efector final;
+    \item mostrar simultáneamente los valores de los ángulos durante el recorrido.
+\end{itemize}
+
+\section*{8. Experimentos obligatorios con las cinco ecuaciones auxiliares}
+
+Los tres experimentos de esta sección son obligatorios. Para hacer comparables los resultados, en todos ellos se utilizarán
+
+\[
+l_1=l_2=l_3=1.
+\]
+
+Las cinco opciones deberán ejecutarse con los mismos parámetros numéricos, el mismo número de cuadros por tramo y criterios de convergencia comparables. Para cada ejecución se presentarán: tabla de ángulos y residuos, gráfica cartesiana de la trayectoria completa y animación \texttt{gif} o video. En las gráficas deberán marcarse la posición inicial del efector, los puntos objetivo y el orden de visita.
+
+\subsection*{8.1. Fase I: comparación de recorridos compatibles}
+
+Se utilizará, en el orden indicado, la secuencia
+
+\[
+\mathcal{P}=\bigl[(1.5,0.5),\ (0.5,1.5),\ (-0.5,1.2),\ (1.2,-0.5)\bigr].
+\]
+
+Los cuatro puntos son compatibles con las cinco opciones auxiliares. El equipo deberá producir cinco gráficas y cinco animaciones, y comparar punto por punto y tramo por tramo:
+
+\begin{itemize}
+    \item las configuraciones articulares obtenidas;
+    \item la forma y longitud aproximada de las trayectorias cartesianas;
+    \item el número de iteraciones y el valor final del residuo
+    \[
+    \|\mathbf{F}(\boldsymbol{\theta})\|_2
+    =\sqrt{F_1(\boldsymbol{\theta})^2+F_2(\boldsymbol{\theta})^2+F_3^{(s)}(\boldsymbol{\theta})^2};
+    \]
+    además, para un mismo punto y una misma ecuación auxiliar deberán utilizarse al menos dos suposiciones iniciales diferentes y compararse la convergencia, el número de iteraciones y la configuración angular obtenida;
+    \item la continuidad del movimiento y los acercamientos a configuraciones singulares;
+    \item el efecto visible y matemático de cada ecuación auxiliar.
+\end{itemize}
+
+\subsection*{8.2. Fase II: análisis de compatibilidad punto por punto}
+
+Se utilizará ahora, sin alterar el orden, la segunda secuencia
+
+\[
+\mathcal{Q}=\bigl[(0.5,0.5),\ (1.3,1.3),\ (-1.4,0.3),\ (0.3,-1.4)\bigr].
+\]
+
+Para cada una de las cinco ecuaciones auxiliares, el equipo deberá determinar si cada punto de \(\mathcal{Q}\) es compatible o incompatible con el sistema no lineal correspondiente. El análisis deberá realizarse punto por punto y respetando el orden de la secuencia. No se debe concluir que un punto es incompatible únicamente porque Newton-Raphson no converja: cada conclusión deberá apoyarse en una justificación matemática y en la evidencia numérica obtenida.
+
+El programa deberá examinar los cuatro puntos para cada opción y presentar una tabla de compatibilidad con el estado de cada combinación punto--ecuación auxiliar. Cuando no se obtenga una solución, deberá distinguirse entre: (i) punto fuera del alcance geométrico del brazo; (ii) punto geométricamente alcanzable, pero incompatible con la ecuación auxiliar; y (iii) posible fallo numérico de Newton-Raphson.
+
+La imposibilidad de alcanzar un punto no deberá finalizar el análisis de los puntos posteriores. Para efectos de la animación, el equipo deberá definir y explicar una política coherente; por ejemplo, mantener el brazo en la última configuración válida, señalar visualmente el punto no alcanzado y continuar con el siguiente punto desde esa configuración. No se permite eliminar, reordenar ni reemplazar puntos.
+
+\subsection*{8.3. Fase III: mapas del espacio de trabajo}
+
+Para \(l_1=l_2=l_3=1\), el equipo deberá construir un mapa aproximado del lugar geométrico alcanzable con cada una de las cinco ecuaciones auxiliares. En cada mapa se coloreará o sombreará la región del plano formada por los puntos para los cuales exista al menos una configuración angular compatible con la opción correspondiente.
+
+Los cinco mapas deberán elaborarse con los mismos límites cartesianos, escala, relación de aspecto, resolución, densidad de muestreo y convención de colores. Como referencia, deberá incluirse en todas las gráficas la circunferencia
+
+\[
+x^2+y^2=(l_1+l_2+l_3)^2=9,
+\]
+
+que representa la frontera exterior del alcance geométrico del brazo sin considerar una ecuación auxiliar. Cada gráfica deberá mostrar claramente los ejes, el origen, la frontera de referencia y la región alcanzable correspondiente.
+
+El equipo deberá escoger \textbf{una} de las dos alternativas de implementación descritas a continuación y aplicarla a las cinco ecuaciones auxiliares. Antes de presentar los mapas deberá indicar cuál alternativa escogió y justificar la decisión considerando, al menos, su relación con Newton-Raphson, el costo computacional, la facilidad de implementación y las limitaciones del procedimiento.
+
+\textbf{Alternativa 1: exploración de una cuadrícula cartesiana mediante Newton-Raphson.}
+
+Esta alternativa pregunta directamente, para muchos puntos del plano, si el programa logra encontrar una configuración angular compatible. Se sugiere el procedimiento siguiente:
+
+\begin{enumerate}[label=\arabic*.]
+    \item Construir una cuadrícula uniforme de puntos \((x_i,y_j)\) en el dominio \([-3,3]\times[-3,3]\). Puede utilizarse inicialmente una cuadrícula de \(101\times101\) puntos y aumentarse la resolución si fuera necesario.
+    \item Seleccionar una ecuación auxiliar y aplicar la función de Newton-Raphson en cada punto de la cuadrícula.
+    \item Probar varias suposiciones iniciales en cada punto. Se considerará que se encontró una configuración compatible cuando al menos una produzca una solución con un residuo menor que la tolerancia establecida.
+    \item Guardar los resultados en una matriz: por ejemplo, asignar \(1\) cuando se encuentre una configuración compatible y \(0\) cuando no se encuentre una solución después de completar todos los intentos.
+    \item Representar la matriz con \texttt{contourf}, \texttt{pcolormesh}, \texttt{imshow} o una herramienta equivalente. Las celdas con valor \(1\) deberán aparecer coloreadas o sombreadas.
+    \item Repetir el procedimiento para A, B, C, D y E manteniendo la misma cuadrícula, tolerancia, máximo de iteraciones, conjunto de suposiciones iniciales y formato gráfico.
+\end{enumerate}
+
+En esta alternativa, una celda con valor \(0\) significa inicialmente ``Newton-Raphson no encontró una solución con los intentos realizados''. No deberá interpretarse automáticamente como una demostración de que el punto es incompatible.
+
+\textbf{Alternativa 2: pintura cinemática mediante el movimiento del brazo.}
+
+Esta alternativa utiliza cinemática directa. El brazo se moverá durante un intervalo suficientemente largo y el efector final irá coloreando las celdas del plano por las que pase. Se sugiere el procedimiento siguiente:
+
+\begin{enumerate}[label=\arabic*.]
+    \item Dividir el dominio \([-3,3]\times[-3,3]\) en una cuadrícula de celdas e inicializar una matriz de visita con ceros.
+    \item Definir dos variables angulares independientes y hacerlas evolucionar con velocidades diferentes y variables en el tiempo. Las velocidades deberán escogerse de manera que se evite, en lo posible, repetir rápidamente una misma trayectoria cerrada.
+    \item Calcular el ángulo restante de forma que se respete en todo momento la ecuación auxiliar. Para las primeras cuatro opciones pueden utilizarse las relaciones
+    \[
+    \begin{array}{ll}
+    \text{A: }\theta_3=-\theta_1-\theta_2,
+    &\text{B: }\theta_3=\dfrac{\pi}{2}-\theta_1-\theta_2,\\[0.5em]
+    \text{C: }\theta_3=0,
+    &\text{D: }\theta_3=\theta_2.
+    \end{array}
+    \]
+    Para la opción E deberá determinarse numéricamente el ángulo restante que satisfaga \(F_3^{(E)}=0\), utilizando preferiblemente el valor del instante anterior como suposición inicial. Si no se encuentra una solución válida en un instante, esa configuración no deberá pintarse.
+    \item En cada instante, calcular \((x,y)\) mediante la cinemática directa, determinar la celda correspondiente y asignarle el valor \(1\). De esta manera, el rastro acumulado del efector irá sombreando la región visitada.
+    \item Repetir la simulación desde varias configuraciones iniciales y durante intervalos progresivamente mayores. Deberá registrarse la cantidad de celdas nuevas pintadas para analizar si el mapa comienza a estabilizarse.
+    \item Repetir el procedimiento para A, B, C, D y E utilizando la misma resolución, cantidad total de muestras, criterio de estabilización y formato gráfico.
+\end{enumerate}
+
+En esta alternativa, una celda coloreada contiene posiciones que fueron alcanzadas efectivamente por el brazo. Una celda blanca significa solamente que no fue visitada durante las simulaciones realizadas; no demuestra, por sí sola, que sea incompatible.
+
+Independientemente de la alternativa escogida, deberán seleccionarse algunos puntos ubicados dentro, cerca de la frontera y fuera de las regiones observadas, y realizarse pruebas adicionales con Newton-Raphson para respaldar la interpretación de cada mapa. Para sostener una afirmación de incompatibilidad deberán aumentarse las pruebas numéricas y complementarse los resultados con una explicación geométrica.
+
+Como producto de esta fase deberán presentarse:
+
+\begin{enumerate}[label=\alph*)]
+    \item cinco mapas individuales, uno por cada ecuación auxiliar;
+    \item una figura comparativa que reúna los cinco mapas usando la misma escala;
+    \item una interpretación de la forma, ubicación, simetrías, fronteras, regiones vacías y extensión de cada lugar geométrico;
+    \item una comparación de cuáles ecuaciones conservan una región mayor o menor del alcance general del brazo;
+    \item la identificación razonada de si alguna opción parece conservar el alcance geométrico completo;
+    \item la verificación con Newton-Raphson de algunos puntos interiores, cercanos a la frontera y exteriores a cada región sombreada;
+    \item una discusión de las limitaciones del mapa numérico, incluida la posibilidad de que una celda aparezca vacía por resolución insuficiente, muestreo inadecuado, singularidad o falta de convergencia.
+\end{enumerate}
+
+No se exige una demostración algebraica formal de las regiones obtenidas. Sin embargo, las conclusiones deberán estar sustentadas conjuntamente por las gráficas, las pruebas numéricas y una explicación geométrica coherente. Una nube de puntos sin interpretación no será suficiente.
+
+\section*{9. Organización mínima del cuaderno de Google Colab}
+
+El cuaderno de Colab deberá estar claramente organizado y contener, como mínimo, las siguientes secciones:
+
+\begin{enumerate}[label=\arabic*.]
+    \item Portada con nombre del curso, título del laboratorio, integrantes y coordinador.
+    \item Objetivo del proyecto.
+    \item Declaración de uso responsable de IA.
+    \item Bitácora de reuniones y distribución del trabajo.
+    \item Explicación del modelo geométrico del brazo robótico.
+    \item Planteamiento matemático de los cinco sistemas no lineales.
+    \item Construcción de los cinco jacobianos.
+    \item Explicación del método de Newton-Raphson aplicado al problema.
+    \item Implementación de la función \texttt{NR\_Un\_Punto}.
+    \item Pruebas de la función para las cinco opciones auxiliares.
+    \item Implementación de la función principal para la lista de puntos.
+    \item Fase I: resultados, cinco gráficas, cinco animaciones y análisis comparativo.
+    \item Fase II: tabla de compatibilidad punto--ecuación, diagnóstico matemático de cada caso y política aplicada cuando no se obtenga una solución.
+    \item Fase III: elección y justificación de la alternativa de implementación, cinco mapas del espacio de trabajo, figura comparativa, verificaciones numéricas e interpretación geométrica.
+    \item Presentación de resultados en radianes y grados.
+    \item Presentación ordenada de todas las gráficas y archivos \texttt{gif} o \texttt{video}.
+    \item Conclusiones del equipo.
+\end{enumerate}
+
+\section*{10. Entregables}
+
+Deberá entregarse lo siguiente:
+
+\begin{enumerate}[label=\arabic*.]
+    \item El \textbf{cuaderno de Google Colab} con todo el desarrollo solicitado.
+    \item Las \textbf{gráficas cartesianas y animaciones en formato \texttt{gif}} o video exigidas para las cinco opciones y las dos secuencias.
+    \item El \textbf{análisis comparativo de las tres fases}, incluidos los mapas e interpretación geométrica solicitados en la Fase III.
+    \item La \textbf{bitácora de reuniones y distribución del trabajo}.
+    \item La \textbf{declaración de uso responsable de IA}.
+\end{enumerate}
+
+\section*{11. Aclaraciones importantes}
+
+\begin{enumerate}[label=\arabic*.]
+    \item El uso de inteligencia artificial está permitido y se incentiva como parte del proceso de trabajo. Lo que se evaluará será la capacidad del equipo para reconocer, comprender y explicar el proyecto que presenta.
+    
+    \item Se recomienda verificar cuidadosamente la coherencia entre las ecuaciones del modelo, el jacobiano y el código implementado.
+    
+    \item Las ecuaciones auxiliares y las secuencias de puntos de la Sección 8 son obligatorias y no podrán sustituirse por otras.
+    
+    \item Si se utilizan funciones auxiliares, clases o estructuras adicionales, ello será válido siempre que la solución mínima exigida esté presente y claramente identificada.
+    
+    \item Deberá diferenciarse explícitamente entre incompatibilidad matemática con una ecuación auxiliar, punto fuera del alcance geométrico y no convergencia numérica.
+\end{enumerate}
+
+\section*{12. Formato sugerido para la bitácora}
+
+Se sugiere utilizar una tabla como la siguiente dentro del cuaderno o como anexo.
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{2.2cm}|>{\raggedright\arraybackslash}p{2.4cm}|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}p{2.9cm}|}
+\hline
+\textbf{Fecha} & \textbf{Asistentes} & \textbf{Acuerdos y tareas} & \textbf{Responsable} & \textbf{Meta / evidencia} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Fecha} & \textbf{Asistentes} & \textbf{Acuerdos y tareas} & \textbf{Responsable} & \textbf{Meta / evidencia} \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+ & & & & \\
+\hline
+ & & & & \\
+\hline
+ & & & & \\
+\hline
+ & & & & \\
+\hline
+\end{longtable}
+
+\section*{13. Formato sugerido para la declaración de uso responsable de IA}
+
+Se podrá utilizar un texto similar al siguiente:
+
+\begin{quote}
+\textbf{Declaración de uso responsable de inteligencia artificial.} En la elaboración de este laboratorio se utilizaron herramientas de inteligencia artificial como apoyo para \underline{\hspace{5cm}}. El equipo revisó, adaptó y validó los aportes utilizados, y comprende el propósito general, las decisiones principales, los resultados y las conclusiones del proyecto. El equipo asume la responsabilidad académica por el producto presentado.
+\end{quote}
+
+\section*{14. Cierre}
+
+Se espera un trabajo técnicamente sólido, matemáticamente bien fundamentado y correctamente implementado. No se busca únicamente obtener una animación funcional, sino evidenciar comprensión del modelado geométrico, de la formulación del sistema no lineal, del método de Newton-Raphson en varias variables y de la organización responsable del trabajo en equipo.
+
+\vfill
+
+
+\section*{Rúbrica de evaluación del laboratorio}
+\textbf{Valor total del laboratorio: 8\% de la nota del curso}
+
+\subsection*{Instrucciones generales}
+Cada \textbf{tópico} se calificará en una escala de \(0\) a \(4\). Posteriormente, en cada sección se calculará el promedio de los tópicos evaluados, y dicho promedio se transformará según el peso porcentual asignado a la sección.
+
+%Si en la sección \(j\) se evaluaron \(m_j\) tópicos y sus puntajes fueron \(c_{j1},c_{j2},\dots,c_{jm_j}\), entonces el promedio de la sección será
+%\[
+%A_j=\frac{1}{m_j}\sum_{k=1}^{m_j} c_{jk}.
+%\]
+%
+%El aporte de la sección a la nota del laboratorio será
+%\[
+%\frac{A_j}{4}\,p_j,
+%\]
+%donde \(p_j\) es el peso porcentual de la sección.
+
+La nota final del laboratorio será la suma de los aportes de todas las secciones, con un máximo de \(8\%\).
+
+\subsection*{Escala global de valoración}
+
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{4pt}
+
+\begin{center}
+\begin{tabular}{|c|p{12cm}|}
+\hline
+\textbf{Puntaje} & \textbf{Descriptor global} \\
+\hline
+\(4\) & Desempeño excelente. El tópico se cumple completamente, con alto nivel de calidad, claridad, coherencia y corrección técnica. No presenta errores relevantes. \\
+\hline
+\(3\) & Desempeño bueno. El tópico se cumple adecuadamente, aunque presenta detalles menores de precisión, profundidad, organización o presentación. \\
+\hline
+\(2\) & Desempeño aceptable. El tópico se cumple de forma parcial. Existen limitaciones importantes, pero aún se evidencia trabajo pertinente y comprensible. \\
+\hline
+\(1\) & Desempeño insuficiente. El tópico presenta deficiencias serias, errores relevantes o desarrollo muy incompleto. \\
+\hline
+\(0\) & Desempeño deficiente o nulo. El tópico no se cumple, es incorrecto o no fue entregado. \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Descriptor específico para análisis e interpretación}
+
+En los tópicos de análisis no será suficiente presentar tablas, gráficas o resultados numéricos. Se valorará la capacidad de relacionar la evidencia obtenida con las ecuaciones auxiliares, explicar las causas de los comportamientos observados y reconocer las limitaciones del procedimiento utilizado.
+
+\begin{center}
+\begin{tabular}{|c|p{12cm}|}
+\hline
+\textbf{Puntaje} & \textbf{Descriptor para los tópicos de análisis} \\
+\hline
+\(4\) & Interpreta correctamente, explica las causas, relaciona ecuaciones, resultados y gráficas, sustenta sus conclusiones con evidencia y reconoce las limitaciones del análisis. \\
+\hline
+\(3\) & Presenta una interpretación correcta y respaldada por evidencia, aunque algunas relaciones, causas o limitaciones quedan explicadas de manera incompleta. \\
+\hline
+\(2\) & Describe los resultados principales, pero ofrece poca explicación de sus causas o utiliza evidencia limitada para sustentar las conclusiones. \\
+\hline
+\(1\) & Presenta resultados o gráficas con comentarios superficiales, desarticulados o parcialmente incorrectos. \\
+\hline
+\(0\) & No presenta análisis ni interpretación, o las conclusiones contradicen los resultados sin justificación. \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Distribución porcentual por secciones}
+
+\[
+\begin{array}{ll}
+\text{1. Presentación y completitud} & 0.50\%\\
+\text{2. Modelo y significado de las ecuaciones auxiliares} & 1.25\%\\
+\text{3. Implementación y validación de Newton-Raphson} & 0.75\%\\
+\text{4. Fase I: análisis comparativo de trayectorias} & 1.25\%\\
+\text{5. Fase II: análisis de compatibilidad} & 1.50\%\\
+\text{6. Fase III: mapas e interpretación del espacio de trabajo} & 1.75\%\\
+\text{7. Código, gráficas y animaciones} & 0.50\%\\
+\text{8. Bitácora, trabajo en equipo y uso responsable de IA} & 0.50\%\\
+\hline
+\textbf{Total} & \textbf{8.00\%}
+\end{array}
+\]
+
+\bigskip
+
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{0pt}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{3pt}
+
+{\scriptsize
+\begin{longtable}{|p{3.7cm}|p{7.0cm}|>{\centering\arraybackslash}p{1cm}|p{3.0cm}|}
+\hline
+\textbf{Sección} & \textbf{Tópico a calificar} & \textbf{Puntaje} & \textbf{Observaciones} \\
+\hline
+\endfirsthead
+
+\hline
+\textbf{Sección} & \textbf{Tópico a calificar} & \textbf{Puntaje} & \textbf{Observaciones} \\
+\hline
+\endhead
+
+\hline
+\endfoot
+
+\hline
+\endlastfoot
+
+\multicolumn{4}{|l|}{\textbf{Sección 1. Presentación y completitud \hfill Peso: 0.50\%}}\\
+\hline
+Presentación &
+El cuaderno incluye todos los entregables solicitados y permite localizar claramente las tres fases del proyecto. & & \\
+\hline
+Presentación &
+La portada, integrantes, coordinación, organización interna y rotulación de resultados están completos. & & \\
+\hline
+Presentación &
+La redacción, el orden lógico y la presentación general permiten comprender y reproducir el trabajo. & & \\
+\hline
+\multicolumn{2}{|r|}{\textbf{Promedio de la sección 1}} & & \\
+\hline
+
+\multicolumn{4}{|l|}{\textbf{Sección 2. Modelo y significado de las ecuaciones auxiliares \hfill Peso: 1.25\%}}\\
+\hline
+Modelo e interpretación &
+Explicación clara del modelo geométrico, los datos conocidos, las incógnitas y las ecuaciones de posición. & & \\
+\hline
+Modelo e interpretación &
+Formulación correcta de los cinco sistemas no lineales y de sus respectivos jacobianos. & & \\
+\hline
+Modelo e interpretación &
+Interpretación geométrica correcta de las ecuaciones auxiliares A, B, C, D y E. & & \\
+\hline
+Modelo e interpretación &
+Explicación de cómo cada ecuación auxiliar elimina el grado de libertad y selecciona configuraciones articulares. & & \\
+\hline
+Modelo e interpretación &
+Análisis conceptual de cómo las condiciones auxiliares pueden modificar el alcance, la continuidad y las singularidades. & & \\
+\hline
+Modelo e interpretación &
+Coherencia entre el modelo escrito, el jacobiano, el código y la interpretación física presentada. & & \\
+\hline
+\multicolumn{2}{|r|}{\textbf{Promedio de la sección 2}} & & \\
+\hline
+
+\multicolumn{4}{|l|}{\textbf{Sección 3. Implementación y validación de Newton-Raphson \hfill Peso: 0.75\%}}\\
+\hline
+Newton-Raphson &
+Implementación funcional y consistente de Newton-Raphson para las cinco ecuaciones auxiliares. & & \\
+\hline
+Newton-Raphson &
+Uso correcto del sistema lineal de Newton, del criterio de parada, la tolerancia y el máximo de iteraciones. & & \\
+\hline
+Newton-Raphson &
+Cálculo y reporte correcto del residuo, los ángulos, el número de iteraciones y el estado de la ejecución. & & \\
+\hline
+Newton-Raphson &
+Uso razonado de varias suposiciones iniciales y aprovechamiento de la solución anterior durante el recorrido. & & \\
+\hline
+Newton-Raphson &
+Distinción programática entre éxito, falta de convergencia, punto fuera del alcance e incompatibilidad respaldada. & & \\
+\hline
+\multicolumn{2}{|r|}{\textbf{Promedio de la sección 3}} & & \\
+\hline
+
+\multicolumn{4}{|l|}{\textbf{Sección 4. Fase I: análisis comparativo de trayectorias \hfill Peso: 1.25\%}}\\
+\hline
+Análisis de la Fase I &
+Resultados completos de la secuencia \(\mathcal P\) para las cinco ecuaciones auxiliares. & & \\
+\hline
+Análisis de la Fase I &
+Comparación punto por punto de las configuraciones articulares obtenidas. & & \\
+\hline
+Análisis de la Fase I &
+Comparación de la forma y la longitud aproximada de las trayectorias cartesianas. & & \\
+\hline
+Análisis de la Fase I &
+Análisis del número de iteraciones, los residuos y el efecto de diferentes suposiciones iniciales. & & \\
+\hline
+Análisis de la Fase I &
+Explicación causal de las diferencias visibles entre recorridos a partir de las ecuaciones auxiliares. & & \\
+\hline
+Análisis de la Fase I &
+Conclusiones comparativas sustentadas con ángulos, gráficas, animaciones y resultados numéricos. & & \\
+\hline
+\multicolumn{2}{|r|}{\textbf{Promedio de la sección 4}} & & \\
+\hline
+
+\multicolumn{4}{|l|}{\textbf{Sección 5. Fase II: análisis de compatibilidad \hfill Peso: 1.50\%}}\\
+\hline
+Análisis de la Fase II &
+Tabla completa y ordenada de las veinte combinaciones entre los puntos de \(\mathcal Q\) y las cinco ecuaciones auxiliares. & & \\
+\hline
+Análisis de la Fase II &
+Clasificación correcta de cada combinación como compatible, incompatible, fuera del alcance o numéricamente inconclusa. & & \\
+\hline
+Análisis de la Fase II &
+Justificación geométrica y numérica de los casos en los que no se obtiene una solución. & & \\
+\hline
+Análisis de la Fase II &
+Distinción fundamentada entre incompatibilidad matemática y falta de convergencia de Newton-Raphson. & & \\
+\hline
+Análisis de la Fase II &
+Procesamiento de los puntos posteriores y aplicación coherente de la política definida después de un punto no alcanzado. & & \\
+\hline
+Análisis de la Fase II &
+Conclusiones que relacionan los resultados de la secuencia con las restricciones impuestas por cada ecuación auxiliar. & & \\
+\hline
+\multicolumn{2}{|r|}{\textbf{Promedio de la sección 5}} & & \\
+\hline
+
+\multicolumn{4}{|l|}{\textbf{Sección 6. Fase III: mapas e interpretación del espacio de trabajo \hfill Peso: 1.75\%}}\\
+\hline
+Análisis de la Fase III &
+Elección y justificación de una de las dos alternativas de construcción de los mapas. & & \\
+\hline
+Análisis de la Fase III &
+Descripción reproducible del procedimiento, incluidos resolución, muestreo, tolerancia, suposiciones iniciales o velocidades utilizadas. & & \\
+\hline
+Análisis de la Fase III &
+Construcción correcta de los cinco mapas y de una figura comparativa con escalas y convenciones consistentes. & & \\
+\hline
+Análisis de la Fase III &
+Interpretación de la forma, ubicación, simetrías, fronteras, regiones vacías y extensión de los lugares geométricos. & & \\
+\hline
+Análisis de la Fase III &
+Comparación razonada de las regiones e identificación de si alguna opción parece conservar el alcance completo. & & \\
+\hline
+Análisis de la Fase III &
+Verificación de puntos interiores, fronterizos y exteriores mediante Newton-Raphson y análisis de los residuos. & & \\
+\hline
+Análisis de la Fase III &
+Discusión de las limitaciones del método y del significado correcto de una celda coloreada o blanca. & & \\
+\hline
+\multicolumn{2}{|r|}{\textbf{Promedio de la sección 6}} & & \\
+\hline
+
+\multicolumn{4}{|l|}{\textbf{Sección 7. Código, gráficas y animaciones \hfill Peso: 0.50\%}}\\
+\hline
+Producto computacional &
+El código es funcional, modular, legible y utiliza nombres claros para variables y funciones. & & \\
+\hline
+Producto computacional &
+Las gráficas son legibles y las animaciones muestran correctamente el movimiento simultáneo y el rastro del efector. & & \\
+\hline
+Producto computacional &
+Las funciones, parámetros y decisiones de implementación están documentados de forma suficiente para reproducir los resultados. & & \\
+\hline
+\multicolumn{2}{|r|}{\textbf{Promedio de la sección 7}} & & \\
+\hline
+
+\multicolumn{4}{|l|}{\textbf{Sección 8. Bitácora, trabajo en equipo y uso responsable de IA \hfill Peso: 0.50\%}}\\
+\hline
+Trabajo en equipo &
+La bitácora documenta reuniones, acuerdos, responsables, metas, avances y evidencias del trabajo realizado. & & \\
+\hline
+Trabajo en equipo &
+Se evidencia una distribución real y coherente del trabajo, incluido el cumplimiento del rol de coordinación. & & \\
+\hline
+Trabajo en equipo e IA &
+La declaración de uso responsable de IA es clara, honesta y explica cómo se verificó y comprendió el contenido utilizado. & & \\
+\hline
+\multicolumn{2}{|r|}{\textbf{Promedio de la sección 8}} & & \\
+\hline
+
+\end{longtable}
+}
+
+%\subsection*{Resumen de cálculo por secciones}
+%
+%{\footnotesize
+%\begin{longtable}{|p{7.1cm}|c|c|c|}
+%\hline
+%\textbf{Sección} & \textbf{Promedio \(0\) a \(4\)} & \textbf{Peso} & \textbf{Aporte} \\
+%\hline
+%\endfirsthead
+%\hline
+%\textbf{Sección} & \textbf{Promedio \(0\) a \(4\)} & \textbf{Peso} & \textbf{Aporte} \\
+%\hline
+%\endhead
+%\hline
+%\endfoot
+%\hline
+%\endlastfoot
+%1. Presentación y completitud &  & \(0.50\%\) &  \\
+%\hline
+%2. Modelo y significado de las ecuaciones auxiliares &  & \(1.25\%\) &  \\
+%\hline
+%3. Implementación y validación de Newton-Raphson &  & \(0.75\%\) &  \\
+%\hline
+%4. Fase I: análisis comparativo de trayectorias &  & \(1.25\%\) &  \\
+%\hline
+%5. Fase II: análisis de compatibilidad &  & \(1.50\%\) &  \\
+%\hline
+%6. Fase III: mapas e interpretación del espacio de trabajo &  & \(1.75\%\) &  \\
+%\hline
+%7. Código, gráficas y animaciones &  & \(0.50\%\) &  \\
+%\hline
+%8. Bitácora, trabajo en equipo y uso responsable de IA &  & \(0.50\%\) &  \\
+%\hline
+%\multicolumn{3}{|r|}{\textbf{Total obtenido}} &  \\
+%\hline
+%\end{longtable}
+%}
+
+\subsection*{Defensa oral de verificación y factor grupal}
+
+El personal docente podrá convocar a cualquier equipo a una \textbf{defensa oral de verificación}. La convocatoria podrá realizarse para todo el grupo e incluir preguntas dirigidas a cualquiera de sus integrantes. La defensa tendrá como propósito verificar que todas las personas integrantes reconocen, comprenden y pueden explicar, en términos generales, el proyecto que entregaron.
+
+El uso de inteligencia artificial está permitido y se incentiva. La defensa no pretende determinar si se utilizó IA ni penalizar su utilización. Tampoco exigirá memorizar líneas de código, explicar la sintaxis exacta de cada función o reproducir demostraciones matemáticas profundas. Se evaluará el dominio general del proyecto y la apropiación del trabajo realizado.
+
+Durante la defensa se podrá solicitar a cada integrante:
+
+\begin{itemize}
+    \item explicar el objetivo general y el funcionamiento global del programa;
+    \item describir el significado de las ecuaciones de posición y de las ecuaciones auxiliares;
+    \item explicar, en términos generales, cómo se aplicó Newton-Raphson y cómo se interpretó el residuo;
+    \item interpretar una trayectoria, una animación, una tabla de compatibilidad o un mapa del espacio de trabajo producido por el equipo;
+    \item explicar las decisiones principales, dificultades, limitaciones y conclusiones del proyecto;
+    \item identificar su contribución y explicar cómo se integró con el trabajo de las demás personas del equipo;
+    \item localizar y reconocer las partes principales del cuaderno, aunque no recuerde de memoria instrucciones o líneas específicas de código.
+\end{itemize}
+
+Todas las personas del equipo deberán estar preparadas para la defensa, conocer la generalidad del proyecto y comprender tanto su propio rol como la manera en que su trabajo se relaciona con el de las demás. El personal docente podrá consultar a la persona coordinadora acerca de la distribución de funciones y de la contribución de cada integrante. La persona coordinadora deberá, por tanto, conocer con claridad el rol desempeñado por cada miembro del equipo.
+
+Si una persona no ha contribuido efectivamente al trabajo, el equipo deberá reportarlo oportunamente al personal docente y solicitar su retiro del grupo antes de la evaluación. Mantener como integrante a una persona que no participó implica que el equipo asume la responsabilidad de su desempeño durante la defensa, pues una respuesta deficiente de cualquiera de sus integrantes podrá afectar la calificación de todo el grupo.
+
+La nota obtenida mediante la rúbrica anterior será la \textbf{nota base del proyecto}. Cuando se realice la defensa, se asignará al equipo un único factor grupal de verificación \(f_g\), y la nota final de todas las personas integrantes se calculará mediante
+
+\[
+N_{\mathrm{grupo}}=N_{\mathrm{base}}\,f_g.
+\]
+
+El factor se asignará de acuerdo con la siguiente escala:
+
+\begin{center}
+\begin{tabular}{|c|p{11.5cm}|}
+\hline
+\textbf{Factor \(f_g\)} & \textbf{Descriptor de la defensa} \\
+\hline
+\(1.00\) & El equipo demuestra un dominio general claro del proyecto; sus integrantes reconocen sus contribuciones y explican de manera coherente las decisiones, resultados e interpretaciones principales. \\
+\hline
+\(0.90\) & El equipo demuestra un dominio general adecuado, aunque se presentan algunas dudas menores o explicaciones incompletas. \\
+\hline
+\(0.75\) & El equipo demuestra comprensión parcial; reconoce el trabajo, pero uno o más integrantes tienen dificultades importantes para explicar varias decisiones, resultados o relaciones centrales. \\
+\hline
+\(0.50\) & El equipo demuestra un dominio insuficiente, o uno o más integrantes no logran explicar aspectos esenciales del proyecto o de su propia contribución. \\
+\hline
+\(0.00\) & El equipo no se presenta sin justificación aceptada, se niega a participar o no aporta evidencia mínima de conocimiento y participación en el proyecto. \\
+\hline
+\end{tabular}
+\end{center}
+
+El factor será grupal y se aplicará por igual a todas las personas integrantes. Por esta razón, el desempeño de cualquiera de ellas durante la defensa podrá modificar la nota de todo el equipo. Si el equipo no es convocado a defensa, se utilizará \(f_g=1.00\). Una ausencia debidamente justificada se atenderá mediante una defensa de reposición, según las disposiciones del curso.
+
+\subsection*{Observaciones finales}
+\begin{itemize}
+    \item La escala admite valores decimales cuando el desempeño se ubique entre dos niveles.
+    \item En las secciones de análisis se aplicará el descriptor específico de análisis e interpretación; presentar resultados sin explicar sus causas no será suficiente para obtener el puntaje máximo.
+    \item En la evaluación del código se deberá considerar no solo que funcione, sino también que sea legible, modular, comentado y debidamente documentado.
+    \item El uso de inteligencia artificial no reducirá la calificación por sí mismo. La responsabilidad del equipo consiste en revisar el producto, reconocer lo realizado y demostrar un dominio general suficiente cuando se solicite la defensa de verificación.
+\end{itemize}
+
+
+\begin{center}
+\textbf{Fin del enunciado}
+\end{center}
+
+\end{document}

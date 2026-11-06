@@ -1,0 +1,403 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage{url}
+\usepackage[colorlinks,urlcolor=blue]{hyperref}
+\usepackage[UTF8]{inputenc}
+%\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{uarial}
+\renewcommand\familydefault{\sfdefault}
+\usepackage{amsmath,amssymb,amsfonts,latexsym,cancel, wrapfig, multicol,enumerate,graphicx, xcolor,paralist,tikz,tkz-tab,dsfont}
+\usepackage[letterpaper,showframe=false]{geometry}
+\usepackage[spanish]{babel}
+\usepackage{color}
+\usepackage{hyperref}
+%colores------------------------------------------------
+\input{Direcciones/colores}
+%-------------------------------------------------------
+
+\DeclareGraphicsExtensions {.pdf,.png,.jpg}
+
+%Dimensiones-------------------------------------------
+\textheight=26cm
+\textwidth=20 cm
+\topmargin=-3.2 cm
+\oddsidemargin=-2 cm
+\evensidemargin=0 cm
+\parskip=0 mm
+\parindent=0 mm
+%-----------------------------------------------------
+
+
+%\usepackage[T1]{fontenc}
+\usepackage{uarial}
+\renewcommand\familydefault{\sfdefault}
+%\usepackage{blindtext}
+
+\newcommand{\URLLibroMN}{\href{https://ezproxy.itcr.ac.cr/login?url=https://www.bibliotecaebook.com/my-library}{\textbf{Acceso al e-book}} Libro de Métodos Numéricos. Autor Jeffry Chavarría Molina.}
+
+\newcommand{\CursoOctave}{\href{https://lugfi.github.io/curso-octave/index.html}{\textbf{Ingreso al curso}}}
+
+\newcommand{\PaqueteSymbolic}{\href{https://docs.sympy.org/latest/tutorials/intro-tutorial/index.html}{\textbf{Paquete Sympy:}} Paquete para realizar cálculo simbólico en Python}
+%--------------------------------
+%Videos
+
+
+\newcommand{\URLVideoUno}{\href{https://youtu.be/ajYx1_p9ENk?si=HcU6I23R4iOyACXt}{\textbf{Vídeo 1:}} E. D. con Métodos Numéricos Teoría}
+
+\newcommand{\URLVideoDos}{\href{https://drive.google.com/file/d/16GAE1hLeBJZZ_wsUSGfVm6QBWMIPFX5s/view}{\textbf{Video 2:}} Introducción a E. D. Numéricas}
+
+\newcommand{\URLVideoTres}{\href{https://youtu.be/-z-xH9WdpSs}{\textbf{Video 3:}} ED01: Método de Euler}
+
+\newcommand{\URLVideoCuatro}{\href{https://drive.google.com/file/d/1cLupAmFHfxKZ5KFbxQljqTgPBWySScXh/view}{\textbf{Video 4:}} Euler}
+
+\newcommand{\URLVideoCinco}{\href{https://youtu.be/AmYC7WBAZPg}{\textbf{Video 5:}} Parte 1}
+\newcommand{\URLVideoSeis}{\href{https://youtu.be/U32K6xWgmoA}{\textbf{Video 6:}} Parte 2}
+
+
+
+\newcommand{\URLVideoSiete}{\href{https://youtu.be/5K-DbO3tiLU}{\textbf{Video 7:}} Método de Taylor}
+\newcommand{\URLVideoOcho}{\href{https://youtu.be/sof7m9UT8oU}{\textbf{Video 8:}} ED02: Método de Taylor de orden n para EDO}
+
+\newcommand{\URLVideoDiez}{\href{https://youtu.be/8PIiLIDGE1k}{\textbf{Video 9:}} ED03: Método de Euler mejorado}
+\newcommand{\URLVideoNueve}{\href{https://youtu.be/VDL00Fs0AxE}{\textbf{Video 9:}} Programación Método de Taylor en Octave }
+
+
+
+
+%------------Vídeos teoricos---------------
+\newcommand{\URLVideoTeoriaActiI}{\href{https://drive.google.com/file/d/1Is-lhFgiC0lT138Ikfc-pgqc2trrvBBq/view?usp=sharing}{\textbf{Vídeo de teoría 1:}}  Complementario al libro}
+\newcommand{\URLVideoTeoriaActiII}{\href{https://drive.google.com/file/d/1kloExvEhsScDhAK6WMXRjhp5rQ62zYDm/view?usp=sharing}{\textbf{Vídeo de teoría 2:}} Complementario al libro}
+\newcommand{\URLVideoTeoriaActiIII}{\href{https://drive.google.com/file/d/1H7o1l6RkJaNmG_7-_cLjfnSolojOus38/view?usp=sharing}{\textbf{Vídeo de teoría 3:}} Complementario al libro}
+
+
+%---------Infografías-----------------
+
+
+
+%----------Solucionario-------------
+\newcommand{\FolletoPractica}{\href{https://tecnube1-my.sharepoint.com/:b:/g/personal/jchavarria_itcr_ac_cr/ESbC_k0vPWdMovfv0-d9GpoBcM31nPWa26ScY419frpBdw?e=hutomi}{\textbf{Folleto de práctica}} Folleto completo de práctica del curso.}
+
+\newcommand{\FolletoPracticaDOS}{\href{https://tecnube1-my.sharepoint.com/:b:/g/personal/jchavarria_itcr_ac_cr/ESbC_k0vPWdMovfv0-d9GpoBcM31nPWa26ScY419frpBdw?e=hutomi}{\textbf{Folleto de práctica}}}
+
+
+%----------Podcast---------------------------------------------
+
+\newcommand{\URLpodcast}{\href{https://soundcloud.com/angie-solis-palma/logica-matematica-y-conectivas-logicas?utm_source=clipboard\&utm_campaign=wtshare\&utm_medium=widget\&utm_content=https\%253A\%252F\%252Fsoundcloud.com\%252Fangie-252Fsol-palmamama}{\textbf{Podcast:}} Lógica matemática.}
+
+
+
+\input{Direcciones/dire}
+
+
+\begin{document}
+\setlength{\parskip}{0.3cm}
+
+%Encabezado-----------------------------------------------------------------------------------	
+
+
+
+
+
+
+\begin{center}
+{ \fboxsep 12pt
+	\fcolorbox {encabezado}{encabezado}{
+	\begin{minipage}[t]{19.5cm}
+		{\color{white} 
+		\input{Direcciones/encabezado} \\
+		\rule[0.1cm]{19.5cm}{0.01cm}
+		\begin{center}
+			{\Huge  \textbf{Semana 13}}
+		\end{center}
+		\vspace{-0.5cm}
+		\rule[0cm]{19.5cm}{0.01cm}
+		\begin{center}
+			{  \textbf{Solución numérica de Ecuaciones Diferenciales}}
+		\end{center}
+					}
+	\vspace{-0.5cm}
+	\end{minipage}
+	} 
+}
+\end{center}
+
+
+%Pagina1-------------------------------------------------------------------------
+\begin{minipage}[c]{14cm}
+	\begin{center}
+		\includegraphics[height=5.4cm,width=11cm]{imagenes/estudiantes}
+	\end{center}
+		
+{\color{titulos} {\large \textbf{Descripción para la semana:}}}\\
+		
+Durante la semana, nos adentraremos en la exploración de métodos fundamentales para aproximar soluciones a ecuaciones diferenciales ordinarias de primer orden. Específicamente, dedicaremos tiempo a comprender en detalle el método de Euler y los métodos de Taylor. Estas técnicas proporcionan herramientas esenciales en el campo de la matemática aplicada y la física, permitiendo aproximaciones efectivas que nos acercan a comprender y resolver una variedad de fenómenos dinámicos en diferentes contextos. 
+		
+{\color{titulos} {\large \textbf{ Modo de trabajo:}}}
+		
+{ \fboxsep 12pt
+	\fcolorbox {cuadro1}{cuadro1}{
+		\begin{minipage}[l][10.5cm]{3.15cm}
+			\begin{center}
+				\includegraphics[scale=0.2]{imagenes/uno}
+			\end{center}
+			{\color{ContenidosObjetivos} {\large Material a utilizar}} \\ \\
+			Libro de texto:\\
+			$\bullet${\footnotesize 
+			\ \ \URLLibroMN } \\			
+			$\bullet${\footnotesize 
+						\ \ \FolletoPractica}\\
+			$\bullet${\footnotesize 
+									\ \ \PaqueteSymbolic}\\
+						\vspace{0.5cm}
+						
+		\end{minipage}
+		}
+}
+{ \fboxsep 12pt
+		\fcolorbox {cuadro2}{cuadro2}{
+			\begin{minipage}[l][10.5cm]{3.15cm}
+				\begin{center}
+					\includegraphics[scale=0.2]{imagenes/dos}
+				\end{center}
+				{\color{ContenidosObjetivos} {\large Vídeos}} \\ \\
+				{{ \tiny $\blacksquare$} \footnotesize   \URLVideoUno}\\
+				{{ \tiny $\blacksquare$} \footnotesize   \URLVideoDos}\\
+				{{ \tiny $\blacksquare$} \footnotesize   \URLVideoTres}\\ 
+				{{ \tiny $\blacksquare$} \footnotesize   \URLVideoCuatro}\\ 
+				{{ \tiny $\blacksquare$} \footnotesize Programación del Método de Euler en Octave}\\
+				{{ $ ^{}$ \ \ \tiny $\blacksquare$} \footnotesize   \URLVideoCinco} \\
+				{{ $ ^{}$ \ \ \tiny $\blacksquare$} \footnotesize   \URLVideoSeis}\\
+				{{ \tiny $\blacksquare$} \footnotesize   \URLVideoSiete}\\ 
+				{{ \tiny $\blacksquare$} \footnotesize   \URLVideoOcho}\\ 
+%				{{ \tiny $\blacksquare$} \footnotesize   \URLVideoNueve}\\ 
+				{{ \tiny $\blacksquare$} \footnotesize   \URLVideoDiez}\\ 
+			\end{minipage}
+	}
+}
+{ \fboxsep 12pt
+	\fcolorbox {cuadro3}{cuadro3}{
+		\begin{minipage}[l][10.5cm]{3.9cm}
+			\begin{center}
+				\includegraphics[scale=0.2]{imagenes/tres}
+			\end{center}
+			{\color{ContenidosObjetivos} {\large Evaluación}} \\ \\
+			 \footnotesize\raggedright
+\textbf{Clase presencial y quiz}\\
+Mañana, \textbf{martes 27 de octubre}, la clase será presencial y se aplicará un quiz sobre \textbf{interpolación y regresión lineal}.
+
+\medskip
+\textbf{Tercer quiz virtual}\\
+Esta semana se habilitará el tercer quiz virtual sobre \textbf{interpolación y regresión lineal}.
+
+\medskip
+\textbf{Defensas del laboratorio 1}\\
+Se realizarán esta semana. Mañana, durante la clase, coordinaremos con los grupos las fechas y horarios.
+
+\medskip
+\textbf{Laboratorio 2}\\
+Al finalizar la semana se asignará el segundo laboratorio, junto con las indicaciones para su desarrollo.
+\end{minipage}
+	} 
+} 
+\end{minipage}\hspace{0.2cm}\begin{minipage}[c]{5cm}
+\begin{center}
+{ \fboxsep 12pt
+		\fcolorbox {CcontenidosObjetivos}{CcontenidosObjetivos}{
+\begin{minipage}[l][21cm]{5cm}
+\begin{center}
+	\ImagenDM
+\end{center}
+					
+{\color{ContenidosObjetivos}\textbf{ \small Contenidos:}}\\
+					
+{ \tiny $\blacksquare$} Ecuaciones diferenciales ordinarias\\ \\
+{ \tiny $\blacksquare$} Método de Euler\\ \\
+{ \tiny $\blacksquare$} Método de Taylor\\
+
+
+
+
+{\color{white}\rule[0.1cm]{5cm}{0.01cm}}
+		{\color{ContenidosObjetivos} \textbf{ \small Objetivos:}}\\
+					
+{ \tiny $\blacksquare$} Estudiar el método de Euler para la solución numérica de Ecuaciones diferenciales ordinarias de orden 1. \\ \\
+{ \tiny $\blacksquare$} Programar el método de Euler. \\ \\
+{ \tiny $\blacksquare$} Estudiar los métodos de Taylor para la solución numérica de Ecuaciones diferenciales ordinarias de orden 1. \\ \\
+{ \tiny $\blacksquare$} Programar el método de Taylor de orden 2.
+
+
+
+{\color{white}\rule[0.1cm]{5cm}{0.01cm}}\\
+
+%\vspace{2cm}
+%\hspace{-7pt}\begin{minipage}[4cm]{5cm}
+%\begin{center}
+%\includegraphics[scale=0.14]{imagenes/QRFacebook}
+%
+%Comunidad de la cátedra de Matemática Discreta en el tecDigital (\URLFacebook).
+%\end{center}
+%\end{minipage}
+
+\end{minipage}
+}}
+\end{center}
+\end{minipage}	 
+%----------------------------------------------------------------------------
+
+
+\newpage
+
+%Página2----------------------------------------------------------------------
+\begin{multicols}{2}
+Se recomienda organizar su tiempo de manera que pueda trabajar por \textbf{etapas} con el fin de cubrir todos los contenidos y actividades, recuerde que el objetivo primordial es aprender. 
+	 
+
+Realice lo siguiente:
+	
+{\color{actividades} \textbf{  $\bullet$ Actividad 1: Ecuaciones Diferenciales. Introducción}}
+
+Realice lo siguiente:
+\begin{itemize}
+\item Visualice los videos
+\begin{itemize}
+\item \URLVideoUno.
+\item \URLVideoDos.
+\end{itemize}
+\item Del libro de texto, favor leer las páginas 376 a la 382. Hacer esta lectura de forma corrida, poniendo espacial atención en:
+\begin{itemize}
+\item ¿Qué es una Ecuación Diferencial?
+\item ¿Qué es la solución general, una solución particular y una solución singular de una Ecuación diferencial?
+\item ¿Qué es un problema de valor inicial?
+\end{itemize}
+\end{itemize}
+
+{\color{actividades} \textbf{  $\bullet$ Actividad 2: Método de Euler}}
+
+Realice lo siguiente:
+\begin{itemize}
+\item Visualice los videos:
+\begin{itemize}
+\item \URLVideoTres
+\item \URLVideoCuatro
+\end{itemize}
+\item Del libro de texto lea la introducción: página 382-391. Estudie los ejemplos:
+\begin{itemize}
+\item Página 383, Ejemplos 138. 
+\item Página 385: Ejemplo 385 y 140. 
+\item Página 388: Ejemplo 141. 
+\item Página 389: Ejemplo 142.
+
+\end{itemize}
+\item Del Folleto de prácticas estudiar:
+\begin{itemize}
+\item Página 86: Ejemplo 7.1. 
+\item Página 87: Ejemplo 7.2
+\end{itemize}
+\end{itemize}
+
+{\color{actividades} \textbf{  $\bullet$ Actividad 3: Ejercicios propuestos}}
+\begin{itemize}
+\item Ejercicios asignados:
+\begin{itemize}
+\item Del libro de texto. Realice todos los ejercicios del bloque (ejercicios 6.1) de la página 390.
+\end{itemize}
+\item Proceda a programar el métodos de Euler en octave, para lo cual se puede guiar de los siguientes videos:
+\begin{itemize}
+\item Programación del método de Euler \URLVideoCinco
+\item Programación del método de Euler \URLVideoSeis
+\end{itemize}
+\end{itemize}
+
+{\color{actividades} \textbf{  $\bullet$ Actividad 4: Métodos de Taylor}}
+
+Realice lo siguiente:
+\begin{itemize}
+\item Visualice los videos:
+\begin{itemize}
+\item \URLVideoSiete
+\item \URLVideoOcho
+\end{itemize}
+\item Del libro de texto lea la introducción: página 392-396. Estudie los ejemplos:
+\begin{itemize}
+\item Página 393: Ejemplos 143. 
+\end{itemize}
+\item Del Folleto de prácticas estudiar:
+\begin{itemize}
+\item Página 88: Ejemplo 7.3. 
+\item Página 89: Ejemplo 7.4. Analice bien todos los aspectos mencionados, leer el documento las veces que sea necesario para entender totalmente lo que se plantea en ellos
+\end{itemize}
+\end{itemize}
+
+{\color{actividades} \textbf{  $\bullet$ Actividad 5: Ejercicios propuestos}}
+\begin{itemize}
+\item Ejercicios asignados:
+\begin{itemize}
+\item Del libro de texto. Realice todos los ejercicios del bloque (ejercicios 6.2) de la página 395.
+\end{itemize}
+%\item Proceda a programar el métodos de Euler en octave, para lo cual se puede guiar de los siguientes videos:
+%\begin{itemize}
+%\item Programación del método de Euler \URLVideoNueve.
+%\end{itemize}
+\end{itemize}
+
+
+
+%{\color{actividades} \textbf{  $\bullet$ Actividad 5: Métodos de Euler Mejorado}}
+%
+%Realice lo siguiente:
+%\begin{itemize}
+%\item Visualice los videos:
+%\begin{itemize}
+%\item \URLVideoDiez
+%\end{itemize}
+%\item Del libro de texto lea la introducción: página 396-399. Estudie el ejemplo:
+%\begin{itemize}
+%\item Página 397: Ejemplos 144. 
+%\end{itemize}
+%\item Del Folleto de prácticas estudiar:
+%\begin{itemize}
+%\item Página 88: Ejemplo 7.3. 
+%\item Página 89: Ejemplo 7.4. Analice bien todos los aspectos mencionados, leer el documento las veces que sea necesario para entender totalmente lo que se plantea en ellos
+%\end{itemize}
+%\end{itemize}
+
+
+
+\end{multicols}
+
+
+{ \fboxsep 12pt
+\fcolorbox {CRecapitulacion}{CRecapitulacion}{
+\begin{minipage}[c]{12cm}
+{\color{ContenidosObjetivos}\large {\large Recapitulación}:}\\
+		
+Se les recuerda la importancia de completar las actividades asignadas de la sección virtual para un desarrollo adecuado de su aprendizaje. El estudiante deberá realizar todas las actividades antes de la o las clases sincrónicas según lo indique el docente. \\
+		
+Se le recuerda que no está solo en el proceso. Puede realizar sus dudas en el grupo de Teams.\\
+
+%Recuerde que esta semana se aplicará un quiz presencial, el cual ser realizará durante la clase del jueves 9 de mayo. Ver la sección de evaluaciones para más detalles. \\
+		
+
+\end{minipage}
+		\begin{minipage}[c]{7cm}
+			\begin{center}
+				\Motivacion
+			\end{center}
+			
+		\end{minipage}
+	}
+}
+
+%{\color{actividades} \textbf{   $\bullet$ Códigos QR de los vídeos:}}\\
+%\begin{center}
+%\begin{tabular}{|c|c|c|c|}
+%\hline 
+%\textbf{¿Para que sirven las matemáticas?} & \textbf{Motivación a la lógica} & \textbf{Vídeo de teoría 1} &\textbf{Vídeo de teoría 2} \\ \hline &&&\\  
+%\includegraphics[scale=0.1]{imagenes/QRMoti1} & \includegraphics[scale=0.1]{imagenes/QRMoti2} & \includegraphics[scale=0.1]{imagenes/QRVideo1} & \includegraphics[scale=0.1]{imagenes/QRVideo2}\\ 
+%\hline 
+%\textbf{Vídeo 3}&\textbf{Vídeo 4}&\textbf{Vídeo 5}&\\ 
+%\hline &&&\\  
+% \includegraphics[scale=0.1]{imagenes/QRVideo3} & \includegraphics[scale=0.1]{imagenes/QRVideo4} & \includegraphics[scale=0.1]{imagenes/QRVideo5} & \\ \hline
+%\end{tabular} 
+%\end{center}
+\end{document}

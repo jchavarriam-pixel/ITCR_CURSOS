@@ -1,0 +1,31 @@
+
+
+
+
+
+
+
+
+
+Instituto Tecnológico de Costa Rica
+Métodos numéricos - MA3106
+Laboratorio 1: Simulación bidimensional de un brazo robótico plano de tres articulaciones
+Estudiantes:
+Ariana Carrillo García - 2023048173 (Coordinadora)
+Nasdia Gutiérrez Sacasa - 2023800122
+Alison Valeria Quillaos Mairena - 2025127873
+Marisol Chacón Rodríguez - 2025069338
+Profesor: Jeffrey Chavarría Molina
+II semestre 2026
+
+
+
+
+
+
+
+
+
+
+Enlace del Google Colab:
+https://colab.research.google.com/drive/1dj4KI56iMYPhbP_GTxshldQFJEdwKNX4?usp=sharing
